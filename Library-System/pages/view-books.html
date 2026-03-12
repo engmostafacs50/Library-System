@@ -1,14 +1,53 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
+    <head>
+
+       <title> View Books </title>
+       <meta charset="UTF-8"/>
+
+    </head>
+
     <body>
+        
         <nav>
             <a href="homepage.html">Home</a>
+            <a href="homepage.html" title="go to Home Page"> Home page  </a> |
+            <a href="borrowed-books.html" title="go to Borrowed Books Page"> Borrowed Books </a> | 
+            <a href="returned-books.html" title="go to Returned Books Page"> Returned Books</a> |
+            <a href="view-books.html" title="go to View Books Page"> View Books</a> 
         </nav>
-        <h2>Available Books</h2>
+
+        <hr>
+
+           <h2>Available Books</h2>
         <a
              href="book-details.html" title="go to book details">
             <img src="../assets/images/clean-code.jpg" width="120">
             <p> Clean Code </p>
         </a>
+
+        <hr>
+        
+        <div>
+
+            <label for="select-by-category"> <h2> Select By Category</h2></label>
+
+            <select multiple id="select-by-category" name="select-by-category"> 
+                <option value="Latest"> Latest </option>
+                <option value="earliest"> Earliest </option>
+                <option value="science"> Science </option>
+                <option value="history"> History </option>
+                <option value="fiction"> Fiction </option>
+            </select>
+            
+        </div>
+
+
     </body>
+
 </html>
+
+         
+
+          
