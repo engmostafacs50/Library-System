@@ -3,7 +3,7 @@
 
     <head>
 
-       <title> View Books </title>
+       <title>Online Library | View Books</title>
        <meta charset="UTF-8"/>
 
     </head>
@@ -11,19 +11,31 @@
     <body>
         
         <nav>
-            <a href="homepage.html" title="go to Home Page"> Home page  </a> |
-            <a href="borrowed-books.html" title="go to Borrowed Books Page"> Borrowed Books </a> | 
-            <a href="returned-books.html" title="go to Returned Books Page"> Returned Books</a> |
-            <a href="view-books.html" title="go to View Books Page"> View Books</a> 
+            <a href="homepage.html" title="go to Home Page"> Home page  </a> | 
+            <a href="user-dashboard.html" title="go to user profile">User Profile</a> | 
+            <a href="search-books.html" title="go to search books">Search Books</a> | 
+            <a href="view-books.html" title="go to View all Books"> View Books</a> | 
+            <a href="borrowed-books.html" title="go to Borrowed Books"> Borrowed Books </a> | 
+            <a href="returned-books.html" title="go to Returned Books"> Returned Books</a> |
+            <a href="../index.html" title="logout of website"> Logout</a>
         </nav>
-
         <hr>
         
         <div>
 
             <h1> View Books</h1>
-            <label for="select-by-category"> <h2> Select By Category</h2></label>
+            <h2>Available Books</h2>
+            <a
+                href="book-details.html" title="go to book details">
+                <img src="../assets/images/clean-code.jpg" width="120">
+                <p> Clean Code </p>
+            </a>
+        </div>
+        <hr>
 
+        <div>
+
+            <label for="select-by-category"> <h2> Select By Category</h2></label>
             <select multiple id="select-by-category" name="select-by-category"> 
                 <option value="Latest"> Latest </option>
                 <option value="earliest"> Earliest </option>
@@ -35,9 +47,4 @@
         </div>
 
     </body>
-
 </html>
-
-         
-
-          
