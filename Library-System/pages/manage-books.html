@@ -6,23 +6,23 @@
     </head>
 
     <body>
-<nav>
-    <ul>
-        <li><a href="homepage.html">Home</a></li>
-        <li><a href="search-books.html">Search Books</a></li>
-        <li><a href="view-books.html">View Books</a></li>
-        <li><a href="borrowed-books.html">Borrowed Books</a></li>
-        <li><a href="returned-books.html">Returned Books</a></li>
-        <li><a href="../../index.html">Logout</a></li>
-    </ul>
-</nav>      
+
+        <nav>
+            <b>Library System</b> |
+            <a href="dashboard.html" title="go to admin page">Admin profile</a> | 
+            <a href="add_book.html" title="go to add book">Add Book</a> | 
+            <a href="manage-books.html" title="go to manage book">Manage Books</a> | 
+            <a href="../index.html" title="logout of website"> Logout</a>
+        </nav>
         <hr>
 
         <h1>Manage Books</h1>
-        <h2>Books List</h2>
+        <!-- <h2>Books List</h2> -->
 
         <table border="1" width="100%">
-
+            <caption>
+                <h2>Books List</h2>
+            </caption>
             <tr>
                 <th>ID</th>
                 <th>Image</th>
@@ -35,12 +35,12 @@
             <tr>
                 <td>1</td>
                 <td>
-                    <a href="book-details.html">
+                    <a href="book-details.html" title="go to book details">
                         <img src="../assets/images/clean-code.jpg" width="80">
                     </a>
                 </td>
                 <td>
-                    <a href="book-details.html">Clean Code</a>
+                    <a href="book-details.html" title="go to book details">Clean Code</a>
                 </td>
                 <td>Robert C. Martin</td>
                 <td>Programming</td>
