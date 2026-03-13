@@ -1,21 +1,26 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Search Books</title>
-</head>
-<body>
+    <head>
+        <title>Online Library | Search Books</title>
+    </head>
+    <body>
 
-<nav>
-    <a href="homepage.html">Home</a>
-    <a href="view-books.html">View Books</a>
-</nav>
+        <nav>
+            <a href="homepage.html" title="go to Home Page"> Home page  </a> | 
+            <a href="user-dashboard.html" title="go to user profile">User Profile</a> | 
+            <a href="search-books.html" title="go to search books">Search Books</a> | 
+            <a href="view-books.html" title="go to View all Books"> View Books</a> | 
+            <a href="borrowed-books.html" title="go to Borrowed Books"> Borrowed Books </a> | 
+            <a href="returned-books.html" title="go to Returned Books"> Returned Books</a> |
+            <a href="../index.html" title="logout of website"> Logout</a>
+        </nav>
+        <hr>
 
-<h2>Search for a Book</h2>
+        <h2>Search for a Book</h2>
+        <form action="search-results.html">
+            <input type="text" placeholder="default-book">
+            <button type="submit">Search</button>
+        </form>
 
-<form action="search-results.html">
-    <input type="text" placeholder="default-book">
-    <button type="submit">Search</button>
-</form>
-
-</body>
+    </body>
 </html>

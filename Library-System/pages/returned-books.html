@@ -2,44 +2,40 @@
 <html>
 
     <head>
-
-       <title> Returned Books </title>
+       <title>Online Library | Returned Books</title>
        <meta charset="UTF-8"/>
-
     </head>
 
     <body>
         
         <nav>
-            <a href="homepage.html" title="go to Home Page"> Home page  </a> |
-            <a href="../index.html" title="go to Sign Up Page"> signup </a> |
-            <a href="login.html" title="go to Log In Page"> Login</a> |
-            <a href="manage-books.html" title="go to Manage Books Page"> Manage Books</a> |
-            <a href="view-books.html" title="go to View Books Page"> View Books</a> 
+            <a href="homepage.html" title="go to Home Page"> Home page  </a> | 
+            <a href="user-dashboard.html" title="go to user profile">User Profile</a> | 
+            <a href="search-books.html" title="go to search books">Search Books</a> | 
+            <a href="view-books.html" title="go to View all Books"> View Books</a> | 
+            <a href="borrowed-books.html" title="go to Borrowed Books"> Borrowed Books </a> | 
+            <a href="returned-books.html" title="go to Returned Books"> Returned Books</a> |
+            <a href="../index.html" title="logout of website"> Logout</a>
         </nav>
-
         <hr>
 
         <div>
 
-              <h1> My Returned Books </h1>
+            <h1> My Returned Books </h1>
+            <table border="1" cellpadding="10" width="100%"> 
+                <tr>
+                    <th> Number of books </th>
+                    <th> Books IDs</th>
+                    <th> Authors </th>
+                    <th> Returning Date </th>
+                </tr>
 
-           <table border="1" cellpadding="10" width="100%"> 
-
-            <tr>
-                <th> Number of books </th>
-                <th> Books IDs</th>
-                <th> Authors </th>
-                <th> Returning Date </th>
-            </tr>
-
-            <tr>
-                <th> <input type="number"> </th>
-                <th> <input type="text" > </th>
-                <th> <input type="text" > </th>
-                <th> <input type="date" > </th>
-            </tr>
-            
+                <tr>
+                    <th> <input type="number"> </th>
+                    <th> <input type="text" > </th>
+                    <th> <input type="text" > </th>
+                    <th> <input type="date" > </th>
+                </tr>
            </table>
 
         </div>

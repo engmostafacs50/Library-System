@@ -1,65 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Manage Books</title>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <title>Online Library | Manage Books</title>
+    </head>
 
-<body>
+    <body>
 
-<!-- Navigation -->
-<nav>
-<b>Library System</b> |
-<a href="homepage.html">Home</a> |
-<a href="manage-books.html">Manage Books</a> |
-<a href="add_book.html">Add Book</a> |
-<a href="view-books.html">View Books</a> |
-<a href="search-books.html">Search</a>
-</nav>
+        <nav>
+            <b>Library System</b> |
+            <a href="dashboard.html" title="go to admin page">Admin profile</a> | 
+            <a href="add_book.html" title="go to add book">Add Book</a> | 
+            <a href="manage-books.html" title="go to manage book">Manage Books</a> | 
+            <a href="../index.html" title="logout of website"> Logout</a>
+        </nav>
+        <hr>
 
-<hr>
+        <h1>Manage Books</h1>
+        <h2>Books List</h2>
 
-<h1>Manage Books</h1>
+        <table border="1" width="100%">
 
-<h2>Books List</h2>
+            <tr>
+                <th>ID</th>
+                <th>Image</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Category</th>
+                <th>Actions</th>
+            </tr>
 
-<table border="1">
+            <tr>
+                <td>1</td>
+                <td>
+                    <a href="book-details.html">
+                        <img src="../assets/images/clean-code.jpg" width="80">
+                    </a>
+                </td>
+                <td>
+                    <a href="book-details.html">Clean Code</a>
+                </td>
+                <td>Robert C. Martin</td>
+                <td>Programming</td>
+                <td>
+                    <button>Edit</button>
+                    <button>Delete</button>
+                </td>
+            </tr>
+        </table>
 
-<tr>
-<th>ID</th>
-<th>Image</th>
-<th>Title</th>
-<th>Author</th>
-<th>Category</th>
-<th>Actions</th>
-</tr>
-
-<tr>
-
-<td>1</td>
-
-<td>
-<a href="book-details.html">
-<img src="../assets/images/clean-code.jpg" width="80">
-</a>
-</td>
-
-<td>
-<a href="book-details.html">Clean Code</a>
-</td>
-
-<td>Robert C. Martin</td>
-
-<td>Programming</td>
-
-<td>
-<button>Edit</button>
-<button>Delete</button>
-</td>
-
-</tr>
-
-</table>
-
-</body>
+    </body>
 </html>

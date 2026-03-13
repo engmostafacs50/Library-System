@@ -1,49 +1,47 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Add New Book - Online Library</title>
-</head>
-<body>
+    <head>
+        <title>Online Library | Add New Book</title>
+    </head>
+    <body>
 
-    <nav>
-        <b>Online Library (Admin)</b> | 
-        <a href="dashboard.html">Home</a> | 
-        <a href="add_book.html">Add New Book</a> | 
-        <a href="view_books.html">View Books</a> | 
-        <a href="login.html">Logout</a>
-    </nav>
+        <nav>
+            <b>Library System</b> |
+            <a href="dashboard.html" title="go to admin page">Admin profile</a> | 
+            <a href="add_book.html" title="go to add book">Add Book</a> | 
+            <a href="manage-books.html" title="go to manage book">Manage Books</a> | 
+            <a href="../index.html" title="logout of website"> Logout</a>
+        </nav>
+        <hr>
 
-    <hr>
+        <h2>Add a New Book to the System</h2>
+        <form action="success.html">
+            <label>Book ID:</label><br>
+            <input type="number" name="book_id" required><br><br>
 
-    <h2>Add a New Book to the System</h2>
-    
-    <form action="success.html">
-        <label>Book ID:</label><br>
-        <input type="number" name="book_id" required><br><br>
+            <label>Book Name:</label><br>
+            <input type="text" name="book_name" required><br><br>
 
-        <label>Book Name:</label><br>
-        <input type="text" name="book_name" required><br><br>
+            <label>Author Name:</label><br>
+            <input type="text" name="author" required><br><br>
 
-        <label>Author Name:</label><br>
-        <input type="text" name="author" required><br><br>
+            <label>Category:</label><br>
+            <select name="category">
+                <option value="fiction">Fiction</option>
+                <option value="science">Science</option>
+                <option value="history">History</option>
+                <option value="other">Other</option>
+            </select><br><br>
 
-        <label>Category:</label><br>
-        <select name="category">
-            <option value="fiction">Fiction</option>
-            <option value="science">Science</option>
-            <option value="history">History</option>
-            <option value="other">Other</option>
-        </select><br><br>
+            <label>Description:</label><br>
+            <textarea name="description" rows="4" cols="30"></textarea><br><br>
 
-        <label>Description:</label><br>
-        <textarea name="description" rows="4" cols="30"></textarea><br><br>
+            <input type="submit" value="Save Book Information">
+            <input type="reset" value="Clear Form">
+        </form>
 
-        <input type="submit" value="Save Book Information">
-        <input type="reset" value="Clear Form">
-    </form>
+        <hr>
+        <a href="dashboard.html">Back to Dashboard</a>
 
-    <hr>
-    <a href="dashboard.html">Back to Dashboard</a>
-
-</body>
+    </body>
 </html>
