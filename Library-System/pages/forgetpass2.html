@@ -1,36 +1,27 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Find Account</title>
-</head>
-<body>
-    <h2>Enter the   code via you Email</h2>
+    <link rel="stylesheet" href="../CSS/forget pass.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="box">
+        <h1>Find Your Account</h1>
 
-    
-     <form action="./login.html">
-        
+        <h4>Enter the OTP code</h4>
 
-      <label for="userEmail">Code</label>
-      <input
-        required
-        id="userEmail"
-        type="number"
-        name="userEmail"
-         
-        maxlength="4"
-      />
-      <br />
-      <br />
-     
-       
-      
-       
-      <button type="submit">Submit</button>
+        <form action="./login.html">
+          <label for="userEmail">Code</label>
+          <input required id="userEmail" type="number" name="code" />
 
-       
-     
-    </form>
-</body>
+          <button type="submit">Submit</button>
+        </form>
+
+        <p class="back">Back to <a href="./login.html">Login</a></p>
+      </div>
+    </div>
+  </body>
 </html>
