@@ -1,0 +1,234 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Roboto, sans-serif;
+    background-color: #0f172a;
+    color: white;
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+
+nav {
+    text-align: center;
+    padding: 20px;
+    background: rgba(30, 41, 59, 0.6);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+nav a {
+    color: #94a3b8;
+    text-decoration: none;
+    margin: 0 12px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: 0.3s ease;
+}
+
+nav a:hover {
+    color: #3b82f6;
+    text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+
+.hero {
+    text-align: center;
+    padding: 60px 20px 30px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hero h1 {
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 800;
+    margin-bottom: 10px;
+    background: linear-gradient(to right, #fff, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+    color: #94a3b8;
+    margin-bottom: 30px;
+}
+
+
+.search-box {
+    display: flex;
+    align-items: center;
+    max-width: 600px;
+    width: 90%;
+    background: white;
+    border-radius: 50px;
+    padding: 6px 6px 6px 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+    color: #1e293b;
+    background: transparent;
+}
+
+.search-box button {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s ease;
+}
+
+.search-box button:hover {
+    background: #2563eb;
+    transform: scale(1.03);
+}
+
+
+.featured-book {
+    background: rgba(30, 41, 59, 0.4);
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 25px;
+    border-radius: 24px;
+    border: 1px dashed rgba(59, 130, 246, 0.2);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.featured-book h2 {
+    width: 100%;
+    text-align: center;
+    font-size: 22px;
+    margin-top: 0;
+    color: #3b82f6;
+}
+
+.featured-book .book-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
+    max-width: 100%;
+}
+
+.featured-book img {
+    width: 100px;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+}
+
+
+.book-card {
+    background: #1e293b;
+    max-width: 550px;
+    margin: 40px auto;
+    padding: 30px;
+    border-radius: 28px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.book-card h3 {
+    font-size: 24px;
+    margin: 15px 0;
+    color: #3b82f6;
+}
+
+.book-card p {
+    color: #cbd5e1;
+    margin: 10px 0;
+}
+
+.book-card hr {
+    border: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin: 15px 0;
+}
+
+.categories h2 {
+    text-align: center;
+    font-size: 32px;
+    margin: 50px 0 30px 0;
+}
+
+.cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    max-width: 1100px;
+    margin: 0 auto 80px auto;
+    padding: 0 20px;
+}
+
+.cat-card {
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 28px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.cat-card:hover {
+    transform: translateY(-12px);
+    border-color: #3b82f6;
+}
+
+.cat-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 18px;
+    margin-bottom: 15px;
+}
+
+.btn-outline, .cat-card button {
+    background: transparent;
+    border: 2px solid #3b82f6;
+    color: #3b82f6;
+    padding: 10px 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.btn-outline:hover, .cat-card button:hover {
+    background: #3b82f6;
+    color: white;
+}
+
+h6 {
+    text-align: center;
+    color: #475569;
+    padding-bottom: 40px;
+    font-weight: 400;
+}
