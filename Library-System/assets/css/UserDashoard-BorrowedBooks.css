@@ -1,0 +1,133 @@
+body {
+  background-color: #0f172a;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  padding: 30px;
+  margin: 0;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 25px 30px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+nav {
+  background: #ffffff;
+  border-radius: 50px;
+  padding: 12px 20px;
+  margin-bottom: 25px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+nav a {
+  color: #64748b;
+  text-decoration: none;
+  margin: 0 12px;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+nav a:hover {
+  color: #3b82f6;
+}
+
+button {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 30px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+button:hover {
+  background-color: #2563eb;
+  transform: scale(1.02);
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+}
+
+h1 {
+  color: #1e293b;
+  font-size: 28px;
+  margin: 0 0 10px 0;
+}
+
+h3 {
+  color: #334155;
+  font-size: 18px;
+  margin: 15px 0 5px 0;
+}
+
+h6 {
+  color: #64748b;
+  text-align: center;
+  margin: 30px 0 0 0;
+  font-weight: normal;
+  font-size: 13px;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  margin: 15px 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+th {
+  text-align: left;
+  padding: 12px 8px;
+  background: #f8fafc;
+  color: #1e293b;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #e2e8f0;
+  color: #475569;
+}
+
+.footer-message {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.btn-return {
+  background-color: #ef4444;
+  padding: 6px 16px;
+  font-size: 12px;
+}
+
+.btn-return:hover {
+  background-color: #dc2626;
+}
+
+.text-center {
+  text-align: center;
+}
