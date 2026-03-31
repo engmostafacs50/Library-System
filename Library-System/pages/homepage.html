@@ -1,27 +1,62 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Online Library | Home page</title>
-    </head>
-    <body>
-        <nav>
-            <a href="homepage.html" title="go to Home Page"> Home page  </a> | 
-            <a href="user-dashboard.html" title="go to user profile">User Profile</a> | 
-            <a href="search-books.html" title="go to search books">Search Books</a> | 
-            <a href="view-books.html" title="go to View all Books"> View Books</a> | 
-            <a href="borrowed-books.html" title="go to Borrowed Books"> Borrowed Books </a> | 
-            <a href="returned-books.html" title="go to Returned Books"> Returned Books</a> |
-            <a href="../index.html" title="logout of website"> Logout</a>
-        </nav>
-        <hr>
+<head>
+    <title>Online Library | Home page</title>
+    <link rel="stylesheet" href="../assets/css/homepage-bookdetails.css">
+</head>
+<body>
+<nav>
+    <a href="homepage.html"> Home page </a> |
+    <a href="user-dashboard.html">User Profile</a> |
+    <a href="search-books.html">Search Books</a> |
+    <a href="view-books.html"> View Books</a> |
+    <a href="../index.html"> Logout</a>
+</nav>
 
-        <h1>Welcome to Our Online Library </h1>
-        <p>
-            Discover thousands of books and borrow them easily online.
-        </p>
+<div class="hero">
+    <h1>Discover Your Next Favorite Book</h1>
+    <p>Search through thousands of titles and borrow them instantly.</p>
 
-        <a href="view-books.html">
-            <button>Browse Books</button>
-        </a>
-    </body>
+    <div class="search-box">
+        <div class="input-wrapper">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search by title, author, or ISBN...">
+        </div>
+        <button type="submit">Browse Books</button>
+    </div>
+</div>
+
+<div class="featured-book">
+    <h2>Featured Book</h2>
+    <div class="book-card">
+        <img src="../assets/images/clean-code.jpg" width="150" alt="Clean Code">
+        <h3>Clean Code</h3>
+        <p>Robert C. Martin</p>
+        <a href="book-details.html"><button class="btn-outline">View Details</button></a>
+    </div>
+</div>
+
+<div class="categories">
+    <h2>Explore Categories</h2>
+    <div class="cat-grid">
+        <div class="cat-card">
+            <img src="../assets/images/science.jpg" alt="Science">
+            <h3>Science</h3>
+            <button>Explore Science</button>
+        </div>
+        <div class="cat-card">
+            <img src="../assets/images/history.jpg" alt="History">
+            <h3>History</h3>
+            <button>Explore History</button>
+        </div>
+        <div class="cat-card">
+            <img src="../assets/images/entertainment.jpg" alt="Entertainment">
+            <h3>Entertainment</h3>
+            <button>Explore Fun</button>
+        </div>
+    </div>
+</div>
+
+<h6> 2026 Online Library System </h6>
+</body>
 </html>
