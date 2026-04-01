@@ -1,27 +1,59 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Online Library | Search Books</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    </head>
-    <body>
+<head>
+    <title>Online Library | Search Books</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <nav>
-            <a href="homepage.html" title="go to Home Page"> Home page  </a> | 
-            <a href="user-dashboard.html" title="go to user profile">User Profile</a> | 
-            <a href="search-books.html" title="go to search books">Search Books</a> | 
-            <a href="view-books.html" title="go to View all Books"> View Books</a> | 
-            <a href="borrowed-books.html" title="go to Borrowed Books"> Borrowed Books </a> | 
-            <a href="returned-books.html" title="go to Returned Books"> Returned Books</a> |
-            <a href="../index.html" title="logout of website"> Logout</a>
-        </nav>
-        <hr>
+    <!-- 🔥 Link CSS -->
+    <link rel="stylesheet" href="../CSS/search-books.css">
+</head>
 
-        <h2>Search for a Book</h2>
-        <form action="search-results.html">
-            <input type="text" placeholder="default-book">
-            <button type="submit">Search</button>
-        </form>
+<body>
 
-    </body>
+    <!-- Navbar -->
+<nav>
+    <div class="nav-links">
+        <a href="homepage.html">Home</a>
+        <a href="user-dashboard.html">Dashboard</a>
+        <a href="view-books.html">Books</a>
+        <a href="borrowed-books.html">Borrowed</a>
+        <a href="returned-books.html">Returned</a>
+    </div>
+
+    <div class="logout">
+        <a href="../index.html">Logout</a>
+    </div>
+</nav>
+
+    <!-- Search Section -->
+  <div class="main">
+        <div class="bg-orbs">
+            <div class="orb orb1"></div>
+            <div class="orb orb2"></div>
+        </div>
+
+        <div class="container">
+            <div class="label-chip">Online Library</div>
+            <h2>Search for a Book</h2>
+
+            <div class="search-wrap">
+                <form class="search-box" action="search-results.html" method="GET">
+                    <svg class="search-icon" width="18" height="18" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    <input
+                        type="text"
+                        name="query"
+                        placeholder="Enter book name, author, or genre..."
+                        required
+                    >
+                    <button type="submit" class="search-btn">Search</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+</body>
 </html>
