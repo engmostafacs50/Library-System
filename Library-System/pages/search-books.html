@@ -1,16 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Online Library | Search Books</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- 🔥 Link CSS -->
     <link rel="stylesheet" href="../CSS/search-books.css">
 </head>
-
 <body>
 
-    <!-- Navbar -->
+<!--Navbar -->
 <nav>
     <div class="nav-links">
         <a href="homepage.html">Home</a>
@@ -19,41 +16,162 @@
         <a href="borrowed-books.html">Borrowed</a>
         <a href="returned-books.html">Returned</a>
     </div>
-
     <div class="logout">
         <a href="../index.html">Logout</a>
     </div>
 </nav>
 
-    <!-- Search Section -->
-  <div class="main">
-        <div class="bg-orbs">
-            <div class="orb orb1"></div>
-            <div class="orb orb2"></div>
-        </div>
+<!-- Background orbs -->
+<div class="bg-orbs">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+</div>
 
-        <div class="container">
-            <div class="label-chip">Online Library</div>
-            <h2>Search for a Book</h2>
+<!--Search area-->
+<div class="hero">
+    <div class="label-chip">Online Library</div>
+    <h2>Search for a Book</h2>
 
-            <div class="search-wrap">
-                <form class="search-box" action="search-results.html" method="GET">
-                    <svg class="search-icon" width="18" height="18" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
-                        <circle cx="11" cy="11" r="8"/>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                    </svg>
-                    <input
-                        type="text"
-                        name="query"
-                        placeholder="Enter book name, author, or genre..."
-                        required
-                    >
-                    <button type="submit" class="search-btn">Search</button>
-                </form>
-            </div>
+    <div class="search-wrap">
+        <div class="search-box">
+            <svg class="search-icon" width="18" height="18" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="text" placeholder="Enter book name, author, or genre..." />
+            <button class="search-btn">Search</button>
         </div>
     </div>
+</div>
 
+<!-- ── Books ── -->
+<div class="books-section">
 
+    <p class="books-title">All Books</p>
+
+    <div class="books-grid">
+
+        <!-- has a real image -->
+        <a class="book-card" href="book-details.html">
+            <img src="../assets/images/clean-code.jpg" alt="Clean Code">
+            <div class="book-info">
+                <div class="book-title">Clean Code</div>
+                <div class="book-author">Robert C. Martin</div>
+                <div class="badges">
+                    <span class="badge badge-genre">Programming</span>
+                    <span class="badge badge-available">✓ Available</span>
+                </div>
+            </div>
+        </a>
+
+        <!-- placeholder -->
+        <a class="book-card" href="book-details.html">
+            <div class="cover-placeholder">
+                🔧
+                <small>Programming</small>
+            </div>
+            <div class="book-info">
+                <div class="book-title">The Pragmatic Programmer</div>
+                <div class="book-author">Andrew Hunt</div>
+                <div class="badges">
+                    <span class="badge badge-genre">Programming</span>
+                    <span class="badge badge-available">✓ Available</span>
+                </div>
+            </div>
+        </a>
+
+        <!-- Book 1 -->
+        <a class="book-card" href="book-details.html">
+            <div class="cover-placeholder">
+                🏗️
+                <small>Programming</small>
+            </div>
+            <div class="book-info">
+                <div class="book-title">Design Patterns</div>
+                <div class="book-author">Gang of Four</div>
+                <div class="badges">
+                    <span class="badge badge-genre">Programming</span>
+                    <span class="badge badge-borrowed">⏳ Borrowed</span>
+                </div>
+            </div>
+        </a>
+
+        <!-- Book 4 -->
+        <a class="book-card" href="book-details.html">
+            <div class="cover-placeholder">
+                📖
+                <small>Fiction</small>
+            </div>
+            <div class="book-info">
+                <div class="book-title">1984</div>
+                <div class="book-author">George Orwell</div>
+                <div class="badges">
+                    <span class="badge badge-genre">Fiction</span>
+                    <span class="badge badge-available">✓ Available</span>
+                </div>
+            </div>
+        </a>
+
+        <!-- Book 5 -->
+        <!-- <a class="book-card" href="book-details.html">
+            <div class="cover-placeholder">
+                🏜️
+                <small>Sci-Fi</small>
+            </div>
+            <div class="book-info">
+                <div class="book-title">Dune</div>
+                <div class="book-author">Frank Herbert</div>
+                <div class="badges">
+                    <span class="badge badge-genre">Sci-Fi</span>
+                    <span class="badge badge-available">✓ Available</span>
+                </div>
+            </div>
+        </a> -->
+
+        <!-- 📚 Book 6 -->
+        <!-- <a class="book-card" href="book-details.html">
+            <div class="cover-placeholder">
+                🧠
+                <small>Psychology</small>
+            </div>
+            <div class="book-info">
+                <div class="book-title">Thinking, Fast and Slow</div>
+                <div class="book-author">Daniel Kahneman</div>
+                <div class="badges">
+                    <span class="badge badge-genre">Psychology</span>
+                    <span class="badge badge-borrowed">⏳ Borrowed</span>
+                </div>
+            </div>
+        </a> -->
+
+        <!--
+        =====================================================
+        👇 TO ADD A NEW BOOK — copy and paste this block:
+        =====================================================
+
+        <a class="book-card" href="book-details.html">
+            <div class="cover-placeholder">
+                📗
+                <small>Your Genre</small>
+            </div>
+            <div class="book-info">
+                <div class="book-title">Book Title Here</div>
+                <div class="book-author">Author Name Here</div>
+                <div class="badges">
+                    <span class="badge badge-genre">Genre</span>
+                    <span class="badge badge-available">✓ Available</span>
+                </div>
+            </div>
+        </a>
+
+        ➡ If you have an image, replace the cover-placeholder div with:
+            <img src="../assets/images/your-image.jpg" alt="Book Title">
+
+        ➡ Change badge-available to badge-borrowed if the book is taken.
+        =====================================================
+        -->
+
+    <!-- </div> -->
+</div>
 </body>
 </html>
