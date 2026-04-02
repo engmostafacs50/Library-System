@@ -55,7 +55,7 @@ function AddUser() {
   Users.push(UserData);
   localStorage.setItem("Users", JSON.stringify(Users));
 
-  alert("Registered successfully ");
+  // alert("Registered successfully ");
 
   window.location.href = "./login.html";
 }

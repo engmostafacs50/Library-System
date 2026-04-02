@@ -14,7 +14,7 @@ function Login() {
       Users[i].userEmail === userEmail.value &&
       Users[i].Password === Password.value
     ) {
-      alert("Login successful ");
+      // alert("Login successful ");
 
       localStorage.setItem("currentUser", Users[i].userName);
 
