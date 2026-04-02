@@ -13,19 +13,18 @@ body {
     min-height: 100vh;
 }
 
-/* Navbar */
+/* ── Navbar ── */
 nav {
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: center; /* CENTER */
+    justify-content: center;
     padding: 15px 30px;
-    background: rgba(15, 23, 42, 0.8);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
-/* Center links */
 .nav-links {
     display: flex;
     gap: 25px;
@@ -35,88 +34,155 @@ nav a {
     color: #cbd5f5;
     text-decoration: none;
     font-size: 15px;
-    transition: 0.3s;
+    transition: color 0.3s;
 }
 
 nav a:hover {
-    color: #60a5fa;
+    color: #818cf8;
 }
 
-/* Logout right */
 .logout {
     position: absolute;
     right: 30px;
 }
 
-/* Container */
-.container {
+/* ── Orbs background ── */
+.bg-orbs {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.18;
+}
+
+.orb1 {
+    width: 520px;
+    height: 520px;
+    background: radial-gradient(circle, #6366f1, #4f46e5);
+    top: -120px;
+    left: -100px;
+}
+
+.orb2 {
+    width: 420px;
+    height: 420px;
+    background: radial-gradient(circle, #ec4899, #a855f7);
+    bottom: -80px;
+    right: -80px;
+}
+
+/* ── Hero / Search area ── */
+.hero {
+    position: relative;
+    z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 80vh;
+    padding: 60px 24px 40px;
+    text-align: center;
 }
 
-/* Title */
+.label-chip {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(99, 102, 241, 0.35);
+    background: rgba(99, 102, 241, 0.1);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #a5b4fc;
+    margin-bottom: 18px;
+
+    /* entrance animation */
+    animation: fadeDown 0.6s ease both;
+}
+
 h2 {
-    margin-bottom: 20px;
-    font-size: 28px;
+    font-size: 30px;
+    font-weight: 600;
+    margin-bottom: 28px;
+    color: #e2e8f0;
+
+    /* entrance animation — slightly delayed */
+    animation: fadeDown 0.6s 0.1s ease both;
 }
 
-/* Search Box */.search-wrap {
-    position: relative;
+/* ── Search wrap ── */
+.search-wrap {
     width: 100%;
-    max-width: 520px;
-    animation: fadeUp 0.7s 0.3s ease both;
+    max-width: 620px;
+
+    /* entrance: slides up and fades in */
+    animation: slideUp 0.7s 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-@keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-
+/* ── Search box ── */
 .search-box {
     display: flex;
     align-items: center;
-    background: rgba(22, 30, 46, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.09);
-    border-radius: 14px;
+    background: rgba(22, 30, 50, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
     padding: 8px 8px 8px 18px;
     gap: 10px;
-    transition: border-color 0.3s, box-shadow 0.3s;
+
+    /* smooth transition for the glow effect */
+    transition: border-color 0.3s ease,
+                box-shadow 0.4s ease,
+                background 0.3s ease;
+
+    /* shimmer sweep animation always running */
     position: relative;
     overflow: hidden;
 }
 
+/* shimmer sweep — subtle, always on */
 .search-box::before {
     content: '';
     position: absolute;
     top: 0;
     left: -100%;
-    width: 60%;
+    width: 55%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.05), transparent);
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(99, 102, 241, 0.06),
+        transparent
+    );
     animation: shimmer 3.5s ease-in-out infinite;
+    pointer-events: none;
 }
 
-@keyframes shimmer {
-    0%   { left: -100%; }
-    100% { left: 200%; }
-}
-
+/* ✨ GLOW — when user clicks inside the search bar */
 .search-box:focus-within {
-    border-color: rgba(99, 102, 241, 0.5);
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.08), 0 8px 32px rgba(0, 0, 0, 0.3);
+    border-color: rgba(99, 102, 241, 0.7);
+    background: rgba(22, 30, 60, 0.97);
+
+    /* layered glow: tight inner ring + wide soft bloom */
+    box-shadow:
+        0 0 0 3px rgba(99, 102, 241, 0.15),
+        0 0 20px rgba(99, 102, 241, 0.25),
+        0 0 60px rgba(99, 102, 241, 0.12),
+        0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
+/* icon dims/brightens with focus */
 .search-icon {
     flex-shrink: 0;
     opacity: 0.35;
-    transition: opacity 0.3s;
+    transition: opacity 0.3s ease;
 }
 
 .search-box:focus-within .search-icon {
-    opacity: 0.75;
+    opacity: 0.9;
 }
 
 .search-box input {
@@ -126,32 +192,188 @@ h2 {
     background: transparent;
     color: white;
     font-size: 15px;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Segoe UI', sans-serif;
 }
 
 .search-box input::placeholder {
-    color: rgba(148, 163, 184, 0.45);
+    color: rgba(148, 163, 184, 0.4);
+    transition: color 0.3s ease;
+}
+
+.search-box:focus-within input::placeholder {
+    color: rgba(148, 163, 184, 0.25);
 }
 
 .search-btn {
     flex-shrink: 0;
-    padding: 10px 22px;
+    padding: 10px 24px;
     border: none;
-    border-radius: 9px;
+    border-radius: 10px;
     background: linear-gradient(135deg, #4f46e5, #6366f1);
     color: white;
     font-size: 14px;
     font-weight: 500;
-    font-family: 'DM Sans', sans-serif;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .search-btn:hover {
     transform: scale(1.04);
-    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.45);
+    box-shadow: 0 4px 18px rgba(99, 102, 241, 0.5);
 }
 
 .search-btn:active {
     transform: scale(0.97);
+}
+
+/* ── Books section ── */
+.books-section {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 10px 24px 60px;
+}
+
+.books-title {
+    font-size: 14px;
+    color: rgba(148, 163, 184, 0.6);
+    margin-bottom: 20px;
+}
+
+/* ── Books grid ── */
+.books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 20px;
+}
+
+/* ── Book card ── */
+.book-card {
+    background: rgba(22, 30, 50, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.book-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+/* Book cover image */
+.book-card img {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    display: block;
+}
+
+/* Cover placeholder (when no image) */
+.cover-placeholder {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    font-size: 40px;
+}
+
+.cover-placeholder small {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(148, 163, 184, 0.5);
+}
+
+/* Book info below cover */
+.book-info {
+    padding: 12px 14px 14px;
+}
+
+.book-title {
+    font-size: 13.5px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    line-height: 1.35;
+}
+
+.book-author {
+    font-size: 12px;
+    color: rgba(148, 163, 184, 0.6);
+    margin-bottom: 8px;
+}
+
+/* Badges */
+.badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.badge {
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 10.5px;
+    font-weight: 500;
+}
+
+.badge-genre {
+    background: rgba(99, 102, 241, 0.15);
+    color: #a5b4fc;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.badge-available {
+    background: rgba(34, 197, 94, 0.12);
+    color: #86efac;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.badge-borrowed {
+    background: rgba(234, 179, 8, 0.12);
+    color: #fde047;
+    border: 1px solid rgba(234, 179, 8, 0.2);
+}
+
+/* ══════════════════════════════
+   ANIMATIONS
+══════════════════════════════ */
+
+/* label-chip and h2 fall gently from above */
+@keyframes fadeDown {
+    from {
+        opacity: 0;
+        transform: translateY(-14px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* search bar rises from below */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(28px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* shimmer sweep across the box */
+@keyframes shimmer {
+    0%   { left: -100%; }
+    100% { left: 200%; }
 }
