@@ -1,0 +1,55 @@
+/* ══════════════════════════════
+   background.css
+   Link this in every page:
+   <link rel="stylesheet" href="../CSS/background.css">
+══════════════════════════════ */
+
+/* Body background */
+body {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: white;
+    min-height: 100vh;
+}
+
+/* ── Orbs wrapper ── */
+.bg-orbs {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.18;
+}
+
+/* Left top purple orb */
+.orb1 {
+    width: 520px;
+    height: 520px;
+    background: radial-gradient(circle, #6366f1, #4f46e5);
+    top: -120px;
+    left: -100px;
+    animation: drift1 12s ease-in-out infinite alternate;
+}
+
+/* Right bottom pink orb */
+.orb2 {
+    width: 420px;
+    height: 420px;
+    background: radial-gradient(circle, #ec4899, #a855f7);
+    bottom: -80px;
+    right: -80px;
+    animation: drift2 14s ease-in-out infinite alternate;
+}
+
+@keyframes drift1 {
+    to { transform: translate(60px, 40px); }
+}
+
+@keyframes drift2 {
+    to { transform: translate(-50px, -30px); }
+}
