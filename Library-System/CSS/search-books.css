@@ -348,7 +348,7 @@ h2 {
    ANIMATIONS
 ══════════════════════════════ */
 
-/* label-chip and h2 fall gently from above */
+/* label-chip and h2 fall gently from above */ 
 @keyframes fadeDown {
     from {
         opacity: 0;
