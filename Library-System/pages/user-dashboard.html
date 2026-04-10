@@ -3,69 +3,58 @@
   <head>
     <meta charset="UTF-8" />
     <title>Online Library | User Dashboard</title>
-    <link rel="stylesheet" href="../CSS/background.css">
-    <link rel="stylesheet" href="../CSS/navbar.css">
-    <link
-      rel="stylesheet"
-      href="../CSS/UserDashoard-BorrowedBooks.css"
-    />
+    <link rel="stylesheet" href="../CSS/UserDashoard-BorrowedBooks.css" />
   </head>
-
   <body>
+    <nav>
+      <a href="homepage.html">Home</a>
+      <a href="user-dashboard.html">Profile</a>
+      <a href="search-books.html">Search</a>
+      <a href="view-books.html">Books</a>
+      <a href="borrowed-books.html">Borrowed</a>
+      <a href="../index.html">Logout</a>
+    </nav>
+
     <div class="container">
-      <nav>
-        <a href="homepage.html" title="go to Home Page">🏠Home</a>
-        <a href="user-dashboard.html" title="go to user page"> 👤Profile</a>
-        <a href="search-books.html" title="go to search books"> 🔍Search</a>
-        <a href="view-books.html" title="go to View all Books"> 📚View Books</a>
-        <a href="borrowed-books.html" title="go to Borrowed Books">
-          📖Borrowed</a
-        >
-        <a href="returned-books.html" title="go to Returned Books">
-          ✅Returned</a
-        >
-        <a href="../index.html" title="logout of website"> 🚪Logout</a>
-      </nav>
-
-      <div class="card">
-        <h1>Welcome, book lover! 💕</h1>
-        <br />
-        <h3>👤 Name : user</h3>
-        <h3>📧 Email : user123@gmail.com</h3>
-        <p>A world of pages is waiting for you ^.^ 💖</p>
-      </div>
-
-      <div class="card">
-        <h3>🔍 Search For Books</h3>
-        <p>
-          Discover New books by title, your Fav author or category
-          <a href="search-books.html"><button>GO →</button></a>
-        </p>
-
-        <h3>📚 View Books</h3>
-        <p>
-          Explore everything our library has to offer, Live New journey
-          <a href="view-books.html"><button>GO →</button></a>
-        </p>
-
-        <h3>📖 My Borrowed Books</h3>
-        <p>
-          Keep track of your Fav books you've borrowed
-          <a href="borrowed-books.html"><button>GO →</button></a>
-        </p>
-
-        <h3>✅ Returned Books</h3>
-        <p>
-          Keep track of your Fav books you've returned
-          <a href="returned-books.html"><button>GO →</button></a>
+      <div class="user-header">
+        <img src="" class="profile-img" id="user-avatar" />
+        <h1 id="user-welcome">Welcome!</h1>
+        <p class="subtitle">
+          "A reader lives a thousand lives before he dies."
         </p>
       </div>
 
-      <div class="footer-message">
-        🌟"A reader lives a thousand lives before he dies"🌟
+      <div class="card">
+        <h2>Reading Statistics</h2>
+        <div class="stats-container">
+          <div class="stat-item">
+            <div class="stat-number" id="stat-active">0</div>
+            <div class="stat-label">Active Loans</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="stat-returned">0</div>
+            <div class="stat-label">Total Returned</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="stat-total">0</div>
+            <div class="stat-label">Total Borrowed</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Suggested for You</h2>
+        <div id="suggested-container">
+          <a href="book-details.html" class="suggested-book-link">
+            <div style="font-size: 50px; margin-bottom: 10px">📘</div>
+            <p style="font-weight: bold">Clean Code</p>
+            <small style="color: #818cf8">Robert C. Martin</small>
+          </a>
+        </div>
+        <a href="view-books.html" class="btn-explore">Explore All Books</a>
       </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="../JS/UserDashoard-BorrowedBooks.js"></script>
   </body>
 </html>
