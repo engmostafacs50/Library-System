@@ -50,24 +50,9 @@ const BOOKS = [
     emoji:  "🧠",
     link:   "book-details.html"
   },
-
-  /* ── TO ADD A NEW BOOK, copy and paste this block: ──
-  {
-    title:  "Your Book Title",
-    author: "Author Name",
-    genre:  "Genre",
-    status: "available",   // or "borrowed"
-    image:  null,          // or "../assets/images/your-image.jpg"
-    emoji:  "📗",
-    link:   "book-details.html"
-  },
-  */
 ];
 
 
-/* ============================================================
-   ⚙️  ENGINE — no need to edit anything below this line
-   ============================================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -76,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const grid      = document.querySelector(".books-grid");
   const STORAGE_KEY = "library_last_search";
 
-  /* ── Render all books into the grid ── */
+  /* Render all books into the grid*/
   function renderBooks() {
     grid.innerHTML = "";
     BOOKS.forEach(book => {
@@ -111,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  /* ── Empty state ── */
+  /* Empty state*/
   const emptyState = document.createElement("div");
   emptyState.className = "empty-state";
   emptyState.innerHTML = `
@@ -121,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   grid.after(emptyState);
 
-  /* ── No results ── */
+  /*No results*/
   const noResults = document.createElement("div");
   noResults.className = "empty-state hidden";
   noResults.innerHTML = `
@@ -131,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   emptyState.after(noResults);
 
-  /* ── Search logic ── */
+  /*Search logic */
   function runSearch() {
     const query = input.value.trim().toLowerCase();
     localStorage.setItem(STORAGE_KEY, input.value.trim());
@@ -168,7 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
     noResults.classList.toggle("hidden", visible > 0);
   }
 
-  /* ── Event listeners ── */
+  /*Event listeners*/
   searchBtn.addEventListener("click", runSearch);
   input.addEventListener("keydown", e => { if (e.key === "Enter") runSearch(); });
   input.addEventListener("input", () => {
@@ -176,7 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
     runSearch();
   });
 
-  /* ── Init ── */
+  /* Init */
   renderBooks();
 
   const saved = localStorage.getItem(STORAGE_KEY);
@@ -185,7 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
     runSearch();
   }
 
-  /* ── Companion CSS ── */
+  /* Companion CSS */
   const style = document.createElement("style");
   style.textContent = `
     .hidden { display: none !important; }
