@@ -3,57 +3,37 @@
   <head>
     <meta charset="UTF-8" />
     <title>Online Library | Borrowed Books</title>
-    <link rel="stylesheet" href="../CSS/background.css">
-    <link rel="stylesheet" href="../CSS/navbar.css">
-    <link
-      rel="stylesheet"
-      href = "../CSS/UserDashoard-BorrowedBooks.css"    />
+    <link rel="stylesheet" href="../CSS/UserDashoard-BorrowedBooks.css" />
   </head>
-
   <body>
+    <nav>
+      <a href="homepage.html">Home</a>
+      <a href="user-dashboard.html">Profile</a>
+      <a href="search-books.html">Search</a>
+      <a href="view-books.html">Books</a>
+      <a href="borrowed-books.html">Borrowed</a>
+      <a href="../index.html">Logout</a>
+    </nav>
+
     <div class="container">
-      <nav>
-        <a href="homepage.html" title="go to Home Page">🏠Home</a>
-        <a href="user-dashboard.html" title="go to user page"> 👤Profile</a>
-        <a href="search-books.html" title="go to search books"> 🔍Search</a>
-        <a href="view-books.html" title="go to View all Books"> 📚View Books</a>
-        <a href="borrowed-books.html" title="go to Borrowed Books">
-          📖Borrowed</a
-        >
-        <a href="returned-books.html" title="go to Returned Books">
-          ✅Returned</a
-        >
-        <a href="../index.html" title="logout of website"> 🚪Logout</a>
-      </nav>
+      <h1>My Borrowed Books</h1>
+      <p class="subtitle">Manage your current loans</p>
 
       <div class="card">
-        <h1>My Borrowed Books 📖</h1>
-        <p>📌 You currently borrowed <strong>0</strong> books :</p>
-
         <table>
           <thead>
             <tr>
-              <th>📘 Book Name</th>
-              <th>✍️ Author</th>
-              <th>📂 Category</th>
-              <th>📅 Borrow Date</th>
-              <th>⏰ Return Date</th>
-              <th>⚡ Status</th>
+              <th>Book Title</th>
+              <th>Borrow Date</th>
+              <th>Due Date</th>
+              <th>Action</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td colspan="6" class="text-center">
-                📭 No books borrowed yet. Start exploring! 📭
-              </td>
-            </tr>
-          </tbody>
+          <tbody id="borrowed-table-body"></tbody>
         </table>
       </div>
-
-      <div class="footer-message">📖 Please return books on time!📖</div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="../JS/UserDashoard-BorrowedBooks.js"></script>
   </body>
 </html>

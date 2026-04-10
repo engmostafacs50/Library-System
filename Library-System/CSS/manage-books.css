@@ -1,0 +1,295 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/*BODY*/
+body {
+    font-family: "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: white;
+    min-height: 100vh;
+}
+
+/*
+   ORB BACKGROUND (decorative blobs)
+   Add this to your HTML:
+   <div class="bg-orbs">
+     <div class="orb orb1"></div>
+     <div class="orb orb2"></div>
+    </div>*/
+.bg-orbs {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.18;
+}
+
+.orb1 {
+    width: 520px;
+    height: 520px;
+    background: radial-gradient(circle, #6366f1, #4f46e5);
+    top: -120px;
+    left: -100px;
+}
+
+.orb2 {
+    width: 420px;
+    height: 420px;
+    background: radial-gradient(circle, #ec4899, #a855f7);
+    bottom: -80px;
+    right: -80px;
+}
+
+/* ══════════════════════════════
+   NAVBAR
+══════════════════════════════ */
+nav {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 15px 30px;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    z-index: 10;
+}
+
+nav b {
+    color: #a5b4fc;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+nav a {
+    color: #cbd5f5;
+    text-decoration: none;
+    font-size: 15px;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: #818cf8;
+}
+
+/* ══════════════════════════════
+   PAGE WRAPPER
+══════════════════════════════ */
+.page-wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 50px 24px 80px;
+}
+
+/*PAGE HEADING  (h1) */
+h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin-bottom: 32px;
+    animation: fadeDown 0.6s ease both;
+}
+
+/*TABLE WRAPPER  (glass card) */
+.table-wrapper {
+    background: rgba(22, 30, 50, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+    animation: slideUp 0.7s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/*TABLE*/
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+/* Caption used as section title */
+caption {
+    padding: 22px 28px 0;
+    text-align: left;
+    caption-side: top;
+}
+
+caption h2 {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(148, 163, 184, 0.7);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    /* override the global h2 animation delay */
+    animation: none;
+}
+
+/* ── Header row ── */
+thead tr {
+    background: rgba(99, 102, 241, 0.1);
+    border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+th {
+    padding: 14px 20px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #a5b4fc;
+}
+
+/* ── Body rows ── */
+tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background 0.2s ease;
+}
+
+tbody tr:last-child {
+    border-bottom: none;
+}
+
+tbody tr:hover {
+    background: rgba(99, 102, 241, 0.07);
+}
+
+td {
+    padding: 14px 20px;
+    vertical-align: middle;
+    color: #cbd5e1;
+}
+
+/* ID column — subtle monospace */
+td:first-child {
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    color: rgba(148, 163, 184, 0.5);
+    width: 50px;
+}
+
+/* ── Book thumbnail ── */
+td img {
+    width: 60px;
+    border-radius: 8px;
+    display: block;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+td img:hover {
+    transform: scale(1.06) translateY(-2px);
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+}
+
+/* ── Links inside cells ── */
+td a {
+    color: #c7d2fe;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.25s ease;
+}
+
+td a:hover {
+    color: #818cf8;
+}
+
+/* ── Category badge ── */
+td .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    background: rgba(99, 102, 241, 0.15);
+    color: #a5b4fc;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+/* ── Action buttons ── */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    margin-right: 6px;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+.btn:active {
+    transform: scale(0.96);
+}
+
+/* Edit — indigo */
+.btn-edit {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: #fff;
+}
+
+.btn-edit:hover {
+    box-shadow: 0 4px 18px rgba(99, 102, 241, 0.5);
+}
+
+/* Delete — rose */
+.btn-delete {
+    background: rgba(244, 63, 94, 0.15);
+    color: #fda4af;
+    border: 1px solid rgba(244, 63, 94, 0.25);
+}
+
+.btn-delete:hover {
+    background: rgba(244, 63, 94, 0.25);
+    box-shadow: 0 4px 18px rgba(244, 63, 94, 0.3);
+}
+
+/*
+   DIVIDER  (the <hr> after nav)*/
+hr {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/*ANIMATIONS */
+@keyframes fadeDown {
+    from {
+        opacity: 0;
+        transform: translateY(-14px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(28px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}

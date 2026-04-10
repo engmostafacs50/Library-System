@@ -1,57 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Online Library | Manage Books</title>
-        <link rel="stylesheet" href="../CSS/background.css">
-        <link rel="stylesheet" href="../CSS/navbar.css">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <title>Online Library | Manage Books</title>
+    <link rel="stylesheet" href="../CSS/manage-books.css">
+</head>
+<body>
 
-    <body>
+    <!-- Decorative background orbs (matches dashboard style) -->
+    <div class="bg-orbs">
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+    </div>
 
-        <nav>
-            <b>Library System</b> |
-            <a href="dashboard.html" title="go to admin page">Admin profile</a> | 
-            <a href="add_book.html" title="go to add book">Add Book</a> | 
-            <a href="manage-books.html" title="go to manage book">Manage Books</a> | 
-            <a href="../index.html" title="logout of website"> Logout</a>
-        </nav>
-        <hr>
+    <nav>
+        <b>Library System</b> |
+        <a href="dashboard.html" title="go to admin page">Admin Profile</a> |
+        <a href="add-book.html"  title="go to add book">Add Book</a> |
+        <a href="manage-books.html" title="go to manage books">Manage Books</a> |
+        <a href="../index.html"  title="logout of website">Logout</a>
+    </nav>
+    <hr>
 
+    <div class="page-wrapper">
         <h1>Manage Books</h1>
-        <!-- <h2>Books List</h2> -->
 
-        <table border="1" width="100%">
-            <caption>
-                <h2>Books List</h2>
-            </caption>
-            <tr>
-                <th>ID</th>
-                <th>Image</th>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Category</th>
-                <th>Actions</th>
-            </tr>
+        <div class="table-wrapper">
+            <table>
+                <caption><h2>Books List</h2></caption>
 
-            <tr>
-                <td>1</td>
-                <td>
-                    <a href="book-details.html" title="go to book details">
-                        <img src="../assets/images/clean-code.jpg" width="80">
-                    </a>
-                </td>
-                <td>
-                    <a href="book-details.html" title="go to book details">Clean Code</a>
-                </td>
-                <td>Robert C. Martin</td>
-                <td>Programming</td>
-                <td>
-                    <button>Edit</button>
-                    <button>Delete</button>
-                </td>
-            </tr>
-        </table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Image</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Category</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
 
-    </body>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>
+                            <a href="book-details.html" title="go to book details">
+                                <img src="../assets/images/clean-code.jpg" alt="Clean Code cover">
+                            </a>
+                        </td>
+                        <td>
+                            <a href="book-details.html" title="go to book details">Clean Code</a>
+                        </td>
+                        <td>Robert C. Martin</td>
+                        <td><span class="badge">Programming</span></td>
+                        <td>
+                            <button class="btn btn-edit">Edit</button>
+                            <button class="btn btn-delete">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="../JS/manage-books.js"></script>
+</body>
 </html>
