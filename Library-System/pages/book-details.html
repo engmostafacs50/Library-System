@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../CSS/homepage-bookdetails.css">
 </head>
 <body>
+
 <nav>
     <a href="homepage.html"> Home page </a> |
     <a href="user-dashboard.html">User Profile</a> |
@@ -16,22 +17,33 @@
     <a href="returned-books.html"> Returned Books</a> |
     <a href="../index.html"> Logout</a>
 </nav>
+
 <hr>
 
 <h2>Book Details</h2>
 
 <div class="book-card">
-    <img src="../assets/images/clean-code.jpg" width="150">
-    <h3>Book Title : Clean Code</h3>
-    <p><strong>Author:</strong> Robert C. Martin</p>
+
+    <img id="bookImage" width="150">
+
+    <h3 id="title"></h3>
+
+    <p><strong>Author:</strong> <span id="author"></span></p>
     <hr>
-    <p><strong>Category:</strong> Programming</p>
+
+    <p><strong>Category:</strong> <span id="category"></span></p>
     <hr>
-    <p><strong>Description:</strong> A book about writing clean and maintainable code.</p>
+
+    <p><strong>Description:</strong> <span id="description"></span></p>
     <hr>
-    <p><strong>Status:</strong> Available</p>
+
+    <p><strong>Status:</strong> <span id="status"></span></p>
+
     <button class="btn-outline">Borrow Book</button>
+
 </div>
+
+<script src="../JS/book-details.js"></script>
 
 </body>
 </html>
