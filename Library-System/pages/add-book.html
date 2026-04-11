@@ -1,49 +1,57 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Online Library | Add New Book</title>
-        <link rel="stylesheet" href="../CSS/background.css">
-        <link rel="stylesheet" href="../CSS/navbar.css">
-    </head>
-    <body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Online Library | Add New Book</title>
+    <link rel="stylesheet" href="../CSS/background.css">
+    <link rel="stylesheet" href="../CSS/register.css"> <link rel="stylesheet" href="../CSS/search-books.css"> </head>
+<body>
+    <div class="bg-orbs">
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+    </div>
 
-        <nav>
-            <b>Library System</b> |
-            <a href="dashboard.html" title="go to admin page">Admin profile</a> | 
-            <a href="add_book.html" title="go to add book">Add Book</a> | 
-            <a href="manage-books.html" title="go to manage book">Manage Books</a> | 
-            <a href="../index.html" title="logout of website"> Logout</a>
-        </nav>
-        <hr>
+    <nav>
+        <div class="nav-links">
+            <a href="dashboard.html">Admin Profile</a>
+            <a href="add-book.html" style="color: #818cf8;">Add Book</a>
+            <a href="manage-books.html">Manage Books</a>
+            <a href="../index.html" class="logout">Logout</a>
+        </div>
+    </nav>
 
-        <h2>Add a New Book to the System</h2>
-        <form action="success.html">
-            <label>Book ID:</label><br>
-            <input type="number" name="book_id" required><br><br>
+    <div class="container">
+        <div class="register-box" style="margin-top: 50px; width: 450px;">
+            <h1 style="background: linear-gradient(to right, #6366f1, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Add New Book</h1>
+            
+            <form id="addBookForm" class="Parent">
+                <label>Book ID</label>
+                <input type="number" id="bookId" placeholder="e.g. 101">
 
-            <label>Book Name:</label><br>
-            <input type="text" name="book_name" required><br><br>
+                <label>Book Title</label>
+                <input type="text" id="bookName" placeholder="Enter title">
 
-            <label>Author Name:</label><br>
-            <input type="text" name="author" required><br><br>
+                <label>Author Name</label>
+                <input type="text" id="author" placeholder="Enter author">
 
-            <label>Category:</label><br>
-            <select name="category">
-                <option value="fiction">Fiction</option>
-                <option value="science">Science</option>
-                <option value="history">History</option>
-                <option value="other">Other</option>
-            </select><br><br>
+                <label>Category</label>
+                <select id="category" style="padding: 12px; border-radius: 8px; background: #1e293b; color: white; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px; outline: none;">
+                    <option value="">-- Choose --</option>
+                    <option value="Programming">Programming</option>
+                    <option value="Fiction">Fiction</option>
+                    <option value="Science">Science</option>
+                </select>
 
-            <label>Description:</label><br>
-            <textarea name="description" rows="4" cols="30"></textarea><br><br>
+                <label>Description</label>
+                <textarea id="description" rows="3" style="padding: 12px; border-radius: 8px; background: #1e293b; color: white; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; outline: none;"></textarea>
 
-            <input type="submit" value="Save Book Information">
-            <input type="reset" value="Clear Form">
-        </form>
+                <button type="submit" class="btn-explore" style="width: 100%; border: none; padding: 15px; border-radius: 10px; cursor: pointer; color: white; font-weight: bold; background: linear-gradient(135deg, #4f46e5, #9333ea);">
+                    Save Book Information
+                </button>
+            </form>
+        </div>
+    </div>
 
-        <hr>
-        <a href="dashboard.html">Back to Dashboard</a>
-
-    </body>
+    <script src="../JS/add-book.js"></script>
+</body>
 </html>

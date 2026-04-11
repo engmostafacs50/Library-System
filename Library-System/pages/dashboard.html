@@ -1,30 +1,38 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Online Library | Admin Dashboard</title>
-        <link rel="stylesheet" href="../CSS/background.css">
-        <link rel="stylesheet" href="../CSS/navbar.css">
-    </head>
-    <body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Online Library | Admin Dashboard</title>
+    <link rel="stylesheet" href="../CSS/background.css">
+    <link rel="stylesheet" href="../CSS/manage-books.css">
+    <link rel="stylesheet" href="../CSS/search-books.css"> </head>
+<body>
+    <div class="bg-orbs">
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+    </div>
 
-        <nav>
-            <b>Library System</b> |
-            <a href="dashboard.html" title="go to admin page">Admin profile</a> | 
-            <a href="add_book.html" title="go to add book">Add Book</a> | 
-            <a href="manage-books.html" title="go to manage book">Manage Books</a> | 
-            <a href="../index.html" title="logout of website"> Logout</a>
-        </nav>
-        <hr>
+    <nav>
+        <div class="nav-links">
+            <a href="dashboard.html" style="color: #818cf8;">Admin Profile</a>
+            <a href="add-book.html">Add Book</a>
+            <a href="manage-books.html">Manage Books</a>
+            <a href="../index.html" class="logout">Logout</a>
+        </div>
+    </nav>
 
-        <h1>Welcome, Admin!</h1>
-        <p>From this dashboard, you can manage the library system.</p>
+    <div class="container" style="position: relative; z-index: 1; text-align: center; margin-top: 100px;">
+        <h1 id="adminGreeting" style="font-size: 3.5rem; margin-bottom: 20px; background: linear-gradient(to right, #6366f1, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            Welcome, Admin!
+        </h1>
+        <p style="color: #94a3b8; font-size: 1.2rem; margin-bottom: 40px;">Control center for managing your digital library system.</p>
 
-        <h3>Quick Actions:</h3>
-        <ul>
-            <li><a href="add_book.html">Click here to add a new book to the library</a></li>
-            <li><a href="manage-books.html">Click here to see all available books and edit/delete them</a></li>
-        </ul>
-        <hr>
-    
-    </body>
+        <div style="display: flex; justify-content: center; gap: 20px;">
+            <a href="add-book.html" class="btn btn-edit" style="padding: 15px 30px; text-decoration: none;">+ Add New Book</a>
+            <a href="manage-books.html" class="btn btn-delete" style="padding: 15px 30px; text-decoration: none; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">View Inventory</a>
+        </div>
+    </div>
+
+    <script src="../JS/dashboard.js"></script>
+</body>
 </html>
