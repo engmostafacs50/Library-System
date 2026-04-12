@@ -4,7 +4,7 @@ const DEFAULT_USER = {
   id: 1, // must match the user's id in users-data.js
   username: "User Pro",
   borrowedList: [
-    { id: 1, title: "Clean Code", date: "2024-03-15", due: "2024-04-15" },
+    { id: 1, title: "Clean Code", date: "2026-04-9", due: "20260-04-15" },
   ],
   returnedList: [],
   returnedCount: 1,

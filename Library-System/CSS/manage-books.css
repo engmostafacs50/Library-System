@@ -293,3 +293,28 @@ hr {
         transform: translateY(0) scale(1);
     }
 }
+.search-bar {
+    margin-bottom: 16px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 11px 18px;
+    background: rgba(22, 30, 50, 0.75);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    border-radius: 12px;
+    color: #e2e8f0;
+    font-size: 14px;
+    font-family: "Segoe UI", sans-serif;
+    outline: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.search-bar input::placeholder {
+    color: rgba(148, 163, 184, 0.45);
+}
+
+.search-bar input:focus {
+    border-color: rgba(99, 102, 241, 0.6);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
