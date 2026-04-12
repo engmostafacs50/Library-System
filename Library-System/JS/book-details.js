@@ -1,5 +1,3 @@
-// ✅ Depends on books-data.js being loaded first (via <script> in HTML)
-
 const params = new URLSearchParams(window.location.search);
 const id = Number(params.get("id"));
 

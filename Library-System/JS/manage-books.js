@@ -84,9 +84,7 @@ function initDeleteButtons() {
     });
 }
 
-/* ══════════════════════════════
-   3. EDIT — inline row editing
-══════════════════════════════ */
+/* 3. EDIT — inline row editing */
 function initEditButtons() {
     document.querySelectorAll(".btn-edit").forEach(btn => {
         btn.addEventListener("click", () => {
@@ -195,9 +193,7 @@ function initEditButtons() {
     });
 }
 
-/* ══════════════════════════════
-   4. SEARCH
-══════════════════════════════ */
+/*4. SEARCH*/
 function initSearch() {
     const input = document.getElementById("searchInput");
     if (!input) return;
@@ -218,9 +214,7 @@ function initSearch() {
     });
 }
 
-/* ══════════════════════════════
-   5. SORTABLE HEADERS
-══════════════════════════════ */
+/*5. SORTABLE HEADERS */
 function initSortableHeaders() {
     const headers = document.querySelectorAll("thead th");
     let lastSorted = { index: -1, asc: true };
@@ -274,9 +268,6 @@ function sortTable(colIndex, asc) {
     });
 }
 
-/* ══════════════════════════════
-   6. EMPTY STATE
-══════════════════════════════ */
 function updateEmptyState(isEmpty) {
     const tbody    = document.querySelector("tbody");
     const existing = document.getElementById("emptyStateRow");
@@ -334,9 +325,6 @@ function showNotification(message, type = "info") {
     }, 3000);
 }
 
-/* ══════════════════════════════
-   8. CONFIRM TOAST
-══════════════════════════════ */
 function showConfirmToast(message, onConfirm) {
     const existing = document.getElementById("libConfirmToast");
     if (existing) existing.remove();

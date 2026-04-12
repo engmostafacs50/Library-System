@@ -1,0 +1,235 @@
+/* ── Reset ── */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: white;
+  min-height: 100vh;
+}
+
+/* ── Orbs ── */
+.bg-orbs { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.18; }
+.orb1 { width: 520px; height: 520px; background: radial-gradient(circle, #6366f1, #4f46e5); top: -120px; left: -100px; }
+.orb2 { width: 420px; height: 420px; background: radial-gradient(circle, #ec4899, #a855f7); bottom: -80px; right: -80px; }
+
+/* ── Page Wrapper ── */
+.page-wrapper {
+  position: relative; z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 50px 28px 80px;
+  display: flex; flex-direction: column; gap: 40px;
+}
+
+/* ── Header ── */
+.page-header {
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  padding-bottom: 28px;
+  animation: fadeDown 0.6s ease both;
+}
+.page-subtitle {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(99,102,241,0.35);
+  background: rgba(99,102,241,0.1);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #a5b4fc;
+  margin-bottom: 10px;
+}
+.page-header h1 { font-size: 1.9rem; font-weight: 600; color: #e2e8f0; }
+
+/* ── Buttons ── */
+.btn {
+  display: inline-block;
+  padding: 10px 24px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn:hover { transform: scale(1.04); }
+.btn:active { transform: scale(0.97); }
+.btn-primary {
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: white;
+  box-shadow: 0 4px 18px rgba(99,102,241,0.35);
+}
+.btn-primary:hover { box-shadow: 0 4px 28px rgba(99,102,241,0.55); }
+.btn-ghost {
+  background: rgba(255,255,255,0.05);
+  color: #94a3b8;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.09); color: #e2e8f0; }
+
+/* ── Icon Delete Button (reusable) ── */
+.icon-btn-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 8px;
+  border: 1px solid rgba(236, 72, 153, 0.3);
+  background: rgba(236, 72, 153, 0.1);
+  color: #f472b6;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+.icon-btn-delete:hover {
+  background: rgba(236, 72, 153, 0.22);
+  border-color: rgba(236, 72, 153, 0.6);
+  transform: scale(1.08);
+}
+.icon-btn-delete:active { transform: scale(0.94); }
+.icon-btn-delete svg { pointer-events: none; flex-shrink: 0; }
+
+/* ── Remove image button (positioned inside drop zone) ── */
+.remove-img {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  backdrop-filter: blur(6px);
+  background: rgba(15, 23, 42, 0.55);
+}
+
+/* ── Form Layout ── */
+.form-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 28px;
+  animation: slideUp 0.7s 0.1s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+/* ── Image Panel ── */
+.image-panel { display: flex; flex-direction: column; gap: 20px; }
+
+.drop-zone {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2/3;
+  border-radius: 14px;
+  border: 2px dashed rgba(99,102,241,0.35);
+  background: rgba(22,30,50,0.7);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+}
+.drop-zone:hover, .drop-zone.drag-over {
+  border-color: rgba(99,102,241,0.75);
+  background: rgba(99,102,241,0.07);
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.12), 0 0 30px rgba(99,102,241,0.15);
+}
+.drop-inner {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 10px; padding: 24px; text-align: center;
+}
+.drop-icon { color: rgba(99,102,241,0.5); margin-bottom: 4px; }
+.drop-title { font-size: 14px; font-weight: 600; color: #e2e8f0; }
+.drop-sub { font-size: 13px; color: #94a3b8; }
+.file-link { color: #818cf8; cursor: pointer; text-decoration: underline; }
+.drop-hint { font-size: 11px; color: rgba(148,163,184,0.45); }
+
+.preview-img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* ── Form Panel ── */
+.form-panel {
+  background: rgba(22,30,50,0.7);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  padding: 32px;
+  display: flex; flex-direction: column; gap: 22px;
+}
+
+.form-group { display: flex; flex-direction: column; gap: 8px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+label {
+  font-size: 13px;
+  color: rgba(148,163,184,0.75);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+}
+.req { color: #f472b6; }
+
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  background: rgba(15,23,42,0.6);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 11px 16px;
+  color: #e2e8f0;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.4s ease, background 0.3s ease;
+  resize: none;
+}
+input::placeholder, textarea::placeholder { color: rgba(148,163,184,0.3); }
+
+input:focus, select:focus, textarea:focus {
+  border-color: rgba(99,102,241,0.7);
+  background: rgba(22,30,60,0.97);
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.15), 0 0 20px rgba(99,102,241,0.2);
+}
+
+select option { background: #1e293b; }
+
+.form-actions { display: flex; gap: 12px; padding-top: 4px; }
+
+/* ── Toast ── */
+.toast {
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  animation: fadeDown 0.4s ease;
+}
+.toast.success {
+  background: rgba(34,197,94,0.12);
+  color: #86efac;
+  border: 1px solid rgba(34,197,94,0.25);
+}
+.toast.error {
+  background: rgba(236,72,153,0.12);
+  color: #f472b6;
+  border: 1px solid rgba(236,72,153,0.25);
+}
+
+/* ── Animations ── */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(28px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .form-layout { grid-template-columns: 1fr; }
+  .drop-zone { aspect-ratio: 3/2; }
+  .form-row { grid-template-columns: 1fr; }
+  .page-wrapper { padding: 30px 16px 60px; }
+}
