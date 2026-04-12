@@ -10,36 +10,34 @@
 <body>
 
 <nav>
-    <span class="nav-brand">📚 Library System</span>
+    <span class="nav-brand">Library System</span>
     <div class="nav-links">
       <a href="homepage.html" class="active">Home</a>
       <a href="user-dashboard.html">Profile</a>
-      <a href="search-books.html">Search</a>
+      <!-- <a href="search-books.html">Search</a> -->
       <a href="view-books.html">Books</a>
       <a href="borrowed-books.html">Borrowed</a>
       <a href="returned-books.html">Returned</a>
     </div>
     <div class="nav-logout"><a href="../index.html">Logout</a></div>
-  </nav>
+</nav>
 
 <div class="hero">
     <h1>Discover Your Next Favorite Book</h1>
     <p>Search through thousands of titles and borrow them instantly.</p>
 
-    <div class="search-box">
-        <input type="text" placeholder="Search by title, author, or ISBN...">
-        <a href="view-books.html">
-            <button>Browse Books</button>
-        </a>
-    </div>
+    <a href="search-books.html" class="hero-search-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        Search Books
+    </a>
 </div>
 
 <h2 style="text-align: center; margin-top: 40px; font-size: 32px;">Featured Books</h2>
 
-
 <!-- Featured Book -->
 <div class="featured-book">
-
     <div class="book-card">
         <img src="../assets/images/clean-code.jpg" width="150">
         <h3>Clean Code</h3>
@@ -51,7 +49,8 @@
         <img src="../assets/images/design-pattern.jpg" width="150">
         <h3>Design Patterns</h3>
         <p>Erich Gamma</p>
-        <a href="book-details.html?id=3"> <button class="btn-outline">View Details</button>
+        <a href="book-details.html?id=3">
+            <button class="btn-outline">View Details</button>
         </a>
         <hr>
         <img src="../assets/images/The Pragmatic Programmer.png" width="150">
@@ -68,7 +67,6 @@
     <h2>Explore Categories</h2>
 
     <div class="cat-grid">
-
         <div class="cat-card">
             <img src="../assets/images/science.jpg">
             <h3>Science</h3>
@@ -92,7 +90,6 @@
                 <button>Explore Fun</button>
             </a>
         </div>
-
     </div>
 </div>
 
