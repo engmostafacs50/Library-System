@@ -1,4 +1,40 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Online Library | Returned Books</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../CSS/background.css">
+    <link rel="stylesheet" href="../CSS/returned-books.css">
+    <style>
+        .main-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            text-align: center;
+        }
+        
+        table {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .returned-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+        }
+
+        #emptyMsg {
+            text-align: center;
+            color: #64748b;
+            padding: 40px;
+        }
+    </style>
 <html>
 
     <head>
@@ -9,7 +45,30 @@
         <link rel="stylesheet" href="../CSS/background.css">
          <link rel="stylesheet" href="../CSS/navbar.css">
 </head>
+<body>
+    
+    <nav>
+        <div class="nav-links">
+            <a href="homepage.html">Home</a>
+            <a href="user-dashboard.html">Profile</a>
+            <a href="search-books.html">Search</a>
+            <a href="view-books.html">Books</a>
+            <a href="borrowed-books.html">Borrowed</a>
+            <a href="returned-books.html" class="active">Returned</a>
+        </div>
+        <div class="logout">
+            <a href="../index.html">Logout</a>
+        </div>
+    </nav>
 
+    <div class="main-wrapper">
+        
+        <div class="top-action" style="margin-top: 30px;">
+            <a href="borrowed-books.html" class="btn-secondary">← Go to Borrowed Books</a>
+        </div>
+
+        <h1 class="main-title">My Returned Books</h1>
+        <p class="subtitle">Log and track your return history</p>
     <body>
     <div class="bg-orbs">
     <div class="orb orb1"></div>
@@ -49,8 +108,42 @@
                 </tr>
            </table>
 
+        <div class="glass-card" style="max-width: 950px; width: 90%;">
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th>Book Title</th>
+                        <th>Book ID</th>
+                        <th>Author</th>
+                        <th>Return Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" id="return-title" class="dark-input" placeholder="Title"></td>
+                        <td><input type="text" id="return-id" class="dark-input" placeholder="ID"></td>
+                        <td><input type="text" id="return-author" class="dark-input" placeholder="Author"></td>
+                        <td><input type="date" id="return-date" class="dark-input"></td>
+                        <td><button onclick="addReturnRecord()" class="btn-submit">Submit</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="font-size: 12px; color: #475569; margin-top: 15px;">
+                Books returned from "Borrowed Books" page will appear automatically below
+            </p>
         </div>
 
-    </body>
+        <div style="width: 80%; height: 1px; background: rgba(255,255,255,0.1); margin: 50px 0;"></div>
 
+        <div class="history-section" style="width: 90%; max-width: 950px;">
+            <h2 class="section-title" style="text-align: center; border: none; margin-bottom: 30px;"> Your Returned History</h2>
+            <div id="returnedList" class="returned-grid">
+                <p id="emptyMsg">No returns recorded yet.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../JS/returned-books.js"></script>
+</body>
 </html>

@@ -1,32 +1,23 @@
-const STORAGE_KEY = "libraryBooks";
+document.addEventListener('DOMContentLoaded', () => {
+    const categorySelect = document.getElementById('select-by-category');
+    const books = document.querySelectorAll('.book-card');
 
-document.addEventListener("DOMContentLoaded", () => {
-    loadBooks();
-});
+    categorySelect.addEventListener('change', () => {
+        const selectedValue = categorySelect.value.toLowerCase();
 
-function loadBooks() {
-    const books = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-    const container = document.getElementById("booksContainer");
-
-    if (books.length === 0) {
-        container.innerHTML = "<p>No books found</p>";
-        return;
-    }
-
-    container.innerHTML = "";
-
-    books.forEach(book => {
-        const div = document.createElement("div");
-
-        div.innerHTML = `
-            <div class="book-card">
-                <img src="${book.imageUrl}" style="width:120px;height:160px;">
-                <h3>${book.title}</h3>
-                <p>${book.author}</p>
-                <span>${book.category}</span>
-            </div>
-        `;
-
-        container.appendChild(div);
+        books.forEach(book => {
+            const bookCategory = book.getAttribute('data-category').toLowerCase();
+            
+            if (selectedValue === 'all' || bookCategory === selectedValue) {
+                book.style.display = 'block';
+                book.style.opacity = '0';
+                setTimeout(() => {
+                    book.style.opacity = '1';
+                    book.style.transition = 'opacity 0.4s';
+                }, 10);
+            } else {
+                book.style.display = 'none';
+            }
+        });
     });
-}
+});

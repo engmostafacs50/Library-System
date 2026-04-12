@@ -1,15 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-
-    <head>
-
-       <title>Online Library | View Books</title>
-       <link rel="icon" href="../assets/images/Icon.png" type="image/png">
-       <meta charset="UTF-8"/>
-        <link rel="stylesheet" href="../CSS/background.css">
-        <link rel="stylesheet" href="../CSS/navbar.css">
+<head>
+    <title>Online Library | View Books</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../CSS/background.css">
+    <link rel="stylesheet" href="../CSS/view-books.css">
 </head>
+<body>
+    
+  <nav>
+    <a href="homepage.html">Home</a>
+    <a href="user-dashboard.html">Profile</a>
+    <a href="search-books.html">Search</a>
+    <a href="view-books.html" class="active">Books</a>
+    <a href="borrowed-books.html">Borrowed</a>
+    <a href="returned-books.html">Returned</a>
+    <a href="../index.html">Logout</a>
+</nav>
 
+    <div class="main-wrapper">
+        <h1 class="main-title">Library Collection</h1>
+        <p class="subtitle">Explore our available books and resources</p>
+
+        <div class="filter-section">
+            <label for="select-by-category">Select By Category:</label>
+            <select id="select-by-category" class="dark-input"> 
+                <option value="all">All Categories</option>
+                <option value="science">Science</option>
+                <option value="history">History</option>
+                <option value="entertainment">Entertainment</option>
+                <option value="programming">Programming</option>
+            </select>
+        </div>
+
+        <div id="booksContainer" class="books-grid">
+            <a href="book-details.html" class="book-card" data-category="programming">
+                <img src="../assets/images/clean-code.jpg">
+                <div class="book-info">
+                    <h3>Clean Code</h3>
+                    <span class="tag">Programming</span>
+                </div>
+            </a>
+
+            <a href="book-details.html" class="book-card" data-category="programming">
+                <img src="../assets/images/design-pattern.jpg">
+                <div class="book-info">
+                    <h3>Design Patterns</h3>
+                    <span class="tag">Programming</span>
+                </div>
+            </a>
     <body>
         <div class="bg-orbs">
         <div class="orb orb1"></div>
@@ -32,37 +72,48 @@
         
         <div id="booksContainer">
 
-            <h1> View Books</h1>
-            <h2>Available Books</h2>
-            <a
-                href="book-details.html" title="go to book details">
-                <img src="../assets/images/clean-code.jpg" width="120">
-                <p> Clean Code </p>
+            <a href="book-details.html" class="book-card" data-category="programming">
+                <img src="../assets/images/The Pragmatic Programmer.png">
+                <div class="book-info">
+                    <h3>Pragmatic Programmer</h3>
+                    <span class="tag">Programming</span>
+                </div>
             </a>
-            <a
-                href="book-details.html" title="go to book details">
-                <img src="../assets/images/design-pattern.jpg" width="120">
-                <p> design-pattern </p>
+
+            <a href="book-details.html" class="book-card" data-category="science">
+                <img src="../assets/images/science.jpg">
+                <div class="book-info">
+                    <h3>Science Wonders</h3>
+                    <span class="tag">Science</span>
+                </div>
             </a>
-            <a
-                href="book-details.html" title="go to book details">
-                <img src="../assets/images/The Pragmatic Programmer.png" width="120">
-                <p> design-pattern </p>
+
+            <a href="book-details.html" class="book-card" data-category="history">
+                <img src="../assets/images/history.jpg">
+                <div class="book-info">
+                    <h3>World History</h3>
+                    <span class="tag">History</span>
+                </div>
+            </a>
+
+            <a href="book-details.html" class="book-card" data-category="entertainment">
+                <img src="../assets/images/entertainment.jpg">
+                <div class="book-info">
+                    <h3>Entertainment Hub</h3>
+                    <span class="tag">Entertainment</span>
+                </div>
+            </a>
+
+            <a href="book-details.html" class="book-card" data-category="fiction">
+                <img src="../assets/images/1084j.jpg">
+                <div class="book-info">
+                    <h3>Modern Fiction</h3>
+                    <span class="tag">Fiction</span>
+                </div>
             </a>
         </div>
-        <hr>
+    </div>
 
-        <div>
-
-            <label for="select-by-category"> <h2> Select By Category</h2></label>
-            <select multiple id="select-by-category" name="select-by-category"> 
-                <option value="Latest"> Latest </option>
-                <option value="earliest"> Earliest </option>
-                <option value="science"> Science </option>
-                <option value="history"> History </option>
-                <option value="fiction"> Fiction </option>
-            </select>
-            
-        </div>
-    </body>
+    <script src="../JS/view-books.js"></script>
+</body>
 </html>

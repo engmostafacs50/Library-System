@@ -96,67 +96,43 @@ window.returnBook = (i) => {
   }
 };
 
-/* ── Borrow a Book (called from book-details page) ── */
-window.borrowBook = (bookId, bookTitle) => {
-  const today = new Date();
-  const due = new Date(today);
-  due.setDate(due.getDate() + 30);
+//* Return a Book  */
+window.returnBook = (i) => {
+  const book = db.borrowedList[i];
+  if (!book) return;
 
-  const fmt = (d) => d.toISOString().split("T")[0];
+  if (confirm(`Are you sure you want to return "${book.title}"?`)) {
+    // 1. Update user-profile store
+    db.borrowedList.splice(i, 1);
+ 
+    const today = new Date();
+    const returnDate = today.toISOString().split('T')[0];
+    const returnedBook = {
+      ...book,
+      returnDate: returnDate,
+    };
+    
+    db.returnedList.push(returnedBook);
+    db.returnedCount++;
+    saveDB();
 
-  // Check the user hasn't already borrowed this book
-  const alreadyBorrowed = db.borrowedList.some((b) => b.id === bookId);
-  if (alreadyBorrowed) {
-    alert("You have already borrowed this book.");
-    return;
+    if (typeof toggleBookStatus === 'function') {
+      toggleBookStatus(book.id);
+    }
+
+    if (typeof removeBorrowFromUser === 'function') {
+      removeBorrowFromUser(db.id, book.id);
+    }
+
+    let localReturned = JSON.parse(localStorage.getItem('userReturnedHistory')) || [];
+    localReturned.unshift({
+      title: book.title,
+      id: book.id,
+      date: returnDate,
+      returnDate: returnDate
+    });
+    localStorage.setItem('userReturnedHistory', JSON.stringify(localReturned));
+
+    location.reload();
   }
-
-  const entry = {
-    id: bookId,
-    title: bookTitle,
-    date: fmt(today),
-    due: fmt(due),
-  };
-
-  // 1. Update user-profile store
-  db.borrowedList.push(entry);
-  db.totalBorrowed++;
-  saveDB();
-
-  // 2. Update book status in catalog
-  toggleBookStatus(bookId);
-
-  // 3. Sync to users-data store
-  addBorrowToUser(db.id, entry);
-
-  alert(`"${bookTitle}" has been added to your borrowed list!`);
 };
-
-/* ── Render Suggested Books ── */
-function renderSuggested() {
-  const container = document.getElementById("suggested-container");
-  if (!container) return;
-
-  const books = getBooks();
-
-  const borrowedIds = db.borrowedList.map((b) => b.id);
-  const suggestions = books
-    .filter((b) => b.status === "available" && !borrowedIds.includes(b.id))
-    .slice(0, 3);
-
-  if (!suggestions.length) {
-    container.innerHTML = "<p>No suggestions right now.</p>";
-    return;
-  }
-
-  container.innerHTML = suggestions
-    .map(
-      (b) => `
-      <a href="book-details.html?id=${b.id}" class="suggested-book-link">
-        <div style="font-size:50px;margin-bottom:10px">${b.emoji ?? "📖"}</div>
-        <p style="font-weight:bold">${b.title}</p>
-        <small style="color:#818cf8">${b.author}</small>
-      </a>`,
-    )
-    .join("");
-}
