@@ -1,6 +1,4 @@
 const STORAGE_KEY = "libraryBooks";
-
-/* ── Default Data (First Time Only) ── */
 const DEFAULT_BOOKS = [
   {
     id: 1,
@@ -12,18 +10,18 @@ const DEFAULT_BOOKS = [
     emoji: null,
     description: "A handbook of agile software craftsmanship."
   },
+  // {
+  //   id: 2,
+  //   title: "The Pragmatic Programmer",
+  //   author: "Andrew Hunt",
+  //   genre: "Programming",
+  //   status: "available",
+  //   image: "../assets/images/The Pragmatic Programmer.png",
+  //   emoji: null,
+  //   description: "Your journey to mastery as a developer."
+  // },
   {
     id: 2,
-    title: "The Pragmatic Programmer",
-    author: "Andrew Hunt",
-    genre: "Programming",
-    status: "available",
-    image: "../assets/images/pragmatic.jpg",
-    emoji: null,
-    description: "Your journey to mastery as a developer."
-  },
-  {
-    id: 3,
     title: "Design Patterns",
     author: "Gang of Four",
     genre: "Programming",
@@ -33,23 +31,23 @@ const DEFAULT_BOOKS = [
     description: "Classic object-oriented design patterns."
   },
   {
-    id: 4,
+    id: 3,
     title: "1984",
     author: "George Orwell",
     genre: "Fiction",
     status: "available",
     image: null,
-    emoji: "📖",
+    emoji: "../assets/images/",
     description: "Dystopian novel about surveillance."
   },
   {
-    id: 5,
+    id: 4,
     title: "Dune",
     author: "Frank Herbert",
     genre: "Sci-Fi",
     status: "available",
     image: null,
-    emoji: "🏜️",
+    emoji: null,
     description: "Epic story set in a desert world."
   }
 ];
@@ -128,5 +126,4 @@ function toggleBookStatus(id) {
   }
 }
 
-/* ── Auto Run ── */
 seedBooks();

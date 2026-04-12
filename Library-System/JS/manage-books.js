@@ -1,5 +1,3 @@
-// ✅ Depends on books-data.js being loaded first (via <script> in HTML)
-
 document.addEventListener("DOMContentLoaded", () => {
     renderTable();
     initSearch();
@@ -305,9 +303,6 @@ function updateEmptyState(isEmpty) {
     }
 }
 
-/* ══════════════════════════════
-   7. TOAST NOTIFICATION
-══════════════════════════════ */
 function showNotification(message, type = "info") {
     const colors = {
         info   : { bg: "rgba(99,102,241,0.15)",  border: "rgba(99,102,241,0.4)",  color: "#a5b4fc" },
