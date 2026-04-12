@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function syncReturnedFromMainDB() {
-    const mainDB = JSON.parse(localStorage.getItem("library_project_db")) || {};
+    const mainDB = JSON.parse(localStorage.getItem("library_user")) || {};
     const mainReturned = mainDB.returnedList || [];
     
     let localReturned = JSON.parse(localStorage.getItem('userReturnedHistory')) || [];
@@ -15,8 +15,7 @@ function syncReturnedFromMainDB() {
     
     mainReturned.forEach(book => {
         const exists = merged.some(b => 
-            b.title === book.title && 
-            b.returnDate === book.returnDate
+            b.title === book.title
         );
         if (!exists) {
             merged.push({
@@ -101,28 +100,30 @@ window.borrowAgain = (index) => {
     if (!book) return;
     
     if (confirm(`Do you want to borrow "${book.title}" again?`)) {
-
-        const mainDB = JSON.parse(localStorage.getItem("library_project_db")) || {
-            username: "User Pro",
-            borrowedList: [],
-            returnedList: [],
-            returnedCount: 0,
-            totalBorrowed: 0
-        };
-
+        let mainDB = JSON.parse(localStorage.getItem("library_user"));
+        
+        if (!mainDB) {
+            mainDB = {
+                id: 1,
+                username: "User Pro",
+                borrowedList: [],
+                returnedList: [],
+                returnedCount: 0,
+                totalBorrowed: 0
+            };
+        }
         const today = new Date();
         const dueDate = new Date();
         dueDate.setDate(today.getDate() + 30);
-        
         const formatDate = (date) => date.toISOString().split('T')[0];
-    
+        
         const newBook = {
             id: book.id || Date.now(),
             title: book.title,
             date: formatDate(today),
             due: formatDate(dueDate)
         };
-        
+
         mainDB.borrowedList.push(newBook);
         mainDB.totalBorrowed++;
 
@@ -130,13 +131,18 @@ window.borrowAgain = (index) => {
             mainDB.returnedList = mainDB.returnedList.filter(b => b.title !== book.title);
             mainDB.returnedCount = mainDB.returnedList.length;
         }
-        
-        localStorage.setItem("library_project_db", JSON.stringify(mainDB));
+
+        localStorage.setItem("library_user", JSON.stringify(mainDB));
         
         const updatedReturnedList = returnedList.filter((_, i) => i !== index);
         localStorage.setItem('userReturnedHistory', JSON.stringify(updatedReturnedList));
         
+        if (typeof toggleBookStatus === 'function') {
+            toggleBookStatus(book.id);
+        }
+        
         alert(`✅ "${book.title}" has been borrowed again! Check your Borrowed Books page.`);
+
         location.reload();
     }
 };
