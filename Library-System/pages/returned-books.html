@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../CSS/background.css">
     <link rel="stylesheet" href="../CSS/returned-books.css">
+    <link rel="stylesheet" href="../CSS/navbar.css">
     <style>
         .main-wrapper {
             display: flex;
@@ -46,21 +47,19 @@
          <link rel="stylesheet" href="../CSS/navbar.css">
 </head>
 <body>
-    
-    <nav>
-        <div class="nav-links">
-            <a href="homepage.html">Home</a>
-            <a href="user-dashboard.html">Profile</a>
-            <a href="search-books.html">Search</a>
-            <a href="view-books.html">Books</a>
-            <a href="borrowed-books.html">Borrowed</a>
-            <a href="returned-books.html" class="active">Returned</a>
-        </div>
-        <div class="logout">
-            <a href="../index.html">Logout</a>
-        </div>
     </nav>
-
+      <nav>
+    <span class="nav-brand">Library System</span>
+    <div class="nav-links">
+      <a href="homepage.html">Home</a>
+      <a href="user-dashboard.html">Profile</a>
+      <a href="search-books.html">Search</a>
+      <a href="view-books.html">Books</a>
+      <a href="borrowed-books.html">Borrowed</a>
+      <a href="returned-books.html" class="active">Returned</a>
+    </div>
+    <div class="nav-logout"><a href="../index.html">Logout</a></div>
+  </nav>
     <div class="main-wrapper">
         
         <div class="top-action" style="margin-top: 30px;">
@@ -75,38 +74,12 @@
     <div class="orb orb2"></div>
     <div class="orb orb3"></div>
   </div>
-        <nav>
-    <span class="nav-brand">Library System</span>
-    <div class="nav-links">
-      <a href="homepage.html">Home</a>
-      <a href="user-dashboard.html">Profile</a>
-      <a href="search-books.html">Search</a>
-      <a href="view-books.html">Books</a>
-      <a href="borrowed-books.html">Borrowed</a>
-      <a href="returned-books.html" class="active">Returned</a>
-    </div>
-    <div class="nav-logout"><a href="../index.html">Logout</a></div>
-  </nav>
+  
         <hr>
 
         <div>
 
             <h1> My Returned Books </h1>
-            <table border="1" cellpadding="10" width="100%"> 
-                <tr>
-                    <th> Number of books </th>
-                    <th> Books IDs</th>
-                    <th> Authors </th>
-                    <th> Returning Date </th>
-                </tr>
-
-                <tr>
-                    <th> <input type="number"> </th>
-                    <th> <input type="text" > </th>
-                    <th> <input type="text" > </th>
-                    <th> <input type="date" > </th>
-                </tr>
-           </table>
 
         <div class="glass-card" style="max-width: 950px; width: 90%;">
             <table width="100%">
@@ -143,7 +116,7 @@
             </div>
         </div>
     </div>
-
+    <script src="../JS/books-data.js"></script>
     <script src="../JS/returned-books.js"></script>
 </body>
 </html>

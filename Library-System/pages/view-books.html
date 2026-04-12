@@ -6,18 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../CSS/background.css">
     <link rel="stylesheet" href="../CSS/view-books.css">
+    <link rel="stylesheet" href="../CSS/navbar.css">
 </head>
 <body>
-    
-  <nav>
-    <a href="homepage.html">Home</a>
-    <a href="user-dashboard.html">Profile</a>
-    <a href="search-books.html">Search</a>
-    <a href="view-books.html" class="active">Books</a>
-    <a href="borrowed-books.html">Borrowed</a>
-    <a href="returned-books.html">Returned</a>
-    <a href="../index.html">Logout</a>
-</nav>
+
+    <div class="bg-orbs">
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+        <div class="orb orb3"></div>
+    </div>
+
+    <nav>
+        <span class="nav-brand">Library System</span>
+        <div class="nav-links">
+            <a href="homepage.html">Home</a>
+            <a href="user-dashboard.html">Profile</a>
+            <a href="search-books.html">Search</a>
+            <a href="view-books.html" class="active">Books</a>
+            <a href="borrowed-books.html">Borrowed</a>
+            <a href="returned-books.html">Returned</a>
+        </div>
+        <div class="nav-logout"><a href="../index.html">Logout</a></div>
+    </nav>
 
     <div class="main-wrapper">
         <h1 class="main-title">Library Collection</h1>
@@ -25,18 +35,20 @@
 
         <div class="filter-section">
             <label for="select-by-category">Select By Category:</label>
-            <select id="select-by-category" class="dark-input"> 
+            <select id="select-by-category" class="dark-input">
                 <option value="all">All Categories</option>
                 <option value="science">Science</option>
                 <option value="history">History</option>
                 <option value="entertainment">Entertainment</option>
                 <option value="programming">Programming</option>
+                <option value="fiction">Fiction</option>
             </select>
         </div>
 
         <div id="booksContainer" class="books-grid">
+
             <a href="book-details.html" class="book-card" data-category="programming">
-                <img src="../assets/images/clean-code.jpg">
+                <img src="../assets/images/clean-code.jpg" alt="Clean Code">
                 <div class="book-info">
                     <h3>Clean Code</h3>
                     <span class="tag">Programming</span>
@@ -44,36 +56,15 @@
             </a>
 
             <a href="book-details.html" class="book-card" data-category="programming">
-                <img src="../assets/images/design-pattern.jpg">
+                <img src="../assets/images/design-pattern.jpg" alt="Design Patterns">
                 <div class="book-info">
                     <h3>Design Patterns</h3>
                     <span class="tag">Programming</span>
                 </div>
             </a>
-    <body>
-        <div class="bg-orbs">
-        <div class="orb orb1"></div>
-        <div class="orb orb2"></div>
-        <div class="orb orb3"></div>
-  </div>
-        <nav>
-    <span class="nav-brand">Library System</span>
-    <div class="nav-links">
-      <a href="homepage.html">Home</a>
-      <a href="user-dashboard.html">Profile</a>
-      <a href="search-books.html">Search</a>
-      <a href="view-books.html" class="active">Books</a>
-      <a href="borrowed-books.html">Borrowed</a>
-      <a href="returned-books.html">Returned</a>
-    </div>
-    <div class="nav-logout"><a href="../index.html">Logout</a></div>
-  </nav>
-        <hr>
-        
-        <div id="booksContainer">
 
             <a href="book-details.html" class="book-card" data-category="programming">
-                <img src="../assets/images/The Pragmatic Programmer.png">
+                <img src="../assets/images/The Pragmatic Programmer.png" alt="The Pragmatic Programmer">
                 <div class="book-info">
                     <h3>Pragmatic Programmer</h3>
                     <span class="tag">Programming</span>
@@ -81,7 +72,7 @@
             </a>
 
             <a href="book-details.html" class="book-card" data-category="science">
-                <img src="../assets/images/science.jpg">
+                <img src="../assets/images/science.jpg" alt="Science Wonders">
                 <div class="book-info">
                     <h3>Science Wonders</h3>
                     <span class="tag">Science</span>
@@ -89,7 +80,7 @@
             </a>
 
             <a href="book-details.html" class="book-card" data-category="history">
-                <img src="../assets/images/history.jpg">
+                <img src="../assets/images/history.jpg" alt="World History">
                 <div class="book-info">
                     <h3>World History</h3>
                     <span class="tag">History</span>
@@ -97,7 +88,7 @@
             </a>
 
             <a href="book-details.html" class="book-card" data-category="entertainment">
-                <img src="../assets/images/entertainment.jpg">
+                <img src="../assets/images/entertainment.jpg" alt="Entertainment Hub">
                 <div class="book-info">
                     <h3>Entertainment Hub</h3>
                     <span class="tag">Entertainment</span>
@@ -105,15 +96,17 @@
             </a>
 
             <a href="book-details.html" class="book-card" data-category="fiction">
-                <img src="../assets/images/1084j.jpg">
+                <img src="../assets/images/1084j.jpg" alt="Modern Fiction">
                 <div class="book-info">
                     <h3>Modern Fiction</h3>
                     <span class="tag">Fiction</span>
                 </div>
             </a>
+
         </div>
     </div>
 
+    <script src="../JS/books-data.js"></script>
     <script src="../JS/view-books.js"></script>
 </body>
 </html>
