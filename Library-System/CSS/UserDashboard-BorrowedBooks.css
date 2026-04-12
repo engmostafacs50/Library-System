@@ -12,23 +12,6 @@ body {
   text-align: center;
 }
 
-nav {
-  padding: 20px;
-  background: rgba(30, 41, 59, 0.6);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-nav a {
-  color: #94a3b8;
-  text-decoration: none;
-  margin: 0 15px;
-  font-weight: 500;
-  transition: 0.3s;
-}
-nav a:hover {
-  color: #818cf8;
-}
-
 .container {
   max-width: 1000px;
   margin: 40px auto;
