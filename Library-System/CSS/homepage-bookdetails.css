@@ -106,12 +106,10 @@ nav a:hover {
 .featured-book {
     background: rgba(30, 41, 59, 0.4);
     max-width: 800px;
-    margin: 20px auto 40px auto; /* قللنا المارجن اللي فوق عشان يقرب من العنوان */
+    margin: 20px auto 40px auto;
     padding: 25px;
     border-radius: 24px;
     border: 1px dashed rgba(59, 130, 246, 0.2);
-
-    /* النافذة اللي بتعمل سكرول */
     max-height: 450px;
     overflow-y: auto;
 
@@ -121,7 +119,6 @@ nav a:hover {
     gap: 20px;
 }
 
-/* شكل البكرة (اختياري للشياكة) */
 .featured-book::-webkit-scrollbar {
     width: 8px;
 }
