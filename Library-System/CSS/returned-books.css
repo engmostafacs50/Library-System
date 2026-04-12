@@ -53,23 +53,59 @@ nav {
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
 }
 
+/* ====== زيادة المسافات بين المربعات ====== */
+.glass-card table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 15px 12px;
+}
+
+.glass-card th,
+.glass-card td {
+    padding: 15px 10px;
+    vertical-align: middle;
+}
+
+.glass-card th {
+    padding-bottom: 18px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: #a78bfa;
+}
+
+/* تنسيق المدخلات */
 .dark-input {
     background: rgba(15, 23, 42, 0.6);
     border: 1px solid #334155;
     color: white;
-    padding: 10px;
-    border-radius: 10px;
-    width: 90%;
+    padding: 14px 12px;
+    border-radius: 12px;
+    width: 100%;
+    font-size: 0.9rem;
+    transition: 0.3s;
+    box-sizing: border-box;
 }
 
+.dark-input:focus {
+    outline: none;
+    border-color: #818cf8;
+    background: rgba(15, 23, 42, 0.8);
+}
+
+/* زر Submit */
 .btn-submit {
     background: rgba(239, 68, 68, 0.1);
     border: 1px solid #ef4444;
     color: #ef4444;
-    padding: 10px 20px;
+    padding: 14px 20px;
     border-radius: 12px;
     cursor: pointer;
     transition: 0.3s;
+    font-weight: 500;
+    width: 100%;
+    white-space: nowrap;
+    font-size: 0.9rem;
 }
 
 .btn-submit:hover { 
@@ -92,10 +128,11 @@ nav {
     background: rgba(129, 140, 248, 0.1);
 }
 
+/* قسم الكتب المرتجعة (البطاقات) */
 .returned-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
+    gap: 25px;
     padding: 20px 0;
 }
 
@@ -112,6 +149,7 @@ nav {
     transform: translateY(-3px);
     background: #2d3a5e;
 }
+
 /* زر Borrow Again */
 .btn-borrow-again {
     background: rgba(59, 130, 246, 0.15);
@@ -129,4 +167,12 @@ nav {
     background: #3b82f6;
     color: white;
     transform: scale(1.02);
+}
+
+/* تحسين شكل التنبيه تحت الجدول */
+.glass-card p {
+    margin-top: 25px;
+    margin-bottom: 0;
+    font-size: 12px;
+    color: #475569;
 }

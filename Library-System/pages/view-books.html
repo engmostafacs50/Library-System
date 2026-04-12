@@ -9,15 +9,15 @@
 </head>
 <body>
     
-  <nav>
-    <a href="homepage.html">Home</a>
-    <a href="user-dashboard.html">Profile</a>
-    <a href="search-books.html">Search</a>
-    <a href="view-books.html" class="active">Books</a>
-    <a href="borrowed-books.html">Borrowed</a>
-    <a href="returned-books.html">Returned</a>
-    <a href="../index.html">Logout</a>
-</nav>
+    <nav>
+        <a href="homepage.html">Home</a>
+        <a href="user-dashboard.html">Profile</a>
+        <a href="search-books.html">Search</a>
+        <a href="view-books.html" class="active">Books</a>
+        <a href="borrowed-books.html">Borrowed</a>
+        <a href="returned-books.html">Returned</a>
+        <a href="../index.html">Logout</a>
+    </nav>
 
     <div class="main-wrapper">
         <h1 class="main-title">Library Collection</h1>
@@ -27,72 +27,20 @@
             <label for="select-by-category">Select By Category:</label>
             <select id="select-by-category" class="dark-input"> 
                 <option value="all">All Categories</option>
+                <option value="programming">Programming</option>
                 <option value="science">Science</option>
                 <option value="history">History</option>
                 <option value="entertainment">Entertainment</option>
-                <option value="programming">Programming</option>
+                <option value="fiction">Fiction</option>
             </select>
         </div>
 
         <div id="booksContainer" class="books-grid">
-            <a href="book-details.html" class="book-card" data-category="programming">
-                <img src="../assets/images/clean-code.jpg">
-                <div class="book-info">
-                    <h3>Clean Code</h3>
-                    <span class="tag">Programming</span>
-                </div>
-            </a>
-
-            <a href="book-details.html" class="book-card" data-category="programming">
-                <img src="../assets/images/design-pattern.jpg">
-                <div class="book-info">
-                    <h3>Design Patterns</h3>
-                    <span class="tag">Programming</span>
-                </div>
-            </a>
-
-            <a href="book-details.html" class="book-card" data-category="programming">
-                <img src="../assets/images/The Pragmatic Programmer.png">
-                <div class="book-info">
-                    <h3>Pragmatic Programmer</h3>
-                    <span class="tag">Programming</span>
-                </div>
-            </a>
-
-            <a href="book-details.html" class="book-card" data-category="science">
-                <img src="../assets/images/science.jpg">
-                <div class="book-info">
-                    <h3>Science Wonders</h3>
-                    <span class="tag">Science</span>
-                </div>
-            </a>
-
-            <a href="book-details.html" class="book-card" data-category="history">
-                <img src="../assets/images/history.jpg">
-                <div class="book-info">
-                    <h3>World History</h3>
-                    <span class="tag">History</span>
-                </div>
-            </a>
-
-            <a href="book-details.html" class="book-card" data-category="entertainment">
-                <img src="../assets/images/entertainment.jpg">
-                <div class="book-info">
-                    <h3>Entertainment Hub</h3>
-                    <span class="tag">Entertainment</span>
-                </div>
-            </a>
-
-            <a href="book-details.html" class="book-card" data-category="fiction">
-                <img src="../assets/images/1084j.jpg">
-                <div class="book-info">
-                    <h3>Modern Fiction</h3>
-                    <span class="tag">Fiction</span>
-                </div>
-            </a>
+            <!-- الكتب هتتعرض من JavaScript -->
         </div>
     </div>
 
+    <script src="../JS/books-data.js"></script>
     <script src="../JS/view-books.js"></script>
 </body>
 </html>

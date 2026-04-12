@@ -5,7 +5,7 @@ body {
     margin: 0;
 }
 
-/* الناف بار في النص - نفس تصميم returned-books */
+/* الناف بار في النص */
 nav {
     display: flex;
     justify-content: center;
