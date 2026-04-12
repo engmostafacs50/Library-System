@@ -22,7 +22,7 @@ const DEFAULT_BOOKS = [
     description: "Your journey to mastery as a developer.",
   },
   {
-    id: 3, 
+    id: 3,
     title: "Design Patterns",
     author: "Gang of Four",
     genre: "Programming",
@@ -32,7 +32,7 @@ const DEFAULT_BOOKS = [
     description: "Classic object-oriented design patterns.",
   },
   {
-    id: 4, 
+    id: 4,
     title: "1984",
     author: "George Orwell",
     genre: "Fiction",
@@ -42,7 +42,7 @@ const DEFAULT_BOOKS = [
     description: "Dystopian novel about surveillance.",
   },
   {
-    id: 5, 
+    id: 5,
     title: "Dune",
     author: "Frank Herbert",
     genre: "Sci-Fi",
@@ -51,21 +51,20 @@ const DEFAULT_BOOKS = [
     emoji: null,
     description: "Epic story set in a desert world.",
   },
-    {
-    id: 6, 
+  {
+    id: 6,
     title: "A Short History Of The World",
     author: "unknown",
     genre: "History",
     status: "available",
     image: "../assets/images/HistoryBook.jpg",
     emoji: null,
-    description: "Epic story set in a desert world.",
-  }
+    description: "A concise journey through world history.",
+  },
 ];
 
 /* ── Seed Data (First Load Only) ── */
 function seedBooks() {
-  // fixed: uses its own key, won't collide with user profile data
   if (!localStorage.getItem(BOOKS_KEY)) {
     localStorage.setItem(BOOKS_KEY, JSON.stringify(DEFAULT_BOOKS));
   }
@@ -83,7 +82,6 @@ function saveBooks(books) {
 
 /* ── Get Book By ID ── */
 function getBookById(id) {
-  // Now returns the correct book — no duplicate IDs to confuse the search
   return getBooks().find((b) => b.id === Number(id)) || null;
 }
 
