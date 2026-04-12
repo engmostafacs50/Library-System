@@ -51,6 +51,16 @@ const DEFAULT_BOOKS = [
     emoji: null,
     description: "Epic story set in a desert world.",
   },
+    {
+    id: 6, 
+    title: "A Short History Of The World",
+    author: "unknown",
+    genre: "History",
+    status: "available",
+    image: "../assets/images/HistoryBook.jpg",
+    emoji: null,
+    description: "Epic story set in a desert world.",
+  }
 ];
 
 /* ── Seed Data (First Load Only) ── */
