@@ -1,6 +1,7 @@
 const USER_KEY = "library_user";
 
 const DEFAULT_USER = {
+  id: 1, // must match the user's id in users-data.js
   username: "User Pro",
   borrowedList: [
     { id: 1, title: "Clean Code", date: "2024-03-15", due: "2024-04-15" },
@@ -10,9 +11,6 @@ const DEFAULT_USER = {
   totalBorrowed: 2,
 };
 
-// Fixed: Array.isArray() guard prevents an accidental books array
-//    being silently used as the user object (the || fallback won't
-//    trigger for a truthy array, so we check the shape explicitly)
 function loadUser() {
   const raw = JSON.parse(localStorage.getItem(USER_KEY));
   return raw && !Array.isArray(raw) ? raw : DEFAULT_USER;
@@ -72,63 +70,75 @@ document.addEventListener("DOMContentLoaded", () => {
           .join("")
       : '<tr><td colspan="3">No returned books yet.</td></tr>';
   }
+
+  renderSuggested();
 });
 
 /* ── Return a Book ── */
 window.returnBook = (i) => {
   const book = db.borrowedList[i];
-  if (!book) return; //Guard: index might be stale after a reload
+  if (!book) return;
 
   if (confirm(`Are you sure you want to return "${book.title}"?`)) {
+    // 1. Update user-profile store
     db.borrowedList.splice(i, 1);
     db.returnedList.push(book);
     db.returnedCount++;
-    //Keep totalBorrowed in sync (it should reflect all-time borrows)
     saveDB();
+
+    // 2. Update book status in catalog
+    toggleBookStatus(book.id);
+
+    // 3. Sync to users-data store
+    removeBorrowFromUser(db.id, book.id);
+
     location.reload();
   }
 };
 
 /* ── Borrow a Book (called from book-details page) ── */
-// Links the catalog and the user profile:
-// When a user borrows a book, add it to their borrowedList
-// and flip the book's status in the catalog.
 window.borrowBook = (bookId, bookTitle) => {
   const today = new Date();
   const due = new Date(today);
-  due.setDate(due.getDate() + 30); // 30-day loan period
+  due.setDate(due.getDate() + 30);
 
   const fmt = (d) => d.toISOString().split("T")[0];
 
-  //Check the user hasn't already borrowed this book
+  // Check the user hasn't already borrowed this book
   const alreadyBorrowed = db.borrowedList.some((b) => b.id === bookId);
   if (alreadyBorrowed) {
     alert("You have already borrowed this book.");
     return;
   }
 
-  db.borrowedList.push({
+  const entry = {
     id: bookId,
     title: bookTitle,
     date: fmt(today),
     due: fmt(due),
-  });
+  };
+
+  // 1. Update user-profile store
+  db.borrowedList.push(entry);
   db.totalBorrowed++;
   saveDB();
 
-
+  // 2. Update book status in catalog
   toggleBookStatus(bookId);
+
+  // 3. Sync to users-data store
+  addBorrowToUser(db.id, entry);
+
   alert(`"${bookTitle}" has been added to your borrowed list!`);
 };
 
-// Render suggested books from the catalog
+/* ── Render Suggested Books ── */
 function renderSuggested() {
   const container = document.getElementById("suggested-container");
   if (!container) return;
 
-  const books = getBooks(); // from books-data.js
+  const books = getBooks();
 
-  // Show up to 3 available books not currently borrowed by the user
   const borrowedIds = db.borrowedList.map((b) => b.id);
   const suggestions = books
     .filter((b) => b.status === "available" && !borrowedIds.includes(b.id))
@@ -146,7 +156,7 @@ function renderSuggested() {
         <div style="font-size:50px;margin-bottom:10px">${b.emoji ?? "📖"}</div>
         <p style="font-weight:bold">${b.title}</p>
         <small style="color:#818cf8">${b.author}</small>
-      </a>`
+      </a>`,
     )
     .join("");
 }
