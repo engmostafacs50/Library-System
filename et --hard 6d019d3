@@ -1,0 +1,91 @@
+[33m3c0ffb4[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Refactor navigation brand text and update hero search button styles across multiple pages
+[33md9980ce[m Fix formatting issues in DEFAULT_BOOKS and update comments for clarity
+[33mad7ddd7[m Refactor borrowed book functionality and improve user data handling
+[33m6f59ca6[m Add borrowedBooks property to users and implement borrowing functionality
+[33m811444e[m added nav-bar.css link for all files
+[33mc6030a9[m Added nav-bar.css  common for all files
+[33m21f0414[m Finished AddBooks
+[33m8439fb5[m Finished Admin Dashboard .
+[33m69f21ec[m Fixed path of books at homepage
+[33m5140cbe[m Added add-book button to point to add-books page upper manage books table
+[33me69e002[m added Icon for pages
+[33m3b52e80[m fix: pass book id in suggested books link and render dynamically
+[33m9fd030e[m Fixed local Storage key at UserDashboard.js and fixed borrowed books logic
+[33m7aedff9[m added books images
+[33m1f02a1e[m repairing path at books-data
+[33m6d019d3[m Added data books.js to linking data with pages and finished manage books
+[33m7c1a8f4[m add book data and linking it with search and manage book pages
+[33ma200c3d[m updated homepage and book details (#20)
+[33mc864285[m finished manage books
+[33m338d0ac[m finished manage books
+[33m36f5f3e[m Update design and storage (#19)
+[33m6844e16[m delete icons from search-books page.
+[33me437c8a[m finished search books
+[33m1c02f9c[m Added background file
+[33m55f5a98[m Finished Search page.
+[33mda06eac[m Deleted search-res and merge this with search page
+[33m81b9d08[m Delete some alert registered successfully and login successfully
+[33mca18456[m Finshed search books page
+[33mc4d868d[m Refactor CSS for register page layout and styling (#18)
+[33me42509a[m Update login.html (#17)
+[33mb17175b[m Merge pull request #16 from engmostafacs50/saifomar0-patch-2
+[33ma12e82b[m Merge pull request #15 from engmostafacs50/saifomar0-patch-1
+[33mc1405a2[m[33m ([m[1;31morigin/saifomar0-patch-2[m[33m)[m Update Register.html
+[33m889c088[m[33m ([m[1;31morigin/saifomar0-patch-1[m[33m)[m Add files via upload
+[33m41843a7[m Fixed pathes.
+[33md6dccdc[m Moving homepage file to CSS folder
+[33m4658d98[m Merge pull request #14 from engmostafacs50/homepage-bookdetails-branch
+[33mab34555[m Moving UserDashboardFile to CSS folder.
+[33m58d6fc7[m Refactor forgetpass2.html structure and labels
+[33mcc02664[m Refactor forgetpass1.html for formatting consistency
+[33m52c8727[m Refactor login.html for improved structure and style
+[33m798ce3e[m Add files via upload
+[33m18b61f3[m css update
+[33m5d0cab1[m Add files via upload
+[33mdace3cb[m Add files via upload
+[33m4f012ed[m Delete Library-System/index.html
+[33mb82e126[m Add files via upload
+[33mf69f24a[m Add Style To User Dashboard and Borrowed Books
+[33m7639b69[m Create temp
+[33ma8509e6[m Add temp file to CSS directory
+[33m81edebd[m Merge pull request #13 from engmostafacs50/AddedFiles.css
+[33mf996d72[m Repair link edit and delete @ admin dashboard and and add viewports to all files
+[33m7dcae8c[m Merge pull request #12 from engmostafacs50/AddedFiles.css
+[33m607842a[m Added main.js
+[33m099b6eb[m Remove unnecessary whitespace in view-books.html
+[33m06195ca[m Merge pull request #11 from engmostafacs50/AddedFiles.css
+[33m21990d0[m Added files.css
+[33md5fc801[m Update login.html
+[33mbec4496[m update theme styling
+[33me9176b9[m resolve merge conflict
+[33m8daa5ee[m Added management books.
+[33m8313d65[m Merge pull request #10 from engmostafacs50/view-returned-books
+[33m8001f60[m[33m ([m[1;31morigin/view-returned-books[m[33m)[m add view and returned books pages
+[33m7cb7d37[m Merge pull request #9 from engmostafacs50/view-returned-books
+[33m5bbc4f5[m Add view books and returned books pages
+[33m5a9677b[m Merge pull request #6 from engmostafacs50/homepage-bookdetails-branch
+[33m6e27135[m Merge branch 'main' into homepage-bookdetails-branch
+[33m4f0c4ea[m Merge pull request #8 from engmostafacs50/SearchPage
+[33m1742e19[m[33m ([m[1;31morigin/SearchPage[m[33m)[m Clean up book-details.html by removing <hr> tags
+[33mac9b855[m Added homePage label in view books
+[33m683ecf6[m Merge pull request #7 from engmostafacs50/SearchPage
+[33mf289fa2[m finish search page
+[33m728f892[m Added static book for book details and search page and res-search page and add claen code book at view books
+[33m37716fd[m Home page
+[33mf97e75f[m Home page
+[33m49a28d3[m Home page
+[33m7ec9efd[m Home page
+[33m2a2df88[m Merge pull request #5 from engmostafacs50/UserDashboard-and-BorrowedBooks
+[33mf8781a3[m[33m ([m[1;31morigin/UserDashboard-and-BorrowedBooks[m[33m)[m Update user-dashboard.html
+[33m1907fd5[m Merge pull request #3 from engmostafacs50/saif
+[33m9e0fefa[m Merge pull request #4 from engmostafacs50/UserDashboard-and-BorrowedBooks
+[33ma0aeac9[m User dashboard and borrowed books Pages
+[33m4734702[m[33m ([m[1;31morigin/saif[m[33m)[m added my html files
+[33m4804772[m Merge pull request #2 from engmostafacs50/homepage-bookdetails-branch
+[33m96cd2e2[m Home page
+[33m3747236[m details
+[33m50c7b0f[m Merge pull request #1 from engmostafacs50/admin-dashboard-and-add-book
+[33m2c2cf8e[m Move dashbord and add book to pages file
+[33mc10eef7[m Add admin dashboard and add new book pages
+[33m2037ffa[m making-Structure
+[33m6119d88[m Initial commit

@@ -112,7 +112,7 @@ nav {
     transform: translateY(-3px);
     background: #2d3a5e;
 }
-
+/* زر Borrow Again */
 .btn-borrow-again {
     background: rgba(59, 130, 246, 0.15);
     border: 1px solid #3b82f6;

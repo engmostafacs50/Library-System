@@ -160,3 +160,43 @@ function renderSuggested() {
     )
     .join("");
 }
+
+window.returnBook = (i) => {
+  const book = db.borrowedList[i];
+  if (!book) return;
+
+  if (confirm(`Are you sure you want to return "${book.title}"?`)) {
+    // 1. Update user-profile store
+    db.borrowedList.splice(i, 1);
+
+    const today = new Date();
+    const returnDate = today.toISOString().split('T')[0];
+    const returnedBook = {
+      ...book,
+      returnDate: returnDate,
+    };
+    
+    db.returnedList.push(returnedBook);
+    db.returnedCount++;
+    saveDB();
+
+    if (typeof toggleBookStatus === 'function') {
+      toggleBookStatus(book.id);
+    }
+
+    if (typeof removeBorrowFromUser === 'function') {
+      removeBorrowFromUser(db.id, book.id);
+    }
+
+    let localReturned = JSON.parse(localStorage.getItem('userReturnedHistory')) || [];
+    localReturned.unshift({
+      title: book.title,
+      id: book.id,
+      date: returnDate,
+      returnDate: returnDate
+    });
+    localStorage.setItem('userReturnedHistory', JSON.stringify(localReturned));
+
+    location.reload();
+  }
+};
