@@ -10,16 +10,16 @@ const DEFAULT_BOOKS = [
     emoji: null,
     description: "A handbook of agile software craftsmanship."
   },
-  // {
-  //   id: 2,
-  //   title: "The Pragmatic Programmer",
-  //   author: "Andrew Hunt",
-  //   genre: "Programming",
-  //   status: "available",
-  //   image: "../assets/images/The Pragmatic Programmer.png",
-  //   emoji: null,
-  //   description: "Your journey to mastery as a developer."
-  // },
+  {
+    id: 2,
+    title: "The Pragmatic Programmer",
+    author: "Andrew Hunt",
+    genre: "Programming",
+    status: "available",
+    image: "../assets/images/The Pragmatic Programmer.png",
+    emoji: null,
+    description: "Your journey to mastery as a developer."
+  },
   {
     id: 2,
     title: "Design Patterns",
@@ -36,8 +36,8 @@ const DEFAULT_BOOKS = [
     author: "George Orwell",
     genre: "Fiction",
     status: "available",
-    image: null,
-    emoji: "../assets/images/",
+    image: "../assets/images/1984.jpg",
+    emoji: null,
     description: "Dystopian novel about surveillance."
   },
   {
@@ -46,7 +46,7 @@ const DEFAULT_BOOKS = [
     author: "Frank Herbert",
     genre: "Sci-Fi",
     status: "available",
-    image: null,
+    image: "../assets/images/Dune.jpg",
     emoji: null,
     description: "Epic story set in a desert world."
   }
