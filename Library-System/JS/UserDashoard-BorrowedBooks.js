@@ -67,3 +67,32 @@ window.returnBook = (i) => {
     location.reload();
   }
 };
+window.returnBook = (i) => {
+    if (confirm(`Are you sure you want to return "${db.borrowedList[i].title}"?`)) {
+        const book = db.borrowedList.splice(i, 1)[0];
+
+        const today = new Date();
+        const returnDate = today.toISOString().split('T')[0];
+        
+        const returnedBook = {
+            ...book,
+            returnDate: returnDate,
+            date: book.date
+        };
+        
+        db.returnedList.push(returnedBook);
+        db.returnedCount++;
+        
+        let localReturned = JSON.parse(localStorage.getItem('userReturnedHistory')) || [];
+        localReturned.unshift({
+            title: book.title,
+            id: book.id,
+            date: returnDate,
+            returnDate: returnDate
+        });
+        localStorage.setItem('userReturnedHistory', JSON.stringify(localReturned));
+        
+        saveDB();
+        location.reload();
+    }
+};
