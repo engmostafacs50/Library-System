@@ -120,3 +120,33 @@ window.borrowBook = (bookId, bookTitle) => {
   toggleBookStatus(bookId);
   alert(`"${bookTitle}" has been added to your borrowed list!`);
 };
+
+// Render suggested books from the catalog
+function renderSuggested() {
+  const container = document.getElementById("suggested-container");
+  if (!container) return;
+
+  const books = getBooks(); // from books-data.js
+
+  // Show up to 3 available books not currently borrowed by the user
+  const borrowedIds = db.borrowedList.map((b) => b.id);
+  const suggestions = books
+    .filter((b) => b.status === "available" && !borrowedIds.includes(b.id))
+    .slice(0, 3);
+
+  if (!suggestions.length) {
+    container.innerHTML = "<p>No suggestions right now.</p>";
+    return;
+  }
+
+  container.innerHTML = suggestions
+    .map(
+      (b) => `
+      <a href="book-details.html?id=${b.id}" class="suggested-book-link">
+        <div style="font-size:50px;margin-bottom:10px">${b.emoji ?? "📖"}</div>
+        <p style="font-weight:bold">${b.title}</p>
+        <small style="color:#818cf8">${b.author}</small>
+      </a>`
+    )
+    .join("");
+}
