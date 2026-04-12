@@ -5,10 +5,8 @@ const dropInner  = document.getElementById("dropInner");
 const imageInput = document.getElementById("imageInput");
 const preview    = document.getElementById("imagePreview");
 const removeBtn  = document.getElementById("removeImg");
-const emojiGrid  = document.getElementById("emojiGrid");
 
 let selectedImage = null; // base64 string
-let selectedEmoji = null;
 
 /* ── Drag & Drop ── */
 dropZone.addEventListener("dragover", (e) => {
@@ -51,8 +49,6 @@ function loadImageFile(file) {
   const reader = new FileReader();
   reader.onload = (e) => {
     selectedImage = e.target.result;
-    selectedEmoji = null;
-    clearEmojiSelection();
     showPreview(selectedImage);
   };
   reader.readAsDataURL(file);
@@ -62,7 +58,7 @@ function showPreview(src) {
   preview.src = src;
   preview.style.display = "block";
   dropInner.style.display = "none";
-  removeBtn.style.display = "block";
+  removeBtn.style.display = "flex";
 }
 
 function hidePreview() {
@@ -78,29 +74,6 @@ removeBtn.addEventListener("click", (e) => {
   e.stopPropagation();
   hidePreview();
 });
-
-/* ── Emoji Picker ── */
-emojiGrid.addEventListener("click", (e) => {
-  const btn = e.target.closest(".emoji-btn");
-  if (!btn) return;
-  const emoji = btn.dataset.emoji;
-
-  if (btn.classList.contains("selected")) {
-    btn.classList.remove("selected");
-    selectedEmoji = null;
-    return;
-  }
-
-  clearEmojiSelection();
-  btn.classList.add("selected");
-  selectedEmoji = emoji;
-  hidePreview(); // clear image if emoji chosen
-});
-
-function clearEmojiSelection() {
-  document.querySelectorAll(".emoji-btn.selected").forEach(b => b.classList.remove("selected"));
-  selectedEmoji = null;
-}
 
 /* ── Save Book ── */
 function handleAddBook() {
@@ -122,7 +95,6 @@ function handleAddBook() {
     status,
     description: desc,
     image: selectedImage || null,
-    emoji: selectedEmoji || null,
   });
 
   showToast(`"${newBook.title}" added successfully!`, "success");
@@ -137,7 +109,6 @@ function clearForm() {
   document.getElementById("bookGenre").selectedIndex = 0;
   document.getElementById("bookStatus").selectedIndex = 0;
   hidePreview();
-  clearEmojiSelection();
 }
 
 /* ── Toast ── */
