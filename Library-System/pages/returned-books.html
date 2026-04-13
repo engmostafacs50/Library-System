@@ -4,7 +4,7 @@
     <title>Online Library | Returned Books</title>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="../assets/images/Icon.png">
+    <link rel="icon" href="../assets/images/Icon.png" type="image/png">
     <link rel="stylesheet" href="../CSS/background.css">
     <link rel="stylesheet" href="../CSS/returned-books.css">
     <link rel="stylesheet" href="../CSS/navbar.css">
@@ -17,7 +17,7 @@
             width: 100%;
             text-align: center;
         }
-        
+
         table {
             margin-left: auto;
             margin-right: auto;
@@ -37,50 +37,39 @@
             padding: 40px;
         }
     </style>
-<html>
-
-    <head>
-        <title>Online Library | Returned Books</title>
-        <link rel="icon" href="../assets/images/Icon.png" type="image/png">
-        <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="../CSS/background.css">
-         <link rel="stylesheet" href="../CSS/navbar.css">
 </head>
 <body>
+
+    <!-- BUG FIX: removed stray </nav> before opening <nav>, removed duplicate html/head/body tags -->
+    <nav>
+        <span class="nav-brand">Library System</span>
+        <div class="nav-links">
+            <a href="homepage.html">Home</a>
+            <a href="user-dashboard.html">Profile</a>
+            <a href="search-books.html">Search</a>
+            <a href="view-books.html">Books</a>
+            <a href="borrowed-books.html">Borrowed</a>
+            <a href="returned-books.html" class="active">Returned</a>
+        </div>
+        <div class="nav-logout"><a href="../index.html">Logout</a></div>
     </nav>
-      <nav>
-    <span class="nav-brand">Library System</span>
-    <div class="nav-links">
-      <a href="homepage.html">Home</a>
-      <a href="user-dashboard.html">Profile</a>
-      <a href="search-books.html">Search</a>
-      <a href="view-books.html">Books</a>
-      <a href="borrowed-books.html">Borrowed</a>
-      <a href="returned-books.html" class="active">Returned</a>
+
+    <div class="bg-orbs">
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+        <div class="orb orb3"></div>
     </div>
-    <div class="nav-logout"><a href="../index.html">Logout</a></div>
-  </nav>
+
     <div class="main-wrapper">
-        
+
         <div class="top-action" style="margin-top: 30px;">
             <a href="borrowed-books.html" class="btn-secondary">← Go to Borrowed Books</a>
         </div>
 
         <h1 class="main-title">My Returned Books</h1>
         <p class="subtitle">Log and track your return history</p>
-    <body>
-    <div class="bg-orbs">
-    <div class="orb orb1"></div>
-    <div class="orb orb2"></div>
-    <div class="orb orb3"></div>
-  </div>
-  
+
         <hr>
-
-        <div>
-
-            <h1> My Returned Books </h1>
 
         <div class="glass-card" style="max-width: 950px; width: 90%;">
             <table>
@@ -95,10 +84,10 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td><input type="text" id="return-title" class="dark-input" placeholder="Title"></td>
-                        <td><input type="text" id="return-id" class="dark-input" placeholder="ID"></td>
-                        <td><input type="text" id="return-author" class="dark-input" placeholder="Author"></td>
-                        <td><input type="date" id="return-date" class="dark-input"></td>
+                        <td><input type="text"  id="return-title"  class="dark-input" placeholder="Title"></td>
+                        <td><input type="text"  id="return-id"     class="dark-input" placeholder="ID"></td>
+                        <td><input type="text"  id="return-author" class="dark-input" placeholder="Author"></td>
+                        <td><input type="date"  id="return-date"   class="dark-input"></td>
                         <td><button onclick="addReturnRecord()" class="btn-submit">Submit</button></td>
                     </tr>
                 </tbody>
@@ -116,9 +105,12 @@
                 <p id="emptyMsg">No returns recorded yet.</p>
             </div>
         </div>
+
     </div>
+
     <script src="../JS/Users-data.js"></script>
     <script src="../JS/books-data.js"></script>
     <script src="../JS/returned-books.js"></script>
+
 </body>
 </html>

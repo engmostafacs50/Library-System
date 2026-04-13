@@ -1,38 +1,93 @@
+// UserDashboard-BorrowedBooks.js — loads the real logged-in user dynamically
+
 const USER_KEY = "library_user";
 
-const DEFAULT_USER = {
-  id: 1, // 
-  username: "User Pro",
-  borrowedList: [
-    { id: 1, title: "Clean Code", date: "2026-04-09", due: "2026-04-15" },
-  ],
-  returnedList: [],
-  returnedCount: 0,
-  totalBorrowed: 1,
-};
-
+/* ── Load the current user's personal borrow/return state ── */
 function loadUser() {
+  // Primary: per-user state stored under USER_KEY (keyed by session)
   const raw = JSON.parse(localStorage.getItem(USER_KEY));
-  // BUG FIX: return a deep copy of DEFAULT_USER so the constant is never mutated
-  return raw && !Array.isArray(raw)
-    ? raw
-    : JSON.parse(JSON.stringify(DEFAULT_USER));
+  if (raw && !Array.isArray(raw)) return raw;
+
+  // Fallback: build a fresh state object from the logged-in user record
+  const userId   = Number(localStorage.getItem("currentUserId"));
+  const userName = localStorage.getItem("currentUserName") || "Guest";
+
+  if (!userId) {
+    // Not logged in — redirect to login
+    window.location.href = "../pages/login.html";
+    return null;
+  }
+
+  const freshState = {
+    id:            userId,
+    username:      userName,
+    borrowedList:  [],
+    returnedList:  [],
+    returnedCount: 0,
+    totalBorrowed: 0,
+  };
+
+  // Pre-populate borrowedList from the users store if it exists
+  const users = JSON.parse(localStorage.getItem("library_users")) || [];
+  const userRecord = users.find((u) => u.id === userId);
+  if (userRecord && Array.isArray(userRecord.borrowedBooks)) {
+    freshState.borrowedList  = userRecord.borrowedBooks;
+    freshState.totalBorrowed = userRecord.borrowedBooks.length;
+  }
+
+  localStorage.setItem(USER_KEY, JSON.stringify(freshState));
+  return freshState;
 }
 
 const db = loadUser();
-
 const saveDB = () => localStorage.setItem(USER_KEY, JSON.stringify(db));
+
+/* ── Borrow a Book ── */
+window.borrowBook = (id, title) => {
+  // Prevent duplicate borrows
+  if (db.borrowedList.some((b) => b.id === id)) {
+    alert(`"${title}" is already in your borrowed list.`);
+    return;
+  }
+
+  const today = new Date();
+  const borrowDate = today.toISOString().split("T")[0];
+
+  // Due date = 7 days from today
+  const dueDateObj = new Date(today);
+  dueDateObj.setDate(dueDateObj.getDate() + 7);
+  const dueDate = dueDateObj.toISOString().split("T")[0];
+
+  const newBorrow = { id, title, date: borrowDate, due: dueDate };
+
+  // 1. Update user store
+  db.borrowedList.push(newBorrow);
+  db.totalBorrowed++;
+  saveDB();
+
+  // 2. Update book status in catalog
+  if (typeof toggleBookStatus === "function") {
+    toggleBookStatus(id);
+  }
+
+  // 3. Sync to users-data store
+  if (typeof addBorrowToUser === "function") {
+    addBorrowToUser(db.id, newBorrow);
+  }
+
+  alert(`"${title}" borrowed successfully! Due: ${dueDate}`);
+  location.reload();
+};
 
 /* ── Render Dashboard ── */
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("user-welcome")) {
-    document.getElementById("user-welcome").innerText =
-      `Welcome, ${db.username}!`;
+    const displayName = localStorage.getItem("currentUserName") || db.username;
+    document.getElementById("user-welcome").innerText = `Welcome, ${displayName}!`;
     document.getElementById("stat-active").innerText = db.borrowedList.length;
     document.getElementById("stat-returned").innerText = db.returnedCount;
     document.getElementById("stat-total").innerText = db.totalBorrowed;
-    document.querySelector(".profile-img").src =
-      "../assets/images/profile-default.jpg";
+    document.querySelector(".profile-img").src = "../assets/images/profile-default.jpg";
   }
 
   /* ── Borrowed Table ── */
@@ -51,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
               Return
             </button>
           </td>
-        </tr>`,
+        </tr>`
           )
           .join("")
       : '<tr><td colspan="4">No active loans found.</td></tr>';
@@ -68,13 +123,15 @@ document.addEventListener("DOMContentLoaded", () => {
           <td>${b.title}</td>
           <td>${b.date}</td>
           <td style="color:#10b981">Returned</td>
-        </tr>`,
+        </tr>`
           )
           .join("")
       : '<tr><td colspan="3">No returned books yet.</td></tr>';
   }
 
-  renderSuggested();
+  if (typeof renderSuggested === "function") {
+    renderSuggested();
+  }
 });
 
 /* ── Return a Book ── */
@@ -83,38 +140,30 @@ window.returnBook = (i) => {
   if (!book) return;
 
   if (confirm(`Are you sure you want to return "${book.title}"?`)) {
-    // 1. Update user-profile store
     db.borrowedList.splice(i, 1);
 
     const today = new Date();
     const returnDate = today.toISOString().split("T")[0];
-    const returnedBook = {
-      ...book,
-      returnDate: returnDate,
-    };
+    const returnedBook = { ...book, returnDate };
 
     db.returnedList.push(returnedBook);
     db.returnedCount++;
     saveDB();
 
-    // 2. Update book status in catalog
     if (typeof toggleBookStatus === "function") {
       toggleBookStatus(book.id);
     }
 
-    // 3. Sync to users-data store
     if (typeof removeBorrowFromUser === "function") {
       removeBorrowFromUser(db.id, book.id);
     }
 
-    // 4. Persist return history
-    let localReturned =
-      JSON.parse(localStorage.getItem("userReturnedHistory")) || [];
+    let localReturned = JSON.parse(localStorage.getItem("userReturnedHistory")) || [];
     localReturned.unshift({
       title: book.title,
       id: book.id,
       date: returnDate,
-      returnDate: returnDate,
+      returnDate,
     });
     localStorage.setItem("userReturnedHistory", JSON.stringify(localReturned));
 

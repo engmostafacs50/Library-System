@@ -1,72 +1,11 @@
 const USERS_KEY = "library_users";
 
-const DEFAULT_USERS = [
-  {
-    id: 1,
-    fullName: "Alice Johnson",
-    username: "alice_j",
-    email: "alice@example.com",
-    role: "admin",
-    status: "active",
-    avatar: null,
-    emoji: null,
-    joined: "2024-01-15",
-    borrowedBooks: [],
-  },
-  {
-    id: 2,
-    fullName: "Bob Smith",
-    username: "bob_smith",
-    email: "bob@example.com",
-    role: "user",
-    status: "active",
-    avatar: null,
-    emoji: null,
-    joined: "2024-02-20",
-    borrowedBooks: [],
-  },
-  {
-    id: 3,
-    fullName: "Clara Lee",
-    username: "clara_l",
-    email: "clara@example.com",
-    role: "user",
-    status: "inactive",
-    avatar: null,
-    emoji: null,
-    joined: "2024-03-05",
-    borrowedBooks: [],
-  },
-  {
-    id: 4,
-    fullName: "David Park",
-    username: "dave_park",
-    email: "david@example.com",
-    role: "user",
-    status: "active",
-    avatar: null,
-    emoji: null,
-    joined: "2024-04-10",
-    borrowedBooks: [],
-  },
-  {
-    id: 5,
-    fullName: "Eva Martinez",
-    username: "eva_m",
-    email: "eva@example.com",
-    role: "user",
-    status: "active",
-    avatar: null,
-    emoji: null,
-    joined: "2024-05-18",
-    borrowedBooks: [],
-  },
-];
+// No default users — all accounts are created via registration.
 
-/* ── Seed ── */
+/* ── Seed: initialize with empty user list on first load ── */
 function seedUsers() {
   if (!localStorage.getItem(USERS_KEY)) {
-    localStorage.setItem(USERS_KEY, JSON.stringify(DEFAULT_USERS));
+    localStorage.setItem(USERS_KEY, JSON.stringify([]));
   }
 }
 

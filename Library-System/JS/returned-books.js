@@ -32,29 +32,26 @@ function syncReturnedFromMainDB() {
 }
 
 function addReturnRecord() {
-    const title = document.getElementById('return-title').value;
-    const id = document.getElementById('return-id').value;
-    const date = document.getElementById('return-date').value;
+    const title  = document.getElementById('return-title').value;
+    const id     = document.getElementById('return-id').value;
+    const author = document.getElementById('return-author').value; // BUG FIX: author was never read
+    const date   = document.getElementById('return-date').value;
 
     if (!title || !date) {
         alert("Please fill in the title and return date.");
         return;
     }
 
-    const book = {
-        title,
-        id,
-        date,
-        returnDate: date
-    };
+    const book = { title, id, author, date, returnDate: date };
 
     let list = JSON.parse(localStorage.getItem('userReturnedHistory')) || [];
     list.unshift(book);
     localStorage.setItem('userReturnedHistory', JSON.stringify(list));
 
-    document.getElementById('return-title').value = '';
-    document.getElementById('return-id').value = '';
-    document.getElementById('return-date').value = '';
+    document.getElementById('return-title').value  = '';
+    document.getElementById('return-id').value     = '';
+    document.getElementById('return-author').value = '';
+    document.getElementById('return-date').value   = '';
 
     loadReturnedBooks();
 }
@@ -82,6 +79,7 @@ function loadReturnedBooks() {
         item.innerHTML = `
             <h4 style="margin:0 0 8px 0; color:#818cf8;">${escapeHtml(book.title)}</h4>
             <p style="font-size:0.85rem; color:#94a3b8; margin:5px 0;">ID: ${escapeHtml(book.id || 'N/A')}</p>
+            <p style="font-size:0.85rem; color:#94a3b8; margin:5px 0;">Author: ${escapeHtml(book.author || 'N/A')}</p>
             <small style="color:#34d399;">📅 Returned on: ${escapeHtml(book.date || book.returnDate || 'Unknown')}</small>
             <div style="margin-top: 15px;">
                 <button class="btn-borrow-again" onclick="borrowAgain(${index})">📖 Borrow Again</button>
@@ -152,7 +150,8 @@ window.borrowAgain = (index) => {
 };
 
 function escapeHtml(str) {
-    if (!str) return '';
+    if (str === null || str === undefined) return '';
+    str = String(str); // coerce numbers, booleans, etc. to string safely
     return str.replace(/[&<>]/g, function(m) {
         if (m === '&') return '&amp;';
         if (m === '<') return '&lt;';

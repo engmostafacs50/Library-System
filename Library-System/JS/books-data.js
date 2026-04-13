@@ -1,72 +1,11 @@
 const BOOKS_KEY = "library_catalog";
 
-const DEFAULT_BOOKS = [
-  {
-    id: 1,
-    title: "Clean Code",
-    author: "Robert C. Martin",
-    genre: "Programming",
-    status: "available",
-    image: "../assets/images/clean-code.jpg",
-    emoji: null,
-    description: "A handbook of agile software craftsmanship.",
-  },
-  {
-    id: 2,
-    title: "The Pragmatic Programmer",
-    author: "Andrew Hunt",
-    genre: "Programming",
-    status: "available",
-    image: "../assets/images/The Pragmatic Programmer.png",
-    emoji: null,
-    description: "Your journey to mastery as a developer.",
-  },
-  {
-    id: 3,
-    title: "Design Patterns",
-    author: "Gang of Four",
-    genre: "Programming",
-    status: "borrowed",
-    image: "../assets/images/design-pattern.jpg",
-    emoji: null,
-    description: "Classic object-oriented design patterns.",
-  },
-  {
-    id: 4,
-    title: "1984",
-    author: "George Orwell",
-    genre: "Fiction",
-    status: "available",
-    image: "../assets/images/1984.jpg",
-    emoji: null,
-    description: "Dystopian novel about surveillance.",
-  },
-  {
-    id: 5,
-    title: "Dune",
-    author: "Frank Herbert",
-    genre: "Sci-Fi",
-    status: "available",
-    image: "../assets/images/Dune.jpg",
-    emoji: null,
-    description: "Epic story set in a desert world.",
-  },
-  {
-    id: 6,
-    title: "A Short History Of The World",
-    author: "unknown",
-    genre: "History",
-    status: "available",
-    image: "../assets/images/HistoryBook.jpg",
-    emoji: null,
-    description: "A concise journey through world history.",
-  },
-];
+// No default books — all data is user-generated.
 
-/* ── Seed Data (First Load Only) ── */
+/* ── Seed: initialize with empty catalog on first load ── */
 function seedBooks() {
   if (!localStorage.getItem(BOOKS_KEY)) {
-    localStorage.setItem(BOOKS_KEY, JSON.stringify(DEFAULT_BOOKS));
+    localStorage.setItem(BOOKS_KEY, JSON.stringify([]));
   }
 }
 
