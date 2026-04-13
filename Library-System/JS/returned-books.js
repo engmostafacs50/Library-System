@@ -8,15 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
 function syncReturnedFromMainDB() {
     const mainDB = JSON.parse(localStorage.getItem("library_user")) || {};
     const mainReturned = mainDB.returnedList || [];
-    
+
     let localReturned = JSON.parse(localStorage.getItem('userReturnedHistory')) || [];
-    
+
     const merged = [...localReturned];
-    
+
     mainReturned.forEach(book => {
-        const exists = merged.some(b => 
-            b.title === book.title
-        );
+        const exists = merged.some(b => b.title === book.title);
         if (!exists) {
             merged.push({
                 title: book.title,
@@ -26,7 +24,7 @@ function syncReturnedFromMainDB() {
             });
         }
     });
-    
+
     if (JSON.stringify(localReturned) !== JSON.stringify(merged)) {
         localStorage.setItem('userReturnedHistory', JSON.stringify(merged));
         loadReturnedBooks();
@@ -43,13 +41,13 @@ function addReturnRecord() {
         return;
     }
 
-    const book = { 
-        title, 
-        id, 
+    const book = {
+        title,
+        id,
         date,
-        returnDate: date 
+        returnDate: date
     };
-    
+
     let list = JSON.parse(localStorage.getItem('userReturnedHistory')) || [];
     list.unshift(book);
     localStorage.setItem('userReturnedHistory', JSON.stringify(list));
@@ -57,7 +55,7 @@ function addReturnRecord() {
     document.getElementById('return-title').value = '';
     document.getElementById('return-id').value = '';
     document.getElementById('return-date').value = '';
-    
+
     loadReturnedBooks();
 }
 
@@ -77,7 +75,7 @@ function loadReturnedBooks() {
 
     if (emptyMsg) emptyMsg.style.display = 'none';
     container.innerHTML = '';
-    
+
     list.forEach((book, index) => {
         const item = document.createElement('div');
         item.className = 'book-history-item';
@@ -96,12 +94,12 @@ function loadReturnedBooks() {
 window.borrowAgain = (index) => {
     const returnedList = JSON.parse(localStorage.getItem('userReturnedHistory')) || [];
     const book = returnedList[index];
-    
+
     if (!book) return;
-    
+
     if (confirm(`Do you want to borrow "${book.title}" again?`)) {
         let mainDB = JSON.parse(localStorage.getItem("library_user"));
-        
+
         if (!mainDB) {
             mainDB = {
                 id: 1,
@@ -112,11 +110,12 @@ window.borrowAgain = (index) => {
                 totalBorrowed: 0
             };
         }
+
         const today = new Date();
         const dueDate = new Date();
         dueDate.setDate(today.getDate() + 30);
         const formatDate = (date) => date.toISOString().split('T')[0];
-        
+
         const newBook = {
             id: book.id || Date.now(),
             title: book.title,
@@ -133,16 +132,15 @@ window.borrowAgain = (index) => {
         }
 
         localStorage.setItem("library_user", JSON.stringify(mainDB));
-        
+
         const updatedReturnedList = returnedList.filter((_, i) => i !== index);
         localStorage.setItem('userReturnedHistory', JSON.stringify(updatedReturnedList));
-        
+
         if (typeof toggleBookStatus === 'function') {
             toggleBookStatus(book.id);
         }
-        
-        alert(`✅ "${book.title}" has been borrowed again! Check your Borrowed Books page.`);
 
+        alert(`"${book.title}" has been borrowed again! Check your Borrowed Books page.`);
         location.reload();
     }
 };

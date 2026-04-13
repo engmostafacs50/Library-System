@@ -4,7 +4,7 @@ const DEFAULT_USER = {
   id: 1, // must match the user's id in users-data.js
   username: "User Pro",
   borrowedList: [
-    { id: 1, title: "Clean Code", date: "2026-04-9", due: "20260-04-15" },
+    { id: 1, title: "Clean Code", date: "2026-04-9", due: "2026-04-15" },
   ],
   returnedList: [],
   returnedCount: 1,
@@ -82,56 +82,38 @@ window.returnBook = (i) => {
   if (confirm(`Are you sure you want to return "${book.title}"?`)) {
     // 1. Update user-profile store
     db.borrowedList.splice(i, 1);
-    db.returnedList.push(book);
-    db.returnedCount++;
-    saveDB();
 
-    // 2. Update book status in catalog
-    toggleBookStatus(book.id);
-
-    // 3. Sync to users-data store
-    removeBorrowFromUser(db.id, book.id);
-
-    location.reload();
-  }
-};
-
-//* Return a Book  */
-window.returnBook = (i) => {
-  const book = db.borrowedList[i];
-  if (!book) return;
-
-  if (confirm(`Are you sure you want to return "${book.title}"?`)) {
-    // 1. Update user-profile store
-    db.borrowedList.splice(i, 1);
- 
     const today = new Date();
-    const returnDate = today.toISOString().split('T')[0];
+    const returnDate = today.toISOString().split("T")[0];
     const returnedBook = {
       ...book,
       returnDate: returnDate,
     };
-    
+
     db.returnedList.push(returnedBook);
     db.returnedCount++;
     saveDB();
 
-    if (typeof toggleBookStatus === 'function') {
+    // 2. Update book status in catalog
+    if (typeof toggleBookStatus === "function") {
       toggleBookStatus(book.id);
     }
 
-    if (typeof removeBorrowFromUser === 'function') {
+    // 3. Sync to users-data store
+    if (typeof removeBorrowFromUser === "function") {
       removeBorrowFromUser(db.id, book.id);
     }
 
-    let localReturned = JSON.parse(localStorage.getItem('userReturnedHistory')) || [];
+    // 4. Persist return history
+    let localReturned =
+      JSON.parse(localStorage.getItem("userReturnedHistory")) || [];
     localReturned.unshift({
       title: book.title,
       id: book.id,
       date: returnDate,
-      returnDate: returnDate
+      returnDate: returnDate,
     });
-    localStorage.setItem('userReturnedHistory', JSON.stringify(localReturned));
+    localStorage.setItem("userReturnedHistory", JSON.stringify(localReturned));
 
     location.reload();
   }

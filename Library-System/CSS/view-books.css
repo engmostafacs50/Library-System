@@ -5,6 +5,7 @@ body {
     margin: 0;
 }
 
+/* الناف بار في النص */
 nav {
     display: flex;
     justify-content: center;
@@ -16,24 +17,23 @@ nav {
     flex-wrap: wrap;
 }
 
-.nav-links a {
+nav a {
     color: #94a3b8;
     text-decoration: none;
-    margin-right: 20px;
+    font-size: 15px;
+    transition: 0.3s;
 }
 
-.nav-links a:last-child {
-    margin-right: 0;
+nav a:hover, nav a.active {
+    color: #818cf8;
 }
 
-.nav-links a.active { 
-    color: #818cf8; 
-    font-weight: bold; 
+nav a:last-child {
+    color: #ef4444;
 }
 
-.logout a {
-    color: #94a3b8;
-    text-decoration: none;
+nav a:last-child:hover {
+    color: #ff6666;
 }
 
 .main-wrapper {
