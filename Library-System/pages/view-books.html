@@ -6,17 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../CSS/background.css">
     <link rel="stylesheet" href="../CSS/view-books.css">
+    <link rel="stylesheet" href="../CSS/navbar.css">
 </head>
 <body>
-    
+
+    <div class="bg-orbs">
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+        <div class="orb orb3"></div>
+    </div>
+
     <nav>
-        <a href="homepage.html">Home</a>
-        <a href="user-dashboard.html">Profile</a>
-        <a href="search-books.html">Search</a>
-        <a href="view-books.html" class="active">Books</a>
-        <a href="borrowed-books.html">Borrowed</a>
-        <a href="returned-books.html">Returned</a>
-        <a href="../index.html">Logout</a>
+        <span class="nav-brand">Library System</span>
+        <div class="nav-links">
+            <a href="homepage.html">Home</a>
+            <a href="user-dashboard.html">Profile</a>
+            <a href="search-books.html">Search</a>
+            <a href="view-books.html" class="active">Books</a>
+            <a href="borrowed-books.html">Borrowed</a>
+            <a href="returned-books.html">Returned</a>
+        </div>
+        <div class="nav-logout"><a href="../index.html">Logout</a></div>
     </nav>
 
     <div class="main-wrapper">
@@ -25,7 +35,7 @@
 
         <div class="filter-section">
             <label for="select-by-category">Select By Category:</label>
-            <select id="select-by-category" class="dark-input"> 
+            <select id="select-by-category" class="dark-input">
                 <option value="all">All Categories</option>
                 <option value="programming">Programming</option>
                 <option value="science">Science</option>
@@ -36,10 +46,9 @@
         </div>
 
         <div id="booksContainer" class="books-grid">
-            <!-- الكتب هتتعرض من JavaScript -->
+     
         </div>
-    </div>
-
+  </div>
     <script src="../JS/books-data.js"></script>
     <script src="../JS/view-books.js"></script>
 </body>

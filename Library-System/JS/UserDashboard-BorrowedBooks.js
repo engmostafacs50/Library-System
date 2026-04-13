@@ -4,7 +4,7 @@ const DEFAULT_USER = {
   id: 1, // must match the user's id in users-data.js
   username: "User Pro",
   borrowedList: [
-    { id: 1, title: "Clean Code", date: "2024-03-15", due: "2024-04-15" },
+    { id: 1, title: "Clean Code", date: "2026-04-9", due: "2026-04-15" },
   ],
   returnedList: [],
   returnedCount: 1,
@@ -82,120 +82,38 @@ window.returnBook = (i) => {
   if (confirm(`Are you sure you want to return "${book.title}"?`)) {
     // 1. Update user-profile store
     db.borrowedList.splice(i, 1);
-    db.returnedList.push(book);
-    db.returnedCount++;
-    saveDB();
-
-    // 2. Update book status in catalog
-    toggleBookStatus(book.id);
-
-    // 3. Sync to users-data store
-    removeBorrowFromUser(db.id, book.id);
-
-    location.reload();
-  }
-};
-
-/* ── Borrow a Book (called from book-details page) ── */
-window.borrowBook = (bookId, bookTitle) => {
-  const today = new Date();
-  const due = new Date(today);
-  due.setDate(due.getDate() + 30);
-
-  const fmt = (d) => d.toISOString().split("T")[0];
-
-  // Check the user hasn't already borrowed this book
-  const alreadyBorrowed = db.borrowedList.some((b) => b.id === bookId);
-  if (alreadyBorrowed) {
-    alert("You have already borrowed this book.");
-    return;
-  }
-
-  const entry = {
-    id: bookId,
-    title: bookTitle,
-    date: fmt(today),
-    due: fmt(due),
-  };
-
-  // 1. Update user-profile store
-  db.borrowedList.push(entry);
-  db.totalBorrowed++;
-  saveDB();
-
-  // 2. Update book status in catalog
-  toggleBookStatus(bookId);
-
-  // 3. Sync to users-data store
-  addBorrowToUser(db.id, entry);
-
-  alert(`"${bookTitle}" has been added to your borrowed list!`);
-};
-
-/* ── Render Suggested Books ── */
-function renderSuggested() {
-  const container = document.getElementById("suggested-container");
-  if (!container) return;
-
-  const books = getBooks();
-
-  const borrowedIds = db.borrowedList.map((b) => b.id);
-  const suggestions = books
-    .filter((b) => b.status === "available" && !borrowedIds.includes(b.id))
-    .slice(0, 3);
-
-  if (!suggestions.length) {
-    container.innerHTML = "<p>No suggestions right now.</p>";
-    return;
-  }
-
-  container.innerHTML = suggestions
-    .map(
-      (b) => `
-      <a href="book-details.html?id=${b.id}" class="suggested-book-link">
-        <div style="font-size:50px;margin-bottom:10px">${b.emoji ?? "📖"}</div>
-        <p style="font-weight:bold">${b.title}</p>
-        <small style="color:#818cf8">${b.author}</small>
-      </a>`,
-    )
-    .join("");
-}
-
-window.returnBook = (i) => {
-  const book = db.borrowedList[i];
-  if (!book) return;
-
-  if (confirm(`Are you sure you want to return "${book.title}"?`)) {
-    // 1. Update user-profile store
-    db.borrowedList.splice(i, 1);
 
     const today = new Date();
-    const returnDate = today.toISOString().split('T')[0];
+    const returnDate = today.toISOString().split("T")[0];
     const returnedBook = {
       ...book,
       returnDate: returnDate,
     };
-    
+
     db.returnedList.push(returnedBook);
     db.returnedCount++;
     saveDB();
 
-    if (typeof toggleBookStatus === 'function') {
+    // 2. Update book status in catalog
+    if (typeof toggleBookStatus === "function") {
       toggleBookStatus(book.id);
     }
 
-    if (typeof removeBorrowFromUser === 'function') {
+    // 3. Sync to users-data store
+    if (typeof removeBorrowFromUser === "function") {
       removeBorrowFromUser(db.id, book.id);
     }
 
-    let localReturned = JSON.parse(localStorage.getItem('userReturnedHistory')) || [];
+    // 4. Persist return history
+    let localReturned =
+      JSON.parse(localStorage.getItem("userReturnedHistory")) || [];
     localReturned.unshift({
       title: book.title,
       id: book.id,
       date: returnDate,
-      returnDate: returnDate
+      returnDate: returnDate,
     });
-    localStorage.setItem('userReturnedHistory', JSON.stringify(localReturned));
+    localStorage.setItem("userReturnedHistory", JSON.stringify(localReturned));
 
     location.reload();
   }

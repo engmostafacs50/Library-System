@@ -1,8 +1,7 @@
 // view-books.js
-
 document.addEventListener('DOMContentLoaded', () => {
     renderBooks();
-    
+
     const categorySelect = document.getElementById('select-by-category');
     if (categorySelect) {
         categorySelect.addEventListener('change', () => {
@@ -14,22 +13,22 @@ document.addEventListener('DOMContentLoaded', () => {
 function renderBooks() {
     const container = document.getElementById('booksContainer');
     if (!container) return;
-    
+
     const books = getBooks();
     const selectedValue = document.getElementById('select-by-category')?.value || 'all';
-    
+
     let filteredBooks = books;
     if (selectedValue !== 'all') {
-        filteredBooks = books.filter(book => 
+        filteredBooks = books.filter(book =>
             book.genre && book.genre.toLowerCase() === selectedValue.toLowerCase()
         );
     }
-    
+
     if (filteredBooks.length === 0) {
         container.innerHTML = '<p style="color: #94a3b8; text-align: center; width: 100%;">No books found in this category.</p>';
         return;
     }
-    
+
     container.innerHTML = filteredBooks.map(book => `
         <a href="book-details.html?id=${book.id}" class="book-card" data-category="${book.genre?.toLowerCase() || ''}">
             <img src="${book.image || '../assets/images/default-book.jpg'}" alt="${book.title}">
