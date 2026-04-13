@@ -131,8 +131,8 @@ function addBorrowToUser(userId, bookEntry) {
   const user = users.find((u) => u.id === Number(userId));
   if (!user) return;
   if (!user.borrowedBooks) user.borrowedBooks = [];
-  // Guard against duplicates
-  if (!user.borrowedBooks.some((b) => b.id === bookEntry.id)) {
+  // Guard against duplicates (compare as strings to safely handle 'N/A' and numeric IDs)
+  if (!user.borrowedBooks.some((b) => String(b.id) === String(bookEntry.id))) {
     user.borrowedBooks.push(bookEntry);
     saveUsers(users);
   }
@@ -143,8 +143,9 @@ function removeBorrowFromUser(userId, bookId) {
   const users = getUsers();
   const user = users.find((u) => u.id === Number(userId));
   if (!user || !user.borrowedBooks) return;
+  // BUG FIX: use String comparison instead of Number() to avoid NaN issues when bookId is 'N/A'
   user.borrowedBooks = user.borrowedBooks.filter(
-    (b) => b.id !== Number(bookId)
+    (b) => String(b.id) !== String(bookId)
   );
   saveUsers(users);
 }

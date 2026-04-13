@@ -128,10 +128,16 @@ window.borrowAgain = (index) => {
 
         if (mainDB.returnedList) {
             mainDB.returnedList = mainDB.returnedList.filter(b => b.title !== book.title);
+            // BUG FIX: returnedCount was never decremented when borrowing again — now derived from list length
             mainDB.returnedCount = mainDB.returnedList.length;
         }
 
         localStorage.setItem("library_user", JSON.stringify(mainDB));
+
+        // BUG FIX: sync the new borrow back to the library_users store (addBorrowToUser was never called)
+        if (typeof addBorrowToUser === "function") {
+            addBorrowToUser(mainDB.id, newBook);
+        }
 
         const updatedReturnedList = returnedList.filter((_, i) => i !== index);
         localStorage.setItem('userReturnedHistory', JSON.stringify(updatedReturnedList));

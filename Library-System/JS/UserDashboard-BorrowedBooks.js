@@ -1,19 +1,22 @@
 const USER_KEY = "library_user";
 
 const DEFAULT_USER = {
-  id: 1, // must match the user's id in users-data.js
+  id: 1, // 
   username: "User Pro",
   borrowedList: [
-    { id: 1, title: "Clean Code", date: "2026-04-9", due: "2026-04-15" },
+    { id: 1, title: "Clean Code", date: "2026-04-09", due: "2026-04-15" },
   ],
   returnedList: [],
-  returnedCount: 1,
-  totalBorrowed: 2,
+  returnedCount: 0,
+  totalBorrowed: 1,
 };
 
 function loadUser() {
   const raw = JSON.parse(localStorage.getItem(USER_KEY));
-  return raw && !Array.isArray(raw) ? raw : DEFAULT_USER;
+  // BUG FIX: return a deep copy of DEFAULT_USER so the constant is never mutated
+  return raw && !Array.isArray(raw)
+    ? raw
+    : JSON.parse(JSON.stringify(DEFAULT_USER));
 }
 
 const db = loadUser();
