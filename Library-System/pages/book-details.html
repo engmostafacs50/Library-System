@@ -5,7 +5,8 @@
     <link rel="icon" href="../assets/images/Icon.png" type="image/png">
     <link rel="stylesheet" href="../CSS/background.css">
     <link rel="stylesheet" href="../CSS/homepage-bookdetails.css">
-  <link rel="stylesheet" href="../CSS/navbar.css">
+    <link rel="stylesheet" href="../CSS/navbar.css">
+    <link rel="stylesheet" href="../CSS/book-details.css">
 </head>
 <body>
 
@@ -28,23 +29,19 @@
 
 <div class="book-card">
 
-    <img id="bookImage" width="150">
+  <img id="bookImage" width="150">
 
+  <div class="book-info">           <!-- ← add this wrapper -->
     <h3 id="title"></h3>
-
-    <p><strong>Author:</strong> <span id="author"></span></p>
-    <hr>
-
-    <p><strong>Category:</strong> <span id="category"></span></p>
-    <hr>
-
-    <p><strong>Description:</strong> <span id="description"></span></p>
-    <hr>
-
-    <p><strong>Status:</strong> <span id="status"></span></p>
-
-    <button class="btn-outline">Borrow Book</button>
-
+      <p><strong>Author:</strong> <span id="author"></span></p>
+      <hr>
+      <p><strong>Category:</strong> <span id="category"></span></p>
+      <hr>
+      <p><strong>Description:</strong> <span id="description"></span></p>
+      <hr>
+      <p><strong>Status:</strong> <span id="status"></span></p>
+      <button class="btn-outline">Borrow Book</button>
+  </div>                            <!-- ← close wrapper -->
 </div>
 <script src="../JS/books-data.js"></script>
 <script src="../JS/book-details.js"></script>

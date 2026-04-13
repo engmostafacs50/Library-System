@@ -1,11 +1,11 @@
-// register.js — saves into the unified library_users store
+// register.js — saves into the unified library_user store
 
 var userName        = document.getElementById("UserName");
 var userEmail       = document.getElementById("userEmail");
 var Password        = document.getElementById("Password");
 var ConfirmPassword = document.getElementById("ConfirmPassword");
 
-var nameRegex     = /^[A-Za-z][A-Za-z\s]{2,29}$/;          // full name, 3–30 chars
+var nameRegex     = /^[A-Za-z][A-Za-z\s]{2,29}$/;         
 var emailRegex    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
 

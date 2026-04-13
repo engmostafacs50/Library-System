@@ -1,4 +1,4 @@
-// login.js — authenticates against the unified library_users store
+// login.js
 
 var userEmail = document.getElementById("userEmail");
 var Password  = document.getElementById("Password");
@@ -24,16 +24,31 @@ function Login() {
   }
 
   if (matched.status === "inactive") {
-    alert("Your account has been deactivated. Please contact an administrator.");
+    alert("Your account has been deactivated.");
     return;
   }
 
-  // Store the logged-in user's ID so other pages can load their data
+
   localStorage.setItem("currentUserId", matched.id);
   localStorage.setItem("currentUserName", matched.fullName || matched.username);
   localStorage.setItem("currentUserRole", matched.role);
 
-  // Redirect based on role (radio value is "Admin" or "User" from register.js)
+
+  const existingSession = JSON.parse(localStorage.getItem("library_session"));
+  const isSameUser = existingSession && String(existingSession.id) === String(matched.id);
+
+  const userSession = {
+    id:            matched.id,
+    username:      matched.fullName || matched.username,
+    borrowedList:  isSameUser ? (existingSession.borrowedList  || []) : [],
+    returnedList:  isSameUser ? (existingSession.returnedList  || []) : [],
+    returnedCount: isSameUser ? (existingSession.returnedCount || 0)  : 0,
+    totalBorrowed: isSameUser ? (existingSession.totalBorrowed || 0)  : 0,
+  };
+
+  localStorage.setItem("library_session", JSON.stringify(userSession));
+
+  /* Redirect */
   if (matched.role === "Admin" || matched.role === "admin") {
     window.location.href = "../pages/dashboard.html";
   } else {
