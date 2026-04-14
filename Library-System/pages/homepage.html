@@ -68,68 +68,32 @@
 
     <div class="cat-grid">
         <div class="cat-card">
-            <img src="../assets/images/science.jpg">
-            <h3>Science</h3>
-            <a href="view-books.html?category=Science">
-                <button>Explore Science</button>
+            <img src="../assets/images/prg.jpg">
+            <h3>programming</h3>
+            <a href="view-books.html?category=programming">
+                <button>Explore</button>
             </a>
         </div>
 
         <div class="cat-card">
             <img src="../assets/images/history.jpg">
             <h3>History</h3>
-            <a href="view-books.html?category=History">
-                <button>Explore History</button>
+            <a href="view-books.html?category=history">
+                <button>Explore</button>
             </a>
         </div>
 
         <div class="cat-card">
             <img src="../assets/images/entertainment.jpg">
-            <h3>Entertainment</h3>
-            <a href="view-books.html?category=Entertainment">
-                <button>Explore Fun</button>
+            <h3>Fiction</h3>
+            <a href="view-books.html?category=fiction">
+                <button>Explore</button>
             </a>
         </div>
     </div>
 </div>
 
 <h6>2026 Online Library System</h6>
-
-<script>
-    if (!localStorage.getItem("libraryBooks")) {
-        const books = [
-            {
-                id: 1,
-                title: "Clean Code",
-                author: "Robert C. Martin",
-                category: "Programming",
-                description: "A book about writing clean code.",
-                status: "Available",
-                image: "../assets/images/clean-code.jpg"
-            },
-            {
-                id: 2,
-                title: "Design Patterns",
-                author: "Erich Gamma",
-                category: "Programming",
-                description: "Elements of Reusable Object-Oriented Software.",
-                status: "Available",
-                image: "../assets/images/design-pattern.jpg"
-            },
-            {
-                id: 3,
-                title: "The Pragmatic Programmer",
-                author: "Andrew Hunt",
-                category: "Programming",
-                description: "Your journey to mastery.",
-                status: "Available",
-                image: "../assets/images/The Pragmatic Programmer.png"
-            }
-        ];
-
-        localStorage.setItem("libraryBooks", JSON.stringify(books));
-    }
-</script>
 
 </body>
 </html>
