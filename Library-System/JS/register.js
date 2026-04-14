@@ -1,61 +1,77 @@
-var userName = document.getElementById("UserName");
-var userEmail = document.getElementById("userEmail");
-var Password = document.getElementById("Password");
+// register.js — saves into the unified library_user store
+
+var userName        = document.getElementById("UserName");
+var userEmail       = document.getElementById("userEmail");
+var Password        = document.getElementById("Password");
 var ConfirmPassword = document.getElementById("ConfirmPassword");
 
-var Users = JSON.parse(localStorage.getItem("Users")) || [];
-
-var nameRegex = /^[A-Z][a-z]{2,10}$/;
-var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+var nameRegex     = /^[A-Za-z][A-Za-z\s]{2,29}$/;         
+var emailRegex    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
 
 function AddUser() {
-  var selectedRole = document.querySelector(
-    'input[name="Accessibility"]:checked',
-  );
+  var selectedRole = document.querySelector('input[name="Accessibility"]:checked');
 
-  if (!nameRegex.test(userName.value)) {
-    alert("Username must start with capital and be 3–10 letters");
+  var fullName = userName.value.trim();
+
+  if (!nameRegex.test(fullName)) {
+    alert("Name must be 3–30 characters and contain only letters.");
     return;
   }
 
-  if (!emailRegex.test(userEmail.value)) {
-    alert("Invalid email format");
+  if (!emailRegex.test(userEmail.value.trim())) {
+    alert("Invalid email format.");
     return;
   }
 
   if (!passwordRegex.test(Password.value)) {
-    alert("Password must be at least 6 chars with letters and numbers");
+    alert("Password must be at least 6 characters with letters and numbers.");
     return;
   }
 
   if (Password.value !== ConfirmPassword.value) {
-    alert("Passwords do not match");
+    alert("Passwords do not match.");
     return;
   }
+
   if (!selectedRole) {
-    alert("Please select role (Admin Or User)");
+    alert("Please select a role (Admin or User).");
     return;
   }
 
-  for (var i = 0; i < Users.length; i++) {
-    if (Users[i].userEmail === userEmail.value) {
-      alert("Email already exists");
-      return;
-    }
+  // Load from the unified store (library_users)
+  var users = JSON.parse(localStorage.getItem("library_users")) || [];
+
+  // Check for duplicate email
+  var emailExists = users.some(function (u) {
+    return u.email === userEmail.value.trim();
+  });
+  if (emailExists) {
+    alert("An account with this email already exists.");
+    return;
   }
 
-  var UserData = {
-    userName: userName.value,
-    userEmail: userEmail.value,
-    Password: Password.value,
-    role: selectedRole.value,
+  // Build username from full name (lowercase, underscored)
+  var autoUsername = fullName.toLowerCase().replace(/\s+/g, "_");
+
+  var maxId = users.reduce(function (max, u) { return Math.max(max, u.id || 0); }, 0);
+
+  var newUser = {
+    id:           maxId + 1,
+    fullName:     fullName,
+    username:     autoUsername,
+    email:        userEmail.value.trim(),
+    password:     Password.value,           // plain-text; hash server-side in production
+    role:         selectedRole.value,       // "Admin" or "User" from the radio buttons
+    status:       "active",
+    avatar:       null,
+    emoji:        null,
+    joined:       new Date().toISOString().slice(0, 10),
+    borrowedBooks: [],
   };
 
-  Users.push(UserData);
-  localStorage.setItem("Users", JSON.stringify(Users));
-
-  // alert("Registered successfully");
+  users.push(newUser);
+  localStorage.setItem("library_users", JSON.stringify(users));
 
   window.location.href = "./login.html";
 }

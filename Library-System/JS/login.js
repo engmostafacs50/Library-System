@@ -1,32 +1,57 @@
-var userEmail = document.getElementById("userEmail");
-var Password = document.getElementById("Password");
+// login.js
 
-var Users = JSON.parse(localStorage.getItem("Users")) || [];
+var userEmail = document.getElementById("userEmail");
+var Password  = document.getElementById("Password");
 
 function Login() {
-  if (userEmail.value === "" || Password.value === "") {
-    alert("Please fill all fields");
+  var email = userEmail.value.trim();
+  var pass  = Password.value;
+
+  if (!email || !pass) {
+    alert("Please fill in all fields.");
     return;
   }
 
-  for (var i = 0; i < Users.length; i++) {
-    if (
-      Users[i].userEmail === userEmail.value &&
-      Users[i].Password === Password.value
-    ) {
-      // alert("Login successful ");
+  var users = JSON.parse(localStorage.getItem("library_users")) || [];
 
-      localStorage.setItem("currentUser", Users[i].userName);
+  var matched = users.find(function (u) {
+    return u.email === email && u.password === pass;
+  });
 
-      if (Users[i].role === "Admin") {
-        window.location.href = "../pages/dashboard.html";
-      } else {
-        window.location.href = "../pages/homepage.html";
-      }
-
-      return;
-    }
+  if (!matched) {
+    alert("Invalid email or password.");
+    return;
   }
 
-  alert("Invalid email or password ");
+  if (matched.status === "inactive") {
+    alert("Your account has been deactivated.");
+    return;
+  }
+
+
+  localStorage.setItem("currentUserId", matched.id);
+  localStorage.setItem("currentUserName", matched.fullName || matched.username);
+  localStorage.setItem("currentUserRole", matched.role);
+
+
+  const existingSession = JSON.parse(localStorage.getItem("library_session"));
+  const isSameUser = existingSession && String(existingSession.id) === String(matched.id);
+
+  const userSession = {
+    id:            matched.id,
+    username:      matched.fullName || matched.username,
+    borrowedList:  isSameUser ? (existingSession.borrowedList  || []) : [],
+    returnedList:  isSameUser ? (existingSession.returnedList  || []) : [],
+    returnedCount: isSameUser ? (existingSession.returnedCount || 0)  : 0,
+    totalBorrowed: isSameUser ? (existingSession.totalBorrowed || 0)  : 0,
+  };
+
+  localStorage.setItem("library_session", JSON.stringify(userSession));
+
+  /* Redirect */
+  if (matched.role === "Admin" || matched.role === "admin") {
+    window.location.href = "../pages/dashboard.html";
+  } else {
+    window.location.href = "../pages/homepage.html";
+  }
 }

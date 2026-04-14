@@ -1,49 +1,120 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Online Library | Add New Book</title>
-        <link rel="stylesheet" href="../CSS/background.css">
-        <link rel="stylesheet" href="../CSS/navbar.css">
-    </head>
-    <body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Online Library | Add New Book</title>
+  <link rel="icon" href="../assets/images/Icon.png" type="image/png">
+  <link rel="stylesheet" href="../CSS/add-book.css">
+  <link rel="stylesheet" href="../CSS/navbar.css">
+</head>
+<body>
 
-        <nav>
-            <b>Library System</b> |
-            <a href="dashboard.html" title="go to admin page">Admin profile</a> | 
-            <a href="add_book.html" title="go to add book">Add Book</a> | 
-            <a href="manage-books.html" title="go to manage book">Manage Books</a> | 
-            <a href="../index.html" title="logout of website"> Logout</a>
-        </nav>
-        <hr>
+  <div class="bg-orbs">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+  </div>
 
-        <h2>Add a New Book to the System</h2>
-        <form action="success.html">
-            <label>Book ID:</label><br>
-            <input type="number" name="book_id" required><br><br>
+  <nav>
+    <span class="nav-brand">Library System</span>
+    <div class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="add-book.html" class="active">Add Book</a>
+      <a href="manage-books.html">Manage Books</a>
+      <!-- <a href="view-books.html">Books</a> -->
+    </div>
+    <div class="nav-logout"><a href="../index.html">Logout</a></div>
+  </nav>
 
-            <label>Book Name:</label><br>
-            <input type="text" name="book_name" required><br><br>
+  <div class="page-wrapper">
 
-            <label>Author Name:</label><br>
-            <input type="text" name="author" required><br><br>
+    <header class="page-header">
+      <div>
+        <p class="page-subtitle">Admin Panel</p>
+        <h1>Add New Book</h1>
+      </div>
+      <a href="dashboard.html" class="btn btn-ghost">Back to Dashboard</a>
+    </header>
 
-            <label>Category:</label><br>
-            <select name="category">
-                <option value="fiction">Fiction</option>
-                <option value="science">Science</option>
-                <option value="history">History</option>
-                <option value="other">Other</option>
-            </select><br><br>
+    <div class="form-layout">
 
-            <label>Description:</label><br>
-            <textarea name="description" rows="4" cols="30"></textarea><br><br>
+      <!-- Image Drop Zone -->
+      <div class="image-panel">
+        <div class="drop-zone" id="dropZone">
+          <div class="drop-inner" id="dropInner">
+            <div class="drop-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+            </div>
+            <p class="drop-title">Drop cover image here</p>
+            <p class="drop-sub">or <label for="imageInput" class="file-link">browse file</label></p>
+            <p class="drop-hint">PNG, JPG, WEBP — max 5 MB</p>
+          </div>
+          <img id="imagePreview" class="preview-img" src="" alt="Cover preview" style="display:none;">
+          <button class="remove-img icon-btn-delete" id="removeImg" style="display:none;" type="button" aria-label="Remove image">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+              <path d="M10 11v6M14 11v6"/>
+              <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+            </svg>
+          </button>
+        </div>
+        <input type="file" id="imageInput" accept="image/*" style="display:none;">
+      </div>
 
-            <input type="submit" value="Save Book Information">
-            <input type="reset" value="Clear Form">
-        </form>
+      <!-- Form Fields -->
+      <div class="form-panel">
+        <div class="form-group">
+          <label for="bookTitle">Book Title <span class="req">*</span></label>
+          <input type="text" id="bookTitle" placeholder="e.g. Clean Code" required>
+        </div>
 
-        <hr>
-        <a href="dashboard.html">Back to Dashboard</a>
+        <div class="form-group">
+          <label for="bookAuthor">Author <span class="req">*</span></label>
+          <input type="text" id="bookAuthor" placeholder="e.g. Robert C. Martin" required>
+        </div>
 
-    </body>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="bookGenre">Genre <span class="req">*</span></label>
+            <select id="bookGenre">
+              <option value="Programming">Programming</option>
+              <option value="Fiction">Fiction</option>
+              <option value="Sci-Fi">Sci-Fi</option>
+              <option value="Science">Science</option>
+              <option value="History">History</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="bookStatus">Status</label>
+            <select id="bookStatus">
+              <option value="available">Available</option>
+              <option value="borrowed">Borrowed</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="bookDesc">Description</label>
+          <textarea id="bookDesc" rows="4" placeholder="Brief summary of the book…"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-primary" onclick="handleAddBook()">Save Book</button>
+          <button type="button" class="btn btn-ghost" onclick="clearForm()">Clear Form</button>
+        </div>
+
+        <div id="toast" class="toast" style="display:none;"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../JS/books-data.js"></script>
+  <script src="../JS/add-book.js"></script>
+</body>
 </html>

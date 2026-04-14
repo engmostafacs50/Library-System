@@ -1,78 +1,37 @@
-const BOOKS = [
-  {
-    title:  "Clean Code",
-    author: "Robert C. Martin",
-    genre:  "Programming",
-    status: "available",
-    image:  "../assets/images/clean-code.jpg",
-    link:   "book-details.html"
-  },
-  {
-    title:  "The Pragmatic Programmer",
-    author: "Andrew Hunt",
-    genre:  "Programming",
-    status: "available",
-    image:  "../assets/images/The Pragmatic Programmer.png",
-    link:   "book-details.html"
-  },
-  {
-    title:  "Design Patterns",
-    author: "Gang of Four",
-    genre:  "Programming",
-    status: "borrowed",
-    image:  "../assets/images/design-pattern.jpg",
-    link:   "book-details.html"
-  },
-  {
-    title:  "1984",
-    author: "George Orwell",
-    genre:  "Fiction",
-    status: "available",
-    image:  null,
-    emoji:  "📖",
-    link:   "book-details.html"
-  },
-  {
-    title:  "Dune",
-    author: "Frank Herbert",
-    genre:  "Sci-Fi",
-    status: "available",
-    image:  null,
-    emoji:  "🏜️",
-    link:   "book-details.html"
-  },
-  {
-    title:  "Thinking, Fast and Slow",
-    author: "Daniel Kahneman",
-    genre:  "Psychology",
-    status: "borrowed",
-    image:  null,
-    emoji:  "🧠",
-    link:   "book-details.html"
-  },
-];
-
-
+// ✅ Depends on books-data.js being loaded first (via <script> in HTML)
 
 document.addEventListener("DOMContentLoaded", () => {
 
   const input     = document.querySelector(".search-box input");
   const searchBtn = document.querySelector(".search-btn");
   const grid      = document.querySelector(".books-grid");
-  const STORAGE_KEY = "library_last_search";
+  const LAST_SEARCH = "library_last_search";
 
-  /* Render all books into the grid*/
+  /* ── Version check: wipe old bad data and re-seed automatically ── */
+  const DB_VERSION = "v2";
+  if (localStorage.getItem("libraryDB_version") !== DB_VERSION) {
+    localStorage.removeItem("libraryBooks");
+    localStorage.setItem("libraryDB_version", DB_VERSION);
+  }
+
+  // ✅ Seed default books if localStorage is empty
+  seedBooks();
+
+  /* ── Render books from books-data.js ── */
   function renderBooks() {
     grid.innerHTML = "";
-    BOOKS.forEach(book => {
+
+    const books = getBooks();
+
+    books.forEach(book => {
       const card = document.createElement("a");
-      card.className  = "book-card hidden";
-      card.href       = book.link;
+      card.className = "book-card hidden";
+      card.href = `book-details.html?id=${book.id}`;
 
       const cover = book.image
         ? `<img src="${book.image}" alt="${book.title}">`
         : `<div class="cover-placeholder">
-             ${book.emoji}
+             ${book.emoji || "📖"}
              <small>${book.genre}</small>
            </div>`;
 
@@ -96,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  /* Empty state*/
+  /* ── Empty states ── */
   const emptyState = document.createElement("div");
   emptyState.className = "empty-state";
   emptyState.innerHTML = `
@@ -106,7 +65,6 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   grid.after(emptyState);
 
-  /*No results*/
   const noResults = document.createElement("div");
   noResults.className = "empty-state hidden";
   noResults.innerHTML = `
@@ -116,10 +74,10 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   emptyState.after(noResults);
 
-  /*Search logic */
+  /* ── Search logic ── */
   function runSearch() {
     const query = input.value.trim().toLowerCase();
-    localStorage.setItem(STORAGE_KEY, input.value.trim());
+    localStorage.setItem(LAST_SEARCH, input.value.trim());
 
     const cards = grid.querySelectorAll(".book-card");
 
@@ -131,46 +89,47 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     let visible = 0;
+
     cards.forEach(card => {
-      const title  = card.querySelector(".book-title")?.textContent.toLowerCase()  || "";
+      const title  = card.querySelector(".book-title")?.textContent.toLowerCase() || "";
       const author = card.querySelector(".book-author")?.textContent.toLowerCase() || "";
-      const genres = [...card.querySelectorAll(".badge-genre")]
-                       .map(b => b.textContent.toLowerCase()).join(" ");
+      const genre  = [...card.querySelectorAll(".badge-genre")]
+                        .map(b => b.textContent.toLowerCase()).join(" ");
 
-      const match = title.includes(query) || author.includes(query) || genres.includes(query);
+      const match = title.includes(query) || author.includes(query) || genre.includes(query);
 
-      if (match) {
-        card.classList.remove("hidden");
-        card.classList.add("card-reveal");
-        visible++;
-      } else {
-        card.classList.add("hidden");
-        card.classList.remove("card-reveal");
-      }
+      card.classList.toggle("hidden", !match);
+      card.classList.toggle("card-reveal", match);
+
+      if (match) visible++;
     });
 
     emptyState.classList.add("hidden");
     noResults.classList.toggle("hidden", visible > 0);
   }
 
-  /*Event listeners*/
+  /* ── Events ── */
   searchBtn.addEventListener("click", runSearch);
-  input.addEventListener("keydown", e => { if (e.key === "Enter") runSearch(); });
+
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter") runSearch();
+  });
+
   input.addEventListener("input", () => {
-    if (input.value.trim() === "") localStorage.removeItem(STORAGE_KEY);
+    if (!input.value.trim()) localStorage.removeItem(LAST_SEARCH);
     runSearch();
   });
 
-  /* Init */
+  /* ── Init ── */
   renderBooks();
 
-  const saved = localStorage.getItem(STORAGE_KEY);
+  const saved = localStorage.getItem(LAST_SEARCH);
   if (saved) {
     input.value = saved;
     runSearch();
   }
 
-  /* Companion CSS */
+  /* ── CSS ── */
   const style = document.createElement("style");
   style.textContent = `
     .hidden { display: none !important; }
@@ -179,16 +138,25 @@ document.addEventListener("DOMContentLoaded", () => {
       from { opacity: 0; transform: translateY(12px) scale(0.97); }
       to   { opacity: 1; transform: translateY(0) scale(1); }
     }
-    .card-reveal { animation: cardReveal 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+    .card-reveal {
+      animation: cardReveal 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
 
     .empty-state {
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 10px; padding: 60px 24px; text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 60px 24px;
+      text-align: center;
     }
+
     .empty-icon { font-size: 52px; filter: grayscale(0.3); margin-bottom: 6px; }
     .empty-title { font-size: 16px; font-weight: 600; color: rgba(226,232,240,0.85); }
     .empty-sub { font-size: 13px; color: rgba(148,163,184,0.5); }
   `;
+
   document.head.appendChild(style);
 });

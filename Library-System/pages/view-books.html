@@ -1,61 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <title>Online Library | View Books</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../CSS/background.css">
+    <link rel="stylesheet" href="../CSS/view-books.css">
+    <link rel="stylesheet" href="../CSS/navbar.css">
+</head>
+<body>
 
-    <head>
+    <div class="bg-orbs">
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+        <div class="orb orb3"></div>
+    </div>
 
-       <title>Online Library | View Books</title>
-       <meta charset="UTF-8"/>
-        <link rel="stylesheet" href="../CSS/background.css">
-        <link rel="stylesheet" href="../CSS/navbar.css">
-    </head>
-
-    <body>
-        
-        <nav>
-            <a href="homepage.html" title="go to Home Page"> Home page  </a> | 
-            <a href="user-dashboard.html" title="go to user profile">User Profile</a> | 
-            <a href="search-books.html" title="go to search books">Search Books</a> | 
-            <a href="view-books.html" title="go to View all Books"> View Books</a> | 
-            <a href="borrowed-books.html" title="go to Borrowed Books"> Borrowed Books </a> | 
-            <a href="returned-books.html" title="go to Returned Books"> Returned Books</a> |
-            <a href="../index.html" title="logout of website"> Logout</a>
-        </nav>
-        <hr>
-        
-        <div id="booksContainer">
-
-            <h1> View Books</h1>
-            <h2>Available Books</h2>
-            <a
-                href="book-details.html" title="go to book details">
-                <img src="../assets/images/clean-code.jpg" width="120">
-                <p> Clean Code </p>
-            </a>
-            <a
-                href="book-details.html" title="go to book details">
-                <img src="../assets/images/design-pattern.jpg" width="120">
-                <p> design-pattern </p>
-            </a>
-            <a
-                href="book-details.html" title="go to book details">
-                <img src="../assets/images/The Pragmatic Programmer.png" width="120">
-                <p> design-pattern </p>
-            </a>
+    <nav>
+        <span class="nav-brand">Library System</span>
+        <div class="nav-links">
+            <a href="homepage.html">Home</a>
+            <a href="user-dashboard.html">Profile</a>
+            <a href="search-books.html">Search</a>
+            <a href="view-books.html" class="active">Books</a>
+            <a href="borrowed-books.html">Borrowed</a>
+            <a href="returned-books.html">Returned</a>
         </div>
-        <hr>
+        <div class="nav-logout"><a href="../index.html">Logout</a></div>
+    </nav>
 
-        <div>
+    <div class="main-wrapper">
+        <h1 class="main-title">Library Collection</h1>
+        <p class="subtitle">Explore our available books and resources</p>
 
-            <label for="select-by-category"> <h2> Select By Category</h2></label>
-            <select multiple id="select-by-category" name="select-by-category"> 
-                <option value="Latest"> Latest </option>
-                <option value="earliest"> Earliest </option>
-                <option value="science"> Science </option>
-                <option value="history"> History </option>
-                <option value="fiction"> Fiction </option>
+        <div class="filter-section">
+            <label for="select-by-category">Select By Category:</label>
+            <select id="select-by-category" class="dark-input">
+                <option value="all">All Categories</option>
+                <option value="programming">Programming</option>
+                <option value="science">Science</option>
+                <option value="history">History</option>
+                <option value="entertainment">Entertainment</option>
+                <option value="fiction">Fiction</option>
             </select>
-            
         </div>
 
-    </body>
+        <div id="booksContainer" class="books-grid">
+     
+        </div>
+  </div>
+    <script src="../JS/books-data.js"></script>
+    <script src="../JS/view-books.js"></script>
+</body>
 </html>

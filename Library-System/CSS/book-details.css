@@ -1,0 +1,159 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #0f0f1a;
+  color: #e2e8f0;
+  min-height: 100vh;
+}
+
+h2 {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 2rem 0 1.5rem;
+  color: #a5b4fc;
+  letter-spacing: 0.5px;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #2d2d4e;
+  margin: 0.9rem 0;
+}
+
+/* ── Book Card ── */
+.book-card {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 2.5rem;
+  max-width: 900px;
+  margin: 0 auto 3rem;
+  background: #1a1a2e;
+  border: 1px solid #2d2d4e;
+  border-radius: 16px;
+  padding: 2.5rem;
+  animation: fadeUp 0.5s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Left: Book Image ── */
+.book-card img {
+  width: 220px;
+  min-width: 220px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid #4f46e5;
+  flex-shrink: 0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: bookFloat 4s ease-in-out infinite;
+}
+
+@keyframes bookFloat {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-7px); }
+}
+
+.book-card img:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 16px 40px rgba(99, 102, 241, 0.4);
+  animation: none;
+}
+
+/* ── Right: Details ── */
+.book-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  flex: 1;
+}
+
+.book-info h3 {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: #c7d2fe;
+  margin-bottom: 0.4rem;
+  line-height: 1.3;
+}
+
+.book-info p {
+  font-size: 1.1rem;
+  color: #94a3b8;
+  line-height: 1.7;
+}
+
+.book-info p strong {
+  color: #a5b4fc;
+  margin-right: 6px;
+  font-size: 1.05rem;
+}
+
+/* ── Status Badge ── */
+#status {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  background: #134e4a;
+  color: #5eead4;
+}
+
+/* ── Borrow Button ── */
+.btn-outline {
+  margin-top: 1.8rem;
+  align-self: flex-start;
+  padding: 0.75rem 2rem;
+  background: transparent;
+  border: 2px solid #6366f1;
+  color: #a5b4fc;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.btn-outline:hover {
+  background: #6366f1;
+  color: #fff;
+}
+
+.btn-outline:active {
+  transform: scale(0.97);
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .book-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .book-card img {
+    width: 170px;
+    min-width: 170px;
+    height: 240px;
+  }
+
+  .book-info h3 { font-size: 1.5rem; }
+  .book-info p  { font-size: 1rem; }
+
+  .btn-outline {
+    align-self: center;
+    font-size: 1rem;
+  }
+}

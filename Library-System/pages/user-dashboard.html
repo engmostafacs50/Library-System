@@ -3,17 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <title>Online Library | User Dashboard</title>
-    <link rel="stylesheet" href="../CSS/UserDashoard-BorrowedBooks.css" />
-  </head>
+    <link rel="icon" href="../assets/images/Icon.png" type="image/png">
+    <link rel="stylesheet" href="../CSS/UserDashboard-BorrowedBooks.css" />
+    <link rel="stylesheet" href="../CSS/navbar.css">
+    <link rel="stylesheet" href="../CSS/background.css">
+</head>
   <body>
+    <div class="bg-orbs">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+  </div>
     <nav>
+    <span class="nav-brand">Library System</span>
+    <div class="nav-links">
       <a href="homepage.html">Home</a>
-      <a href="user-dashboard.html">Profile</a>
+      <a href="user-dashboard.html" class="active">Profile</a>
       <a href="search-books.html">Search</a>
       <a href="view-books.html">Books</a>
       <a href="borrowed-books.html">Borrowed</a>
-      <a href="../index.html">Logout</a>
-    </nav>
+      <a href="returned-books.html">Returned</a>
+    </div>
+    <div class="nav-logout"><a href="../index.html">Logout</a></div>
+  </nav>
 
     <div class="container">
       <div class="user-header">
@@ -45,8 +57,8 @@
       <div class="card">
         <h2>Suggested for You</h2>
         <div id="suggested-container">
-          <a href="book-details.html" class="suggested-book-link">
-            <div style="font-size: 50px; margin-bottom: 10px">📘</div>
+          <a href="book-details.html?id=1" class="suggested-book-link">
+            <div style="font-size: 50px; margin-bottom: 10px"></div>
             <p style="font-weight: bold">Clean Code</p>
             <small style="color: #818cf8">Robert C. Martin</small>
           </a>
@@ -54,7 +66,8 @@
         <a href="view-books.html" class="btn-explore">Explore All Books</a>
       </div>
     </div>
-
-    <script src="../JS/UserDashoard-BorrowedBooks.js"></script>
+    <script src="../JS/Users-data.js"></script>
+    <script src = "../JS/books-data.js"></script>
+    <script src="../JS/UserDashboard-BorrowedBooks.js"></script>
   </body>
 </html>

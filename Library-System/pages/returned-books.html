@@ -1,48 +1,115 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <title>Online Library | Returned Books</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="../assets/images/Icon.png" type="image/png">
+    <link rel="stylesheet" href="../CSS/background.css">
+    <link rel="stylesheet" href="../CSS/returned-books.css">
+    <link rel="stylesheet" href="../CSS/navbar.css">
+    <style>
+        .main-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            text-align: center;
+        }
 
-    <head>
-        <title>Online Library | Returned Books</title>
-        <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="../CSS/background.css">
-        <link rel="stylesheet" href="../CSS/navbar.css">
-    </head>
+        table {
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-    <body>
-        
-        <nav>
-            <a href="homepage.html" title="go to Home Page"> Home page  </a> | 
-            <a href="user-dashboard.html" title="go to user profile">User Profile</a> | 
-            <a href="search-books.html" title="go to search books">Search Books</a> | 
-            <a href="view-books.html" title="go to View all Books"> View Books</a> | 
-            <a href="borrowed-books.html" title="go to Borrowed Books"> Borrowed Books </a> | 
-            <a href="returned-books.html" title="go to Returned Books"> Returned Books</a> |
-            <a href="../index.html" title="logout of website"> Logout</a>
-        </nav>
-        <hr>
+        .returned-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+        }
 
-        <div>
+        #emptyMsg {
+            text-align: center;
+            color: #64748b;
+            padding: 40px;
+        }
+    </style>
+</head>
+<body>
 
-            <h1> My Returned Books </h1>
-            <table border="1" cellpadding="10" width="100%"> 
-                <tr>
-                    <th> Number of books </th>
-                    <th> Books IDs</th>
-                    <th> Authors </th>
-                    <th> Returning Date </th>
-                </tr>
+    <!-- BUG FIX: removed stray </nav> before opening <nav>, removed duplicate html/head/body tags -->
+    <nav>
+        <span class="nav-brand">Library System</span>
+        <div class="nav-links">
+            <a href="homepage.html">Home</a>
+            <a href="user-dashboard.html">Profile</a>
+            <a href="search-books.html">Search</a>
+            <a href="view-books.html">Books</a>
+            <a href="borrowed-books.html">Borrowed</a>
+            <a href="returned-books.html" class="active">Returned</a>
+        </div>
+        <div class="nav-logout"><a href="../index.html">Logout</a></div>
+    </nav>
 
-                <tr>
-                    <th> <input type="number"> </th>
-                    <th> <input type="text" > </th>
-                    <th> <input type="text" > </th>
-                    <th> <input type="date" > </th>
-                </tr>
-           </table>
+    <div class="bg-orbs">
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+        <div class="orb orb3"></div>
+    </div>
 
+    <div class="main-wrapper">
+
+        <div class="top-action" style="margin-top: 30px;">
+            <a href="borrowed-books.html" class="btn-secondary">← Go to Borrowed Books</a>
         </div>
 
-    </body>
+        <h1 class="main-title">My Returned Books</h1>
+        <p class="subtitle">Log and track your return history</p>
 
+        <hr>
+
+        <div class="glass-card" style="max-width: 950px; width: 90%;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Book Title</th>
+                        <th>Book ID</th>
+                        <th>Author</th>
+                        <th>Return Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text"  id="return-title"  class="dark-input" placeholder="Title"></td>
+                        <td><input type="text"  id="return-id"     class="dark-input" placeholder="ID"></td>
+                        <td><input type="text"  id="return-author" class="dark-input" placeholder="Author"></td>
+                        <td><input type="date"  id="return-date"   class="dark-input"></td>
+                        <td><button onclick="addReturnRecord()" class="btn-submit">Submit</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="font-size: 12px; color: #475569; margin-top: 20px;">
+                Books returned from "Borrowed Books" page will appear automatically below
+            </p>
+        </div>
+
+        <div style="width: 80%; height: 1px; background: rgba(255,255,255,0.1); margin: 50px 0;"></div>
+
+        <div class="history-section" style="width: 90%; max-width: 950px;">
+            <h2 class="section-title" style="text-align: center; border: none; margin-bottom: 30px;">📚 Your Returned History</h2>
+            <div id="returnedList" class="returned-grid"></div>
+                <p id="emptyMsg">No returns recorded yet.</p>
+            </div>
+
+    </div>
+
+    <script src="../JS/Users-data.js"></script>
+    <script src="../JS/books-data.js"></script>
+    <script src="../JS/returned-books.js"></script>
+
+</body>
 </html>
