@@ -52,3 +52,21 @@ function escapeHtml(str) {
         return m;
     });
 }
+
+window.onload = function() {
+    const params = new URLSearchParams(window.location.search);
+    const selectedCategory = params.get('category');
+
+    if (selectedCategory) {
+        const categorySelect = document.getElementById('select-by-category');
+
+        categorySelect.value = selectedCategory;
+
+
+        if (typeof filterBooks === "function") {
+            filterBooks();
+        } else {
+            categorySelect.dispatchEvent(new Event('change'));
+        }
+    }
+};
