@@ -37,30 +37,11 @@
 <h2 style="text-align: center; margin-top: 40px; font-size: 32px;">Featured Books</h2>
 
 <!-- Featured Book -->
+
 <div class="featured-book">
-    <div class="book-card">
-        <img src="../assets/images/clean-code.jpg" width="150">
-        <h3>Clean Code</h3>
-        <p>Robert C. Martin</p>
-        <a href="book-details.html?id=1">
-            <button class="btn-outline">View Details</button>
-        </a>
-        <hr>
-        <img src="../assets/images/design-pattern.jpg" width="150">
-        <h3>Design Patterns</h3>
-        <p>Erich Gamma</p>
-        <a href="book-details.html?id=3">
-            <button class="btn-outline">View Details</button>
-        </a>
-        <hr>
-        <img src="../assets/images/The Pragmatic Programmer.png" width="150">
-        <h3>The Pragmatic Programmer</h3>
-        <p>Andrew Hunt</p>
-        <a href="book-details.html?id=2">
-            <button class="btn-outline">View Details</button>
-        </a>
-    </div>
+     <div class="book-card" id="featuredBooks"></div>
 </div>
+
 
 <!-- Categories -->
 <div class="categories">
@@ -95,5 +76,30 @@
 
 <h6>2026 Online Library System</h6>
 
+<script src="../JS/books-data.js"></script>
+
+<script>
+    const container = document.getElementById("featuredBooks");
+
+    const books = getBooks();
+
+    const featured = books.slice(0, 3);
+
+    if (featured.length === 0) {
+        container.innerHTML = "<p>No books available</p>";
+    } else {
+        featured.forEach(book => {
+            container.innerHTML += `
+            <img src="${book.image || '../assets/images/default-book.png'}" width="150">
+            <h3>${book.title}</h3>
+            <p>${book.author}</p>
+            <a href="book-details.html?id=${book.id}">
+                <button class="btn-outline">View Details</button>
+            </a>
+            <hr>
+        `;
+        });
+    }
+</script>
 </body>
 </html>
