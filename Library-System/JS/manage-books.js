@@ -286,7 +286,7 @@ function updateEmptyState(isEmpty) {
             <td colspan="${colCount}" style="
                 text-align:center; padding:48px 20px;
                 color:rgba(148,163,184,0.45); font-size:14px;">
-                📚 No books found.
+                No books found.
             </td>`;
         tbody.appendChild(tr);
     } else if (!isEmpty && existing) {

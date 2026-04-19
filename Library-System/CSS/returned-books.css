@@ -128,7 +128,30 @@ nav {
   background: rgba(129, 140, 248, 0.1);
 }
 
-/* قسم الكتب المرتجعة (البطاقات) */
+
+.borrow-again-btn {
+    flex-shrink: 0;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.borrow-again-btn:hover {
+    transform: scale(1.04);
+    box-shadow: 0 4px 18px rgba(99, 102, 241, 0.5);
+}
+
+.borrow-again-btn:active {
+    transform: scale(0.97);
+}
+
+
 .returned-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -150,7 +173,7 @@ nav {
   background: #2d3a5e;
 }
 
-/* زر Borrow Again */
+
 .btn-borrow-again {
   background: rgba(59, 130, 246, 0.15);
   border: 1px solid #3b82f6;
@@ -169,7 +192,7 @@ nav {
   transform: scale(1.02);
 }
 
-/* تحسين شكل التنبيه تحت الجدول */
+
 .glass-card p {
   margin-top: 25px;
   margin-bottom: 0;

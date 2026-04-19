@@ -44,6 +44,11 @@ window.borrowBook = (id, title) => {
   db.totalBorrowed++;
   saveDB();
 
+ 
+  if (typeof toggleBookStatus === "function") {
+    toggleBookStatus(id);
+  }
+
   renderBorrowed();
 };
 
@@ -65,6 +70,12 @@ window.returnBook = (i) => {
     db.returnedCount = db.returnedList.length;
 
     saveDB();
+
+
+    if (typeof toggleBookStatus === "function") {
+      toggleBookStatus(book.id);
+    }
+
     renderBorrowed();
     renderStats();
   }
@@ -76,16 +87,14 @@ function renderSuggestedBook() {
   const container = document.getElementById("suggested-container");
   if (!container) return;
 
-  const books = getBooks(); // جلب كل الكتب من localStorage
+  const books = getBooks(); 
 
   if (books.length === 0) {
     container.innerHTML =
       "<p style='color: #94a3b8;'>No books available for suggestion.</p>";
     return;
   }
-
-  // اختيار كتاب عشوائي من المصفوفة
-  const randomIndex = Math.floor(Math.random() * books.length);
+   const randomIndex = Math.floor(Math.random() * books.length);
   const suggested = books[randomIndex];
 
   container.innerHTML = `
@@ -103,13 +112,6 @@ function renderSuggestedBook() {
     </a>
   `;
 }
-
-// استدعاء الوظيفة عند تحميل الصفحة داخل الـ Init
-document.addEventListener("DOMContentLoaded", () => {
-  renderBorrowed();
-  renderStats();
-  renderSuggestedBook(); // <--- ضف هذا السطر هنا
-});
 
 /* ── Render ── */
 function renderBorrowed() {
@@ -150,4 +152,5 @@ function renderStats() {
 document.addEventListener("DOMContentLoaded", () => {
   renderBorrowed();
   renderStats();
+  renderSuggestedBook();
 });

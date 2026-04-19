@@ -61,8 +61,7 @@ function AddUser() {
     fullName:     fullName,
     username:     autoUsername,
     email:        userEmail.value.trim(),
-    password:     Password.value,           // plain-text; hash server-side in production
-    role:         selectedRole.value,       // "Admin" or "User" from the radio buttons
+    password:     Password.value,          
     status:       "active",
     avatar:       null,
     emoji:        null,

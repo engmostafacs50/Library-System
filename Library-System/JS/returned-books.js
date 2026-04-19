@@ -24,7 +24,7 @@ function loadReturnedBooks() {
       <h4>${book.title}</h4>
       <p>ID: ${book.id}</p>
       <p>Returned: ${book.returnDate}</p>
-      <button onclick="borrowAgain(${index})">Borrow Again</button>
+      <button class = "borrow-again-btn"onclick="borrowAgain(${index})">Borrow Again</button>
     `;
 
     container.appendChild(item);
@@ -64,6 +64,5 @@ window.borrowAgain = (index) => {
   if (typeof toggleBookStatus === "function") {
     toggleBookStatus(book.id);
   }
-
   location.reload();
 };

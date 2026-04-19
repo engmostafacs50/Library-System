@@ -1,4 +1,4 @@
-// ✅ Depends on books-data.js being loaded first (via <script> in HTML)
+//Depends on books-data.js being loaded first (via <script> in HTML)
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("libraryDB_version", DB_VERSION);
   }
 
-  // ✅ Seed default books if localStorage is empty
+  //Seed default books if localStorage is empty
   seedBooks();
 
   /* ── Render books from books-data.js ── */

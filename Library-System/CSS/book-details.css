@@ -51,12 +51,12 @@ hr {
   width: 220px;
   min-width: 220px;
   height: 300px;
-  object-fit: cover;
+  /* object-fit: cover; */
   border-radius: 12px;
   border: 2px solid #4f46e5;
   flex-shrink: 0;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  animation: bookFloat 4s ease-in-out infinite;
+  transition: transform 1s ease, box-shadow 1s ease;
+  /* animation: bookFloat 4s ease-in-out infinite; */
 }
 
 @keyframes bookFloat {
@@ -64,11 +64,12 @@ hr {
   50%       { transform: translateY(-7px); }
 }
 
-.book-card img:hover {
+.book-card .image-container:hover img {
   transform: translateY(-8px) scale(1.02);
   box-shadow: 0 16px 40px rgba(99, 102, 241, 0.4);
   animation: none;
 }
+ 
 
 /* ── Right: Details ── */
 .book-info {
