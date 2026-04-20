@@ -1,4 +1,3 @@
-/* ── Reset ── */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
@@ -226,7 +225,7 @@ select option { background: #1e293b; }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* ── Responsive ── */
+
 @media (max-width: 768px) {
   .form-layout { grid-template-columns: 1fr; }
   .drop-zone { aspect-ratio: 3/2; }

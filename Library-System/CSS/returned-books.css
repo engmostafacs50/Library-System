@@ -53,7 +53,6 @@ nav {
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
 }
 
-/* ====== زيادة المسافات بين المربعات ====== */
 .glass-card table {
   width: 100%;
   border-collapse: separate;
@@ -74,7 +73,7 @@ nav {
   color: #a78bfa;
 }
 
-/* تنسيق المدخلات */
+
 .dark-input {
   background: rgba(15, 23, 42, 0.6);
   border: 1px solid #334155;
@@ -93,7 +92,7 @@ nav {
   background: rgba(15, 23, 42, 0.8);
 }
 
-/* زر Submit */
+
 .btn-submit {
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid #ef4444;

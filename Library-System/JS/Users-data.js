@@ -30,7 +30,7 @@ function addUser(userData) {
     status: "active",
     role: "user",
     avatar: null,
-    emoji: "👤",
+    emoji: null,
     joined: new Date().toISOString().slice(0, 10),
     borrowedBooks: [],
     ...userData,
