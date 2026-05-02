@@ -36,8 +36,8 @@ document.addEventListener("DOMContentLoaded", () => {
            </div>`;
 
       const badgeStatus = book.status === "available"
-        ? `<span class="badge badge-available">✓ Available</span>`
-        : `<span class="badge badge-borrowed">⏳ Borrowed</span>`;
+        ? `<span class="badge badge-available"> Available</span>`
+        : `<span class="badge badge-borrowed"> Borrowed</span>`;
 
       card.innerHTML = `
         ${cover}
@@ -129,7 +129,6 @@ document.addEventListener("DOMContentLoaded", () => {
     runSearch();
   }
 
-  /* ── CSS ── */
   const style = document.createElement("style");
   style.textContent = `
     .hidden { display: none !important; }

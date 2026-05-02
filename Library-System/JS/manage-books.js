@@ -4,9 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initSortableHeaders();
 });
 
-/* ══════════════════════════════
-   1. RENDER TABLE FROM localStorage
-══════════════════════════════ */
+/* RENDER TABLE FROM localStorage*/
 function renderTable() {
     const books = getBooks();
     const tbody = document.querySelector("tbody");
@@ -39,7 +37,7 @@ function createRow(book, i = 0) {
     tr.innerHTML = `
         <td>${book.id}</td>
         <td>${coverCell}</td>
-        <td><a href="book-details.html?id=${book.id}">${book.title}</a></td>
+        <td><a${book.id}">${book.title}</a></td>
         <td>${book.author}</td>
         <td>${book.genre}</td>
         <td>${statusBadge}</td>
@@ -57,9 +55,7 @@ function createRow(book, i = 0) {
     return tr;
 }
 
-/* ══════════════════════════════
-   2. DELETE
-══════════════════════════════ */
+/* DELETE*/
 function initDeleteButtons() {
     document.querySelectorAll(".btn-delete").forEach(btn => {
         btn.addEventListener("click", () => {
