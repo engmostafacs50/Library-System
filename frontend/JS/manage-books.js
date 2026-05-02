@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initSortableHeaders();
 });
 
-/* RENDER TABLE FROM localStorage*/
+/* RENDER TABLE FROM data layer */
 function renderTable() {
     const books = getBooks();
     const tbody = document.querySelector("tbody");
@@ -55,7 +55,7 @@ function createRow(book, i = 0) {
     return tr;
 }
 
-/* DELETE*/
+/* DELETE */
 function initDeleteButtons() {
     document.querySelectorAll(".btn-delete").forEach(btn => {
         btn.addEventListener("click", () => {
@@ -80,7 +80,7 @@ function initDeleteButtons() {
     });
 }
 
-/* 3. EDIT — inline row editing */
+/* EDIT — inline row editing */
 function initEditButtons() {
     document.querySelectorAll(".btn-edit").forEach(btn => {
         btn.addEventListener("click", () => {
@@ -189,7 +189,7 @@ function initEditButtons() {
     });
 }
 
-/*4. SEARCH*/
+/* SEARCH */
 function initSearch() {
     const input = document.getElementById("searchInput");
     if (!input) return;
@@ -210,7 +210,7 @@ function initSearch() {
     });
 }
 
-/*5. SORTABLE HEADERS */
+/* SORTABLE HEADERS */
 function initSortableHeaders() {
     const headers = document.querySelectorAll("thead th");
     let lastSorted = { index: -1, asc: true };

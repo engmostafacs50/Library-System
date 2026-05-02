@@ -4,7 +4,7 @@ function loadReturnedBooks() {
   const container = document.getElementById("returnedList");
   const emptyMsg  = document.getElementById("emptyMsg");
 
-  const db   = JSON.parse(localStorage.getItem("library_session")) || {};
+  const db   = getSession() || {};
   const list = db.returnedList || [];
 
   container.innerHTML = "";
@@ -24,7 +24,7 @@ function loadReturnedBooks() {
       <h4>${book.title}</h4>
       <p>ID: ${book.id}</p>
       <p>Returned: ${book.returnDate}</p>
-      <button class = "borrow-again-btn"onclick="borrowAgain(${index})">Borrow Again</button>
+      <button class="borrow-again-btn" onclick="borrowAgain(${index})">Borrow Again</button>
     `;
 
     container.appendChild(item);
@@ -33,7 +33,7 @@ function loadReturnedBooks() {
 
 /* ── Borrow Again ── */
 window.borrowAgain = (index) => {
-  const db   = JSON.parse(localStorage.getItem("library_session"));
+  const db   = getSession();
   const book = db.returnedList[index];
 
   if (!book) return;
@@ -50,17 +50,16 @@ window.borrowAgain = (index) => {
     id:    book.id,
     title: book.title,
     date:  format(today),
-    due:   format(new Date(new Date().setDate(today.getDate() + 7))) // fixed: use fresh Date()
+    due:   format(new Date(new Date().setDate(today.getDate() + 7)))
   };
 
   db.borrowedList.push(newBook);
   db.returnedList.splice(index, 1);
   db.returnedCount  = db.returnedList.length;
-  db.totalBorrowed  = (db.totalBorrowed || 0) + 1; //fix: keep total count correct
+  db.totalBorrowed  = (db.totalBorrowed || 0) + 1;
 
-  localStorage.setItem("library_session", JSON.stringify(db));
+  saveSession(db);
 
-  //fix: update book status in the library so it shows as "borrowed"
   if (typeof toggleBookStatus === "function") {
     toggleBookStatus(book.id);
   }

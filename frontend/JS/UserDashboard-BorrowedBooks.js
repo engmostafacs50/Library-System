@@ -2,7 +2,7 @@ const USER_KEY = "library_session";
 
 /* ── Load User ── */
 function loadUser() {
-  const user = JSON.parse(localStorage.getItem(USER_KEY));
+  const user = getSession();
   if (!user) {
     window.location.href = "../pages/login.html";
     return null;
@@ -18,7 +18,7 @@ db.returnedList = db.returnedList || [];
 db.returnedCount = db.returnedList.length;
 db.totalBorrowed = db.totalBorrowed || 0;
 
-const saveDB = () => localStorage.setItem(USER_KEY, JSON.stringify(db));
+const saveDB = () => saveSession(db);
 
 /* ── Borrow Book ── */
 window.borrowBook = (id, title) => {
@@ -44,7 +44,6 @@ window.borrowBook = (id, title) => {
   db.totalBorrowed++;
   saveDB();
 
- 
   if (typeof toggleBookStatus === "function") {
     toggleBookStatus(id);
   }
@@ -71,7 +70,6 @@ window.returnBook = (i) => {
 
     saveDB();
 
-
     if (typeof toggleBookStatus === "function") {
       toggleBookStatus(book.id);
     }
@@ -81,20 +79,19 @@ window.returnBook = (i) => {
   }
 };
 
-/* ── Render Suggested Book ── */
 /* ── Render Random Suggested Book ── */
 function renderSuggestedBook() {
   const container = document.getElementById("suggested-container");
   if (!container) return;
 
-  const books = getBooks(); 
+  const books = getBooks();
 
   if (books.length === 0) {
     container.innerHTML =
       "<p style='color: #94a3b8;'>No books available for suggestion.</p>";
     return;
   }
-   const randomIndex = Math.floor(Math.random() * books.length);
+  const randomIndex = Math.floor(Math.random() * books.length);
   const suggested = books[randomIndex];
 
   container.innerHTML = `

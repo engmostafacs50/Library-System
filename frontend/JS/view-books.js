@@ -62,7 +62,6 @@ window.onload = function() {
 
         categorySelect.value = selectedCategory;
 
-
         if (typeof filterBooks === "function") {
             filterBooks();
         } else {

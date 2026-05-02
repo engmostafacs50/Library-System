@@ -19,7 +19,7 @@ if (!book) {
   const borrowBtn = document.querySelector(".btn-outline");
 
   // ── Check if this user already borrowed this book ──
-  const session = JSON.parse(localStorage.getItem("library_session")) || {};
+  const session = getSession() || {};
   const borrowedList = session.borrowedList || [];
   const alreadyBorrowed = borrowedList.some(b => String(b.id) === String(book.id));
 
@@ -27,7 +27,7 @@ if (!book) {
   document.getElementById("status").textContent = alreadyBorrowed ? "borrowed" : book.status;
 
   borrowBtn.onclick = function () {
-    const session = JSON.parse(localStorage.getItem("library_session"));
+    const session = getSession();
 
     if (!session) {
       alert("You must be logged in to borrow books.");
@@ -60,7 +60,7 @@ if (!book) {
       // Update book status in library
       toggleBookStatus(book.id);
 
-      localStorage.setItem("library_session", JSON.stringify(session));
+      saveSession(session);
 
       borrowBtn.textContent = "Borrow Book";
       document.getElementById("status").textContent = "available";
@@ -85,7 +85,7 @@ if (!book) {
       // Update book status in library
       toggleBookStatus(book.id);
 
-      localStorage.setItem("library_session", JSON.stringify(session));
+      saveSession(session);
 
       borrowBtn.textContent = "Return Book";
       document.getElementById("status").textContent = "borrowed";

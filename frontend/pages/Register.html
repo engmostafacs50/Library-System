@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    <link rel="icon" href="../assets/images/Icon.png" type="image/png">
+    <link rel="stylesheet" href="../CSS/background.css">
+    <link rel="stylesheet" href="../CSS/register.css" />
+  </head>
+  <body>
+    <div class="bg-orbs">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+  </div>
+    <div class="container">
+      <div class="register-box">
+        <h1>Register</h1>
+
+        <div class="Parent">
+          <label for="UserName">User Name</label>
+          <input
+            required
+            id="UserName"
+            type="text"
+            name="UserName"
+            placeholder="Ex: Ahmed"
+          />
+
+          <label for="userEmail">User Email</label>
+          <input
+            required
+            id="userEmail"
+            type="email"
+            name="userEmail"
+            placeholder="Ex: user123@gmail.com"
+          />
+
+          <label for="Password">Password</label>
+          <input required id="Password" type="password" name="Password" />
+
+          <label for="ConfirmPassword">Confirm Password</label>
+          <input
+            required
+            id="ConfirmPassword"
+            type="password"
+            name="ConfirmPassword"
+          />
+
+          <label for="date">User Age</label>
+          <input id="date" type="date" name="date" />
+
+         
+          <div class="radio-group">
+            <label>
+              <input type="radio" name="Accessibility" value="Admin" required />
+              Admin
+            </label>
+
+            <label>
+              <input type="radio" name="Accessibility" value="User" required />
+              User
+            </label>
+          </div>
+
+           
+          <div class="buttons">
+            <button type="reset" class="reset">Reset</button>
+            <button onclick="AddUser()" type="button">Submit</button>
+          </div>
+        </div>
+
+        <p class="login-link">
+          Already have an account?
+          <a href="./login.html">Login</a>
+        </p>
+      </div>
+    </div>
+
+    <script src="../JS/register.js"></script>
+  </body>
+</html>

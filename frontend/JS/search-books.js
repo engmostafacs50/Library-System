@@ -1,23 +1,16 @@
-//Depends on books-data.js being loaded first (via <script> in HTML)
+// Depends on books-data.js being loaded first (via <script> in HTML)
 
 document.addEventListener("DOMContentLoaded", () => {
 
   const input     = document.querySelector(".search-box input");
   const searchBtn = document.querySelector(".search-btn");
   const grid      = document.querySelector(".books-grid");
-  const LAST_SEARCH = "library_last_search";
+  const LAST_SEARCH_KEY = "library_last_search";
 
-  /* ── Version check: wipe old bad data and re-seed automatically ── */
-  const DB_VERSION = "v2";
-  if (localStorage.getItem("libraryDB_version") !== DB_VERSION) {
-    localStorage.removeItem("libraryBooks");
-    localStorage.setItem("libraryDB_version", DB_VERSION);
-  }
-
-  //Seed default books if localStorage is empty
+  // Seed default books if store is empty
   seedBooks();
 
-  /* ── Render books from books-data.js ── */
+  /* ── Render books from data layer ── */
   function renderBooks() {
     grid.innerHTML = "";
 
@@ -77,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ── Search logic ── */
   function runSearch() {
     const query = input.value.trim().toLowerCase();
-    localStorage.setItem(LAST_SEARCH, input.value.trim());
+    setLastSearch(query ? input.value.trim() : null);
 
     const cards = grid.querySelectorAll(".book-card");
 
@@ -116,14 +109,14 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   input.addEventListener("input", () => {
-    if (!input.value.trim()) localStorage.removeItem(LAST_SEARCH);
+    if (!input.value.trim()) setLastSearch(null);
     runSearch();
   });
 
   /* ── Init ── */
   renderBooks();
 
-  const saved = localStorage.getItem(LAST_SEARCH);
+  const saved = getLastSearch();
   if (saved) {
     input.value = saved;
     runSearch();
