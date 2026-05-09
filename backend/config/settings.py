@@ -46,7 +46,14 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+
+    # Our Apps ← ضيف السطور دي
+    'users',
+    'books',
+    'borrowed_books',
+    'returned_books',
 ]
+
 
 MIDDLEWARE = [
     # Task 1 — MUST be first
