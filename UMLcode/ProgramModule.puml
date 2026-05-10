@@ -1,0 +1,323 @@
+@startuml Library_System_Full_Django
+
+skinparam classAttributeIconSize 0
+skinparam class {
+    BackgroundColor #1e1e2e
+    BorderColor #89b4fa
+    ArrowColor #cba6f7
+    FontColor #cdd6f4
+    AttributeFontColor #f38ba8
+    StereotypeFontColor #a6e3a1
+    HeaderBackgroundColor #313244
+}
+skinparam note {
+    BackgroundColor #1e1e2e
+    BorderColor #f38ba8
+    FontColor #cdd6f4
+}
+skinparam package {
+    BackgroundColor #181825
+    BorderColor #cba6f7
+    FontColor #cdd6f4
+}
+
+note as LoginNote
+  Login flow:
+  AuthView -> LoginSerializer -> JWTAuthentication -> JWT Token
+end note
+
+note as RegisterNote
+  Register flow:
+  RegisterView -> UserSerializer -> UserManager -> DB
+end note
+
+note as BorrowNote
+  Borrow flow:
+  BorrowView -> BorrowSerializer -> BorrowManager -> Book(quantity--) -> DB
+end note
+
+note as ReturnNote
+  Return flow:
+  ReturnView -> ReturnSerializer -> ReturnManager -> BorrowedBook(RETURNED) -> Book(quantity++) -> DB
+end note
+
+'=================== USER MODULE ===================
+package "User Module" {
+
+    class AuthView {
+        <<View>>
+        +post(request) : Response
+        +login(request) : Response
+    }
+
+    class RegisterView {
+        <<View>>
+        +post(request) : Response
+    }
+
+    class AdminView {
+        <<View>>
+        +get_all_users(request) : Response
+    }
+
+    class UserSerializer {
+        <<Serializer>>
+        +username : CharField
+        +password : CharField
+        +role : CharField
+        +validate(data) : dict
+        +create(validated_data) : User
+    }
+
+    class LoginSerializer {
+        <<Serializer>>
+        +username : CharField
+        +password : CharField
+        +validate(data) : dict
+    }
+
+    class JWTAuthentication {
+        <<Authentication>>
+        +authenticate(request) : User
+        +get_validated_token(raw_token) : Token
+    }
+
+    class TokenService {
+        <<SimpleJWT>>
+        +get_token(user) : Token
+        +for_user(user) : AccessToken
+    }
+
+    class UserManager {
+        <<Manager>>
+        +create_user(username, password) : User
+        +create_superuser(username, password) : User
+    }
+
+    class User {
+        <<Model>>
+        -id : BigAutoField
+        -username : CharField
+        -password : CharField
+        -role : CharField
+        -is_active : BooleanField
+        -created_at : DateTimeField
+        +__str__() : str
+        +check_password() : bool
+    }
+
+    enum Role {
+        USER
+        ADMIN
+    }
+
+    AuthView --> LoginSerializer : uses
+    AuthView --> JWTAuthentication : authenticates via
+    RegisterView --> UserSerializer : uses
+    AdminView --> UserSerializer : uses
+    JWTAuthentication --> TokenService : validates
+    UserSerializer --> UserManager : calls
+    UserManager --> User : creates
+    User --> Role : has
+}
+
+'=================== BOOKS MODULE ===================
+package "Books Module" {
+
+    class BookAdminView {
+        <<View>>
+        +add_book(request) : Response
+        +edit_book(request, id) : Response
+        +delete_book(request, id) : Response
+    }
+
+    class BookListView {
+        <<View>>
+        +get_all_books(request) : Response
+        +get_book_by_id(request, id) : Response
+        +search_books(request) : Response
+    }
+
+    class BookSerializer {
+        <<Serializer>>
+        +title : CharField
+        +author : CharField
+        +genre : CharField
+        +quantity : IntegerField
+        +available : BooleanField
+        +validate(data) : dict
+        +create(validated_data) : Book
+        +update(instance, validated_data) : Book
+    }
+
+    class BookManager {
+        <<Manager>>
+        +get_available_books() : QuerySet
+        +search_by_title(title) : QuerySet
+        +search_by_author(author) : QuerySet
+        +search_by_genre(genre) : QuerySet
+    }
+
+    class Book {
+        <<Model>>
+        -id : BigAutoField
+        -title : CharField
+        -author : CharField
+        -genre : CharField
+        -quantity : IntegerField
+        -available : BooleanField
+        -created_at : DateTimeField
+        -updated_at : DateTimeField
+        +__str__() : str
+        +is_available() : bool
+    }
+
+    enum Genre {
+        FICTION
+        NON_FICTION
+        SCIENCE
+        HISTORY
+        TECHNOLOGY
+        OTHER
+    }
+
+    BookAdminView --> BookSerializer : uses
+    BookListView --> BookSerializer : uses
+    BookListView --> BookManager : queries via
+    BookSerializer --> BookManager : calls
+    BookManager --> Book : manages
+    Book --> Genre : has
+}
+
+'=================== BORROWED BOOKS MODULE ===================
+package "Borrowed Books Module" {
+
+    class BorrowView {
+        <<View>>
+        +borrow_book(request) : Response
+        +get_my_borrowed(request) : Response
+    }
+
+    class BorrowAdminView {
+        <<View>>
+        +get_all_borrowed(request) : Response
+        +get_borrowed_by_user(request, user_id) : Response
+    }
+
+    class BorrowSerializer {
+        <<Serializer>>
+        +user : PrimaryKeyRelatedField
+        +book : PrimaryKeyRelatedField
+        +borrow_date : DateField
+        +due_date : DateField
+        +status : CharField
+        +validate(data) : dict
+        +create(validated_data) : BorrowedBook
+    }
+
+    class BorrowManager {
+        <<Manager>>
+        +get_active_borrows() : QuerySet
+        +get_borrows_by_user(user_id) : QuerySet
+        +get_overdue_borrows() : QuerySet
+        +is_book_available(book_id) : bool
+    }
+
+    class BorrowedBook {
+        <<Model>>
+        -id : BigAutoField
+        -user : ForeignKey
+        -book : ForeignKey
+        -borrow_date : DateField
+        -due_date : DateField
+        -status : CharField
+        -created_at : DateTimeField
+        +__str__() : str
+        +is_overdue() : bool
+    }
+
+    enum BorrowStatus {
+        ACTIVE
+        RETURNED
+        OVERDUE
+    }
+
+    BorrowView --> BorrowSerializer : uses
+    BorrowAdminView --> BorrowSerializer : uses
+    BorrowAdminView --> BorrowManager : queries via
+    BorrowSerializer --> BorrowManager : calls
+    BorrowManager --> BorrowedBook : manages
+    BorrowedBook --> BorrowStatus : has
+}
+
+'=================== RETURN BOOKS MODULE ===================
+package "Return Books Module" {
+
+    class ReturnView {
+        <<View>>
+        +return_book(request) : Response
+        +get_my_returned(request) : Response
+    }
+
+    class ReturnAdminView {
+        <<View>>
+        +get_all_returned(request) : Response
+        +get_returned_by_user(request, user_id) : Response
+    }
+
+    class ReturnSerializer {
+        <<Serializer>>
+        +borrowed_book : PrimaryKeyRelatedField
+        +return_date : DateField
+        +condition : CharField
+        +fine : DecimalField
+        +validate(data) : dict
+        +create(validated_data) : ReturnedBook
+    }
+
+    class ReturnManager {
+        <<Manager>>
+        +get_all_returns() : QuerySet
+        +get_returns_by_user(user_id) : QuerySet
+        +calculate_fine(borrowed_book) : Decimal
+        +process_return(borrowed_book_id) : ReturnedBook
+    }
+
+    class ReturnedBook {
+        <<Model>>
+        -id : BigAutoField
+        -borrowed_book : ForeignKey
+        -return_date : DateField
+        -condition : CharField
+        -fine : DecimalField
+        -created_at : DateTimeField
+        +__str__() : str
+        +has_fine() : bool
+    }
+
+    enum BookCondition {
+        GOOD
+        DAMAGED
+        LOST
+    }
+
+    ReturnView --> ReturnSerializer : uses
+    ReturnAdminView --> ReturnSerializer : uses
+    ReturnAdminView --> ReturnManager : queries via
+    ReturnSerializer --> ReturnManager : calls
+    ReturnManager --> ReturnedBook : manages
+    ReturnedBook --> BookCondition : has
+}
+
+'=================== CROSS MODULE RELATIONSHIPS ===================
+
+BorrowedBook "many" --> "1" User : belongs to
+BorrowedBook "many" --> "1" Book : references
+ReturnedBook "1" --> "1" BorrowedBook : closes
+ReturnManager --> BorrowedBook : updates status
+ReturnManager --> Book : updates quantity
+BookAdminView --> JWTAuthentication : protected by
+BorrowView --> JWTAuthentication : protected by
+ReturnView --> JWTAuthentication : protected by
+
+@enduml

@@ -1,0 +1,119 @@
+@startuml Borrowed_Books_Module_Django
+
+skinparam classAttributeIconSize 0
+skinparam class {
+    BackgroundColor #1e1e2e
+    BorderColor #89b4fa
+    ArrowColor #cba6f7
+    FontColor #cdd6f4
+    AttributeFontColor #f38ba8
+    StereotypeFontColor #a6e3a1
+    HeaderBackgroundColor #313244
+}
+skinparam note {
+    BackgroundColor #1e1e2e
+    BorderColor #f38ba8
+    FontColor #cdd6f4
+}
+
+note as BorrowNote
+  Borrow flow:
+  BorrowView -> BorrowSerializer -> BorrowManager -> Book(quantity--) -> DB
+end note
+
+note as AdminNote
+  Admin flow:
+  BorrowAdminView -> BorrowSerializer -> BorrowManager -> DB
+end note
+
+class BorrowView {
+    <<View>>
+    +borrow_book(request) : Response
+    +get_my_borrowed(request) : Response
+}
+
+class BorrowAdminView {
+    <<View>>
+    +get_all_borrowed(request) : Response
+    +get_borrowed_by_user(request, user_id) : Response
+}
+
+class BorrowSerializer {
+    <<Serializer>>
+    +user : PrimaryKeyRelatedField
+    +book : PrimaryKeyRelatedField
+    +borrow_date : DateField
+    +due_date : DateField
+    +status : CharField
+    +validate(data) : dict
+    +create(validated_data) : BorrowedBook
+}
+
+class IsAdminUser {
+    <<Permission>>
+    +has_permission(request, view) : bool
+}
+
+class IsAuthenticated {
+    <<Permission>>
+    +has_permission(request, view) : bool
+}
+
+class BorrowManager {
+    <<Manager>>
+    +get_active_borrows() : QuerySet
+    +get_borrows_by_user(user_id) : QuerySet
+    +get_overdue_borrows() : QuerySet
+    +is_book_available(book_id) : bool
+}
+
+class BorrowedBook {
+    <<Model>>
+    -id : BigAutoField
+    -user : ForeignKey
+    -book : ForeignKey
+    -borrow_date : DateField
+    -due_date : DateField
+    -status : CharField
+    -created_at : DateTimeField
+    +__str__() : str
+    +is_overdue() : bool
+}
+
+enum BorrowStatus {
+    ACTIVE
+    RETURNED
+    OVERDUE
+}
+
+interface AbstractBaseUser {
+    +check_password() : bool
+}
+
+class User {
+    <<Model>>
+    -id : BigAutoField
+    -username : CharField
+    -role : CharField
+}
+
+class Book {
+    <<Model>>
+    -id : BigAutoField
+    -title : CharField
+    -quantity : IntegerField
+    -available : BooleanField
+}
+
+BorrowView --> BorrowSerializer : uses
+BorrowView --> IsAuthenticated : protected by
+BorrowAdminView --> BorrowSerializer : uses
+BorrowAdminView --> IsAdminUser : protected by
+BorrowAdminView --> BorrowManager : queries via
+BorrowSerializer --> BorrowManager : calls
+BorrowManager --> BorrowedBook : manages
+BorrowedBook --> BorrowStatus : has
+BorrowedBook "many" --> "1" User : belongs to
+BorrowedBook "many" --> "1" Book : references
+
+@enduml

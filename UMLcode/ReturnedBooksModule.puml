@@ -1,0 +1,127 @@
+@startuml Return_Books_Module_Django
+
+skinparam classAttributeIconSize 0
+skinparam class {
+    BackgroundColor #1e1e2e
+    BorderColor #89b4fa
+    ArrowColor #cba6f7
+    FontColor #cdd6f4
+    AttributeFontColor #f38ba8
+    StereotypeFontColor #a6e3a1
+    HeaderBackgroundColor #313244
+}
+skinparam note {
+    BackgroundColor #1e1e2e
+    BorderColor #f38ba8
+    FontColor #cdd6f4
+}
+
+note as ReturnNote
+  Return flow:
+  ReturnView -> ReturnSerializer -> ReturnManager -> BorrowedBook(status=RETURNED) -> Book(quantity++) -> DB
+end note
+
+note as AdminNote
+  Admin flow:
+  ReturnAdminView -> ReturnSerializer -> ReturnManager -> DB
+end note
+
+class ReturnView {
+    <<View>>
+    +return_book(request) : Response
+    +get_my_returned(request) : Response
+}
+
+class ReturnAdminView {
+    <<View>>
+    +get_all_returned(request) : Response
+    +get_returned_by_user(request, user_id) : Response
+}
+
+class ReturnSerializer {
+    <<Serializer>>
+    +borrowed_book : PrimaryKeyRelatedField
+    +return_date : DateField
+    +condition : CharField
+    +fine : DecimalField
+    +validate(data) : dict
+    +create(validated_data) : ReturnedBook
+}
+
+class IsAdminUser {
+    <<Permission>>
+    +has_permission(request, view) : bool
+}
+
+class IsAuthenticated {
+    <<Permission>>
+    +has_permission(request, view) : bool
+}
+
+class ReturnManager {
+    <<Manager>>
+    +get_all_returns() : QuerySet
+    +get_returns_by_user(user_id) : QuerySet
+    +calculate_fine(borrowed_book) : Decimal
+    +process_return(borrowed_book_id) : ReturnedBook
+}
+
+class ReturnedBook {
+    <<Model>>
+    -id : BigAutoField
+    -borrowed_book : ForeignKey
+    -return_date : DateField
+    -condition : CharField
+    -fine : DecimalField
+    -created_at : DateTimeField
+    +__str__() : str
+    +has_fine() : bool
+}
+
+enum BookCondition {
+    GOOD
+    DAMAGED
+    LOST
+}
+
+class BorrowedBook {
+    <<Model>>
+    -id : BigAutoField
+    -user : ForeignKey
+    -book : ForeignKey
+    -borrow_date : DateField
+    -due_date : DateField
+    -status : CharField
+    +is_overdue() : bool
+}
+
+class Book {
+    <<Model>>
+    -id : BigAutoField
+    -title : CharField
+    -quantity : IntegerField
+    -available : BooleanField
+}
+
+class User {
+    <<Model>>
+    -id : BigAutoField
+    -username : CharField
+    -role : CharField
+}
+
+ReturnView --> ReturnSerializer : uses
+ReturnView --> IsAuthenticated : protected by
+ReturnAdminView --> ReturnSerializer : uses
+ReturnAdminView --> IsAdminUser : protected by
+ReturnAdminView --> ReturnManager : queries via
+ReturnSerializer --> ReturnManager : calls
+ReturnManager --> ReturnedBook : manages
+ReturnManager --> BorrowedBook : updates status
+ReturnManager --> Book : updates quantity
+ReturnedBook --> BookCondition : has
+ReturnedBook "1" --> "1" BorrowedBook : closes
+BorrowedBook "many" --> "1" User : belongs to
+BorrowedBook "many" --> "1" Book : references
+
+@enduml
