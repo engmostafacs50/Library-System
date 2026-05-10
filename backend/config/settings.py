@@ -29,9 +29,13 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
 
-    # entities
+    # Our Apps ← ضيف السطور دي
     'users',
+    'books',
+    'borrowed_books',
+    'returned_books',
 ]
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
