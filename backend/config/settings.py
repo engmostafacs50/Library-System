@@ -31,9 +31,6 @@ INSTALLED_APPS = [
 
     # entities
     'users',
-    'books',
-    'borrowing',
-    'returned_books',
 ]
 
 MIDDLEWARE = [
