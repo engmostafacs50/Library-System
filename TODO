@@ -1,14 +1,19 @@
 
+
+Task2-Backend
 1 - userModule // mostafa 
-
 2 - books  // mohamed wael  ( admin added books )  , ( view books) , (edit books / name / author / genre) , Ignore isAuth , isAdmin
+3 - borrowed_books // seif && mazen  {watch uml diagram}  
+4 - returned_books // dina && selvana {watch uml diagram}
 
-3 - borrowed_books // seif && mazen  
-
-4 - returned_books // dina && selvana 
-
-// instructions 
-
+// instructions
+// Download PostgreSQL Microsoft exention in vs code for DB  
+// and after downloading it enter at connection string 
+// Download Plant UML extention in vs code for watching uml diagram
 // don't write code without watching class diagram in UML code folder
 // make API in js for require function 
 // make branches from dev 
+// don't push on dev 
+
+Task2-API-Ajax
+
