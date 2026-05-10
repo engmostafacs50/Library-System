@@ -9,9 +9,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    # 'yourdomain.com',  # Add your domain in production
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -29,11 +33,9 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
 
-    # Our Apps ← ضيف السطور دي
+    # Our Apps
     'users',
     'books',
-    'borrowed_books',
-    'returned_books',
 ]
 
 
@@ -91,15 +93,27 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = 'static/'
+# ── STATIC & MEDIA FILES ───────────────────────────────────
 
-# ── CORS ─────────────────────────────────────────────────────
+STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [BASE_DIR / 'static'] if (BASE_DIR / 'static').exists() else []
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# ── DEFAULT MODEL FIELD ────────────────────────────────────
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ── CORS ───────────────────────────────────────────────────
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5500',
     'http://127.0.0.1:5500',
     'http://localhost:3000',
     'http://127.0.0.1:8000',
+    'http://localhost:8000',
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -114,7 +128,7 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken', 'x-requested-with',
 ]
 
-# ── DRF + JWT ─────────────────────────────────────────────────
+# ── DRF + JWT ──────────────────────────────────────────────
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -123,6 +137,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
 }
 
 SIMPLE_JWT = {
@@ -134,3 +150,58 @@ SIMPLE_JWT = {
     'USER_ID_FIELD':            'id',
     'USER_ID_CLAIM':            'user_id',
 }
+
+# ── LOGGING ────────────────────────────────────────────────
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {asctime} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'django.log',
+            'formatter': 'verbose',
+        },
+    },
+    'root': {
+        'handlers': ['console', 'file'] if not DEBUG else ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'] if not DEBUG else ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+    },
+}
+
+# ── SECURITY (Production) ──────────────────────────────────
+
+if not DEBUG:
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_SECURITY_POLICY = {
+        'default-src': ("'self'",),
+        'script-src': ("'self'",),
+        'style-src': ("'self'", "'unsafe-inline'"),
+    }
