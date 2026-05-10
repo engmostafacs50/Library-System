@@ -4,17 +4,23 @@ venv/
 
 # Environment Variables
 .env
+.env.local
 
 # Django
 db.sqlite3
+*.sqlite3
 __pycache__/
 *.pyc
 *.pyo
-migrations/
-*.sqlite3
+*.pyd
+*.so
+*.egg-info/
+dist/
+build/
 
 # VS Code
 .vscode/
+*.code-workspace
 
 # System
 .DS_Store
@@ -22,3 +28,8 @@ Thumbs.db
 
 # IDE
 .idea/
+*.swp
+*.swo
+
+# Logs
+*.log
