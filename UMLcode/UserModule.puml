@@ -1,0 +1,135 @@
+@startuml User_Module_Django
+
+skinparam classAttributeIconSize 0
+skinparam class {
+    BackgroundColor #1e1e2e
+    BorderColor #89b4fa
+    ArrowColor #cba6f7
+    FontColor #cdd6f4
+    AttributeFontColor #f38ba8
+    StereotypeFontColor #a6e3a1
+    HeaderBackgroundColor #313244
+}
+skinparam note {
+    BackgroundColor #1e1e2e
+    BorderColor #f38ba8
+    FontColor #cdd6f4
+}
+
+note as LoginNote
+  Login flow:
+  AuthView -> LoginSerializer -> authenticate() -> JWT
+end note
+
+note as RegisterNote
+  Register flow:
+  RegisterView -> UserSerializer -> UserManager -> DB
+end note
+
+class AuthView {
+    <<View>>
+    +post(request) : Response
+    +login(request) : Response
+}
+
+class AdminView {
+    <<View>>
+    +get_all_users(request) : Response
+}
+
+class RegisterView {
+    <<View>>
+    +post(request) : Response
+}
+
+class UserSerializer {
+    <<Serializer>>
+    +username : CharField
+    +password : CharField
+    +role : CharField
+    +validate(data) : dict
+    +create(validated_data) : User
+}
+
+class LoginSerializer {
+    <<Serializer>>
+    +username : CharField
+    +password : CharField
+    +validate(data) : dict
+}
+
+class SecurityConfig {
+    <<Settings>>
+    +REST_FRAMEWORK : dict
+    +SIMPLE_JWT : dict
+    +CORS_ALLOWED_ORIGINS : list
+    +JWTAuthentication()
+    +IsAuthenticated()
+}
+
+class TokenService {
+    <<SimpleJWT>>
+    +ACCESS_TOKEN_LIFETIME : timedelta
+    +REFRESH_TOKEN_LIFETIME : timedelta
+    +get_token(user) : Token
+    +for_user(user) : AccessToken
+}
+
+class JWTAuthentication {
+    <<Authentication>>
+    +authenticate(request) : User
+    +get_validated_token(raw_token) : Token
+}
+
+class IsAuthenticated {
+    <<Permission>>
+    +has_permission(request, view) : bool
+}
+
+class UserManager {
+    <<Manager>>
+    +create_user(username, password) : User
+    +create_superuser(username, password) : User
+}
+
+class User {
+    <<Model>>
+    -id : BigAutoField
+    -username : CharField
+    -password : CharField
+    -role : CharField
+    -is_active : BooleanField
+    -created_at : DateTimeField
+    +__str__() : str
+    +check_password() : bool
+}
+
+enum Role {
+    USER
+    ADMIN
+}
+
+interface AbstractBaseUser {
+    +check_password() : bool
+    +set_password() : void
+}
+
+interface PermissionsMixin {
+    +has_perm() : bool
+    +has_module_perms() : bool
+}
+
+AuthView --> LoginSerializer : uses
+AuthView --> JWTAuthentication : authenticates via
+RegisterView --> UserSerializer : uses
+AdminView --> UserSerializer : uses
+SecurityConfig --> JWTAuthentication : configures
+SecurityConfig --> TokenService : configures
+JWTAuthentication --> TokenService : validates
+UserSerializer --> UserManager : calls
+UserManager --> User : creates
+AbstractBaseUser <|.. User : implements
+PermissionsMixin <|.. User : implements
+User --> Role : has
+
+@enduml
