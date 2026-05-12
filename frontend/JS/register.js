@@ -1,76 +1,71 @@
-// register.js — saves into the unified library_user store
+async function AddUser() {
+  const fullName = document.getElementById("UserName").value.trim();
+  const email    = document.getElementById("userEmail").value.trim();
+  const password = document.getElementById("Password").value;
+  const confirm  = document.getElementById("ConfirmPassword").value;
 
-var userName        = document.getElementById("UserName");
-var userEmail       = document.getElementById("userEmail");
-var Password        = document.getElementById("Password");
-var ConfirmPassword = document.getElementById("ConfirmPassword");
-
-var nameRegex     = /^[A-Za-z][A-Za-z\s]{2,29}$/;
-var emailRegex    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
-
-function AddUser() {
-  var selectedRole = document.querySelector('input[name="Accessibility"]:checked');
-
-  var fullName = userName.value.trim();
+  // --- Validation ---
+  const nameRegex     = /^[A-Za-z][A-Za-z\s]{2,29}$/;
+  const emailRegex    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
   if (!nameRegex.test(fullName)) {
     alert("Name must be 3–30 characters and contain only letters.");
     return;
   }
-
-  if (!emailRegex.test(userEmail.value.trim())) {
+  if (!emailRegex.test(email)) {
     alert("Invalid email format.");
     return;
   }
-
-  if (!passwordRegex.test(Password.value)) {
-    alert("Password must be at least 6 characters with letters and numbers.");
+  if (!passwordRegex.test(password)) {
+    alert("Password must be at least 8 characters with letters and numbers.");
     return;
   }
-
-  if (Password.value !== ConfirmPassword.value) {
+  if (password !== confirm) {
     alert("Passwords do not match.");
     return;
   }
 
-  if (!selectedRole) {
-    alert("Please select a role (Admin or User).");
-    return;
+  // Build username from full name
+  const username = fullName.toLowerCase().replace(/\s+/g, "_");
+
+  try {
+    const response = await fetch("http://localhost:8000/api/users/register/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        username: username,
+        email:    email,
+        password: password,
+        role:     "USER",
+      }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert("Account created successfully!");
+      window.location.href = "./login.html";
+    } else {
+      if (data.email)                 alert("Email: " + data.email[0]);
+      else if (data.username)         alert("Username: " + data.username[0]);
+      else if (data.password)         alert("Password: " + data.password[0]);
+      else if (data.non_field_errors) alert(data.non_field_errors[0]);
+      else alert("Registration failed: " + JSON.stringify(data));
+    }
+
+  } catch (error) {
+    alert("Cannot connect to server. Make sure Django is running on port 8000.");
+    console.error(error);
   }
+}
 
-  // Load from the unified store
-  var users = getUsers();
-
-  // Check for duplicate email
-  var emailExists = users.some(function (u) {
-    return u.email === userEmail.value.trim();
-  });
-  if (emailExists) {
-    alert("An account with this email already exists.");
-    return;
-  }
-
-  // Build username from full name (lowercase, underscored)
-  var autoUsername = fullName.toLowerCase().replace(/\s+/g, "_");
-
-  var maxId = users.reduce(function (max, u) { return Math.max(max, u.id || 0); }, 0);
-
-  var newUser = {
-    id:           maxId + 1,
-    fullName:     fullName,
-    username:     autoUsername,
-    email:        userEmail.value.trim(),
-    password:     Password.value,
-    role:         selectedRole.value,
-    status:       "active",
-    avatar:       null,
-    emoji:        null,
-    joined:       new Date().toISOString().slice(0, 10),
-    borrowedBooks: [],
-  };
-
-  saveUser(newUser);
-
-  window.location.href = "./login.html";
+function ResetForm() {
+  document.getElementById("UserName").value       = "";
+  document.getElementById("userEmail").value      = "";
+  document.getElementById("Password").value       = "";
+  document.getElementById("ConfirmPassword").value = "";
 }

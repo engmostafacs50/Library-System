@@ -1,53 +1,48 @@
-// login.js
+async function Login() {
+  const email    = document.getElementById("userEmail").value.trim();
+  const password = document.getElementById("Password").value;
 
-var userEmail = document.getElementById("userEmail");
-var Password  = document.getElementById("Password");
-
-function Login() {
-  var email = userEmail.value.trim();
-  var pass  = Password.value;
-
-  if (!email || !pass) {
+  if (!email || !password) {
     alert("Please fill in all fields.");
     return;
   }
 
-  var users = getUsers();
+  try {
+    const response = await fetch("http://localhost:8000/api/users/login/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        email:    email,
+        password: password,
+      }),
+    });
 
-  var matched = users.find(function (u) {
-    return u.email === email && u.password === pass;
-  });
+    const data = await response.json();
 
-  if (!matched) {
-    alert("Invalid email or password.");
-    return;
-  }
+    if (response.ok) {
+      const user = data.user;
 
-  if (matched.status === "inactive") {
-    alert("Your account has been deactivated.");
-    return;
-  }
+      // Only display info — auth is handled by HttpOnly cookies
+      sessionStorage.setItem("user_username", user.username);
+      sessionStorage.setItem("user_role",     user.role);
 
-  setCurrentUser(matched.id, matched.fullName || matched.username, matched.role);
+      // Redirect based on role
+      if (user.role === "ADMIN") {
+        window.location.href = "../pages/dashboard.html";
+      } else {
+        window.location.href = "../pages/homepage.html";
+      }
 
-  const existingSession = getSession();
-  const isSameUser = existingSession && String(existingSession.id) === String(matched.id);
+    } else {
+      if (data.non_field_errors) alert(data.non_field_errors[0]);
+      else alert("Invalid email or password.");
+    }
 
-  const userSession = {
-    id:            matched.id,
-    username:      matched.fullName || matched.username,
-    borrowedList:  isSameUser ? (existingSession.borrowedList  || []) : [],
-    returnedList:  isSameUser ? (existingSession.returnedList  || []) : [],
-    returnedCount: isSameUser ? (existingSession.returnedCount || 0)  : 0,
-    totalBorrowed: isSameUser ? (existingSession.totalBorrowed || 0)  : 0,
-  };
-
-  saveSession(userSession);
-
-  /* Redirect */
-  if (matched.role === "Admin" || matched.role === "admin") {
-    window.location.href = "../pages/dashboard.html";
-  } else {
-    window.location.href = "../pages/homepage.html";
+  } catch (error) {
+    alert("Cannot connect to server. Make sure Django is running on port 8000.");
+    console.error(error);
   }
 }
