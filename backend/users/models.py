@@ -20,10 +20,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
     
     class Meta:
-        db
+        db_table = 'users'
+        ordering = ['-created_at']
         
+        
+    def __str__(self) -> str:
+        return f'{self.username}<{self.email}>'
 
-    def __str__(self):
-        return self.email
-    
+    def is_admin(self) -> bool:
+        return self.role == Role.ADMIN    
     
