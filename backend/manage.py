@@ -3,6 +3,7 @@
 import os
 import sys
 
+#U(email="MoAhmed@gmail.com", username="Mostafa Ahmed", password="12345678")
 
 def main():
     """Run administrative tasks."""
