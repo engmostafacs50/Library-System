@@ -14,6 +14,7 @@ urlpatterns = [
     
     # ── Apps ───────────────────────────────────────────────
     path('api/books/', include('books.urls')),
+    path('api/users/', include('users.urls')),  
     # path('api/users/', include('users.urls')),  # إذا عندك users app
     # path('api/returned/', include('returned_books.urls')),  # إذا عندك returned_books app
 ]
