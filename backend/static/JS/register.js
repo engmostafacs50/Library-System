@@ -30,7 +30,7 @@ async function AddUser() {
   const username = fullName.toLowerCase().replace(/\s+/g, "_");
 
   try {
-    const response = await fetch("http://localhost:8000/api/users/register/", {
+    const response = await fetch("/api/users/register/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -48,7 +48,7 @@ async function AddUser() {
 
     if (response.ok) {
       alert("Account created successfully!");
-      window.location.href = "./login.html";
+      window.location.href = "/login/";
     } else {
       if (data.email)                 alert("Email: " + data.email[0]);
       else if (data.username)         alert("Username: " + data.username[0]);

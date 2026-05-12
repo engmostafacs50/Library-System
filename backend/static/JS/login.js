@@ -8,7 +8,7 @@ async function Login() {
   }
 
   try {
-    const response = await fetch("http://localhost:8000/api/users/login/", {
+    const response = await fetch("/api/user/login/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -30,10 +30,13 @@ async function Login() {
       sessionStorage.setItem("user_role",     user.role);
 
       // Redirect based on role
-      if (user.role === "ADMIN") {
-        window.location.href = "../pages/dashboard.html";
-      } else {
-        window.location.href = "../pages/homepage.html";
+      if (user.role === "ADMIN") 
+      {
+         window.location.href = "/dashboard/";
+      } 
+      else 
+      {
+          window.location.href = "/homepage/";
       }
 
     } else {
