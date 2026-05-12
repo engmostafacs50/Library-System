@@ -11,14 +11,13 @@ from .models import User
 
 
 def set_auth_cookies(response, user):
-    """Generate JWT tokens and set them as HttpOnly cookies on the response."""
     refresh = RefreshToken.for_user(user)
     access_token = str(refresh.access_token)
     refresh_token = str(refresh)
 
     is_secure = not settings.DEBUG  # only send over HTTPS in production
 
-    # Access token cookie — short lived (matches ACCESS_TOKEN_LIFETIME)
+    # Access token cookie — short lived
     response.set_cookie(
         key="access_token",
         value=access_token,
@@ -29,7 +28,7 @@ def set_auth_cookies(response, user):
         path="/",
     )
 
-    # Refresh token cookie — long lived (matches REFRESH_TOKEN_LIFETIME)
+    # Refresh token cookie — long lived 
     response.set_cookie(
         key="refresh_token",
         value=refresh_token,
@@ -37,7 +36,7 @@ def set_auth_cookies(response, user):
         httponly=True,
         secure=is_secure,
         samesite="Lax",
-        path="/api/users/token/refresh/",  # scoped — only sent on refresh endpoint
+        path="/api/users/token/refresh/",  
     )
 
     return response
@@ -91,10 +90,7 @@ class AuthView(APIView):
 
 
 class LogoutView(APIView):
-    """
-    POST /api/users/logout/
-    Blacklists the refresh token and clears both cookies.
-    """
+
 
     permission_classes = [IsAuthenticated]
 
@@ -114,11 +110,7 @@ class LogoutView(APIView):
 
 
 class CookieTokenRefreshView(APIView):
-    """
-    POST /api/users/token/refresh/
-    Reads refresh_token from cookie, issues a new access_token cookie.
-    Replaces the default SimpleJWT TokenRefreshView.
-    """
+  
 
     permission_classes = []
 
@@ -148,10 +140,6 @@ class CookieTokenRefreshView(APIView):
 
 
 class AdminView(APIView):
-    """
-    GET /api/users/admin/users/
-    Returns all users. Admin only.
-    """
 
     permission_classes = [IsAuthenticated, IsAdminUser]
 
