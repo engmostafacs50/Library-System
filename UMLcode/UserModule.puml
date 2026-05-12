@@ -46,6 +46,7 @@ class UserSerializer {
     <<Serializer>>
     +username : CharField
     +password : CharField
+    +email : EmailField
     +role : CharField
     +validate(data) : dict
     +create(validated_data) : User
@@ -53,7 +54,7 @@ class UserSerializer {
 
 class LoginSerializer {
     <<Serializer>>
-    +username : CharField
+    +email : EmailField
     +password : CharField
     +validate(data) : dict
 }
