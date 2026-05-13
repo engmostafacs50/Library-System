@@ -18,15 +18,15 @@
   </div>
 
   <nav>
-    <span class="nav-brand">
-      Library System</span>
+    <span class="nav-brand">Library System</span>
     <div class="nav-links">
-      <a href="dashboard.html" class="active">Dashboard</a>
-      <a href="add-book.html">Add Book</a>
-      <a href="manage-books.html">Manage Books</a>
-      <!-- <a href="view-books.html">Books</a> -->
+      <a href="{% url 'dashboard' %}" class="active">Dashboard</a>
+      <a href="{% url 'add-book' %}">Add Book</a>
+      <a href="{% url 'manage-books' %}">Manage Books</a>
     </div>
-    <div class="nav-logout"><a href="../index.html">Logout</a></div>
+    <div class="nav-logout">
+      <a href="{% url 'logout' %}">Logout</a>
+    </div>
   </nav>
 
   <div class="page-wrapper">
@@ -43,28 +43,28 @@
     <!-- Stat Cards -->
     <section class="stats-grid">
       <div class="stat-card accent">
-        
+        <div class="stat-icon">👥</div>
         <div class="stat-info">
           <span class="stat-label">Total Users</span>
           <span class="stat-value" id="totalUsers">0</span>
         </div>
       </div>
       <div class="stat-card">
-        
+        <div class="stat-icon">✅</div>
         <div class="stat-info">
           <span class="stat-label">Active Users</span>
           <span class="stat-value" id="activeUsers">0</span>
         </div>
       </div>
       <div class="stat-card">
-        
+        <div class="stat-icon">📚</div>
         <div class="stat-info">
           <span class="stat-label">Total Books</span>
           <span class="stat-value" id="totalBooks">0</span>
         </div>
       </div>
       <div class="stat-card">
-        
+        <div class="stat-icon">📖</div>
         <div class="stat-info">
           <span class="stat-label">Books Borrowed</span>
           <span class="stat-value" id="borrowedBooks">0</span>
@@ -76,8 +76,8 @@
     <section class="quick-actions">
       <p class="section-title">Quick Actions</p>
       <div class="action-buttons">
-        <a href="add-book.html" class="btn btn-primary">+ Add New Book</a>
-        <a href="manage-books.html" class="btn btn-secondary">Manage Books</a>
+        <a href="{% url 'add-book' %}" class="btn btn-primary">+ Add New Book</a>
+        <a href="{% url 'manage-books' %}" class="btn btn-secondary">Manage Books</a>
       </div>
     </section>
 
@@ -86,7 +86,7 @@
       <div class="section-header">
         <p class="section-title">Registered Users</p>
         <div class="search-bar">
-          <input type="text" id="userSearch" placeholder="Search users…" oninput="filterUsers()">
+          <input type="text" id="userSearch" placeholder="Search users…">
         </div>
       </div>
 
@@ -113,8 +113,25 @@
 
   </div>
 
-  <script src="../JS/books-data.js"></script>
-  <script src="../JS/users-data.js"></script>
-  <script src="../JS/dashboard.js"></script>
+  <!-- ── History Modal ── -->
+  <div id="historyModal" class="modal-backdrop" style="display:none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="modalTitle" class="modal-title">User History</h2>
+        <button class="modal-close" onclick="closeHistoryModal()">✕</button>
+      </div>
+      <div id="modalBody" class="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ── Toast Notification ── -->
+  <div id="toast" class="toast"></div>
+
+  <script>
+    window.CSRF_TOKEN = "{{ csrf_token }}";
+  </script>
+
+  <script src="{% static 'JS/dashboard.js' %}"></script>
+
 </body>
 </html>

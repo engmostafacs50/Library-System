@@ -8,6 +8,10 @@ from django.conf import settings
 
 from .serializers import UserSerializer, LoginSerializer
 from .models import User
+from borrowed_books.serializers import BorrowSerializer
+from borrowed_books.models import BorrowedBook
+from returned_books.serializers import ReturnSerializer
+from returned_books.models import ReturnedBook
 
 
 def set_auth_cookies(response, user):
@@ -142,3 +146,55 @@ class AdminView(APIView):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+
+
+class AdminUserDetailView(APIView):
+    """
+    PATCH /api/users/admin/users/<user_id>/  → toggle active/inactive
+    DELETE /api/users/admin/users/<user_id>/ → delete user
+    """
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def patch(self, request, user_id):
+        try:
+            user = User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        user.is_active = not user.is_active
+        user.save(update_fields=["is_active"])
+        return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
+
+    def delete(self, request, user_id):
+        try:
+            user = User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        user.delete()
+        return Response({"detail": "User deleted."}, status=status.HTTP_204_NO_CONTENT)
+
+
+class AdminUserHistoryView(APIView):
+    """
+    GET /api/users/admin/users/<user_id>/history/
+    Returns all borrow and return records for a specific user.
+    """
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def get(self, request, user_id):
+        try:
+            user = User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        borrows = BorrowedBook.objects.get_borrows_by_user(user_id)
+        returns = ReturnedBook.objects.get_returns_by_user(user_id)
+
+        return Response({
+            "user":    UserSerializer(user).data,
+            "borrows": BorrowSerializer(borrows, many=True).data,
+            "returns": ReturnSerializer(returns, many=True).data,
+        }, status=status.HTTP_200_OK)
