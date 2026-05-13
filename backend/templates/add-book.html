@@ -17,16 +17,18 @@
       <div class="orb orb2"></div>
     </div>
 
-    <nav>
+     <nav>
       <span class="nav-brand">Library System</span>
       <div class="nav-links">
-        <a href="dashboard.html">Dashboard</a>
-        <a href="add-book.html" class="active">Add Book</a>
-        <a href="manage-books.html">Manage Books</a>
-        <!-- <a href="view-books.html">Books</a> -->
+        <a href="{% url 'dashboard' %}" >Dashboard</a>
+        <a href="{% url 'add-book' %}" class="active" >Add Book</a>
+        <a href="{% url 'manage-books' %}">Manage Books</a>
       </div>
-      <div class="nav-logout"><a href="../index.html">Logout</a></div>
+      <div class="nav-logout">
+        <a href="{% url 'logout' %}">Logout</a>
+      </div>
     </nav>
+
 
     <div class="page-wrapper">
 
@@ -35,7 +37,7 @@
           <p class="page-subtitle">Admin Panel</p>
           <h1>Add New Book</h1>
         </div>
-        <a href="dashboard.html" class="btn btn-ghost">Back to Dashboard</a>
+        <a href="{% url 'dashboard' %}" class="btn btn-ghost">Back to Dashboard</a>
       </header>
 
       <div class="form-layout">

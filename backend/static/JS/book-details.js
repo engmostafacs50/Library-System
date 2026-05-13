@@ -1,38 +1,79 @@
-const params = new URLSearchParams(window.location.search);
-const id = Number(params.get("id"));
+// book-details.js — connected to Django REST API
+const API_BASE = "http://localhost:8000"; // ← change to your actual API URL
 
-// Use books-data.js helper
-const book = getBookById(id);
+function authHeaders(extra = {}) {
+    const token = localStorage.getItem("authToken");
+    return {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Token ${token}` } : {}),
+        ...extra,
+    };
+}
 
-if (!book) {
-  document.body.innerHTML = "<h2>Book not found</h2>";
-} else {
-  document.getElementById("title").textContent = "Book Title: " + book.title;
-  document.getElementById("author").textContent = book.author;
-  document.getElementById("category").textContent = book.genre;
-  document.getElementById("description").textContent = book.description;
-  document.getElementById("status").textContent = book.status;
+// ── Bootstrap ────────────────────────────────────────────────────────────────
 
-  const img = document.getElementById("bookImage");
-  img.src = book.image || "../assets/images/default.png";
+document.addEventListener("DOMContentLoaded", async () => {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
 
-  const borrowBtn = document.querySelector(".btn-outline");
+    if (!id) {
+        showError("No book ID provided.");
+        return;
+    }
 
-  // ── Check if this user already borrowed this book ──
-  const session = getSession() || {};
-  const borrowedList = session.borrowedList || [];
-  const alreadyBorrowed = borrowedList.some(b => String(b.id) === String(book.id));
+    try {
+        const res = await fetch(`${API_BASE}/api/books/${id}/`, {
+            headers: { Accept: "application/json" },
+        });
 
-  borrowBtn.textContent = alreadyBorrowed ? "Return Book" : "Borrow Book";
-  document.getElementById("status").textContent = alreadyBorrowed ? "borrowed" : book.status;
+        if (res.status === 404) { showError("Book not found."); return; }
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-  borrowBtn.onclick = function () {
-    const session = getSession();
+        const book = await res.json();
+        renderBook(book);
 
+    } catch (err) {
+        console.error("Failed to load book:", err);
+        showError("Could not load book details. Please try again later.");
+    }
+});
+
+// ── Render ───────────────────────────────────────────────────────────────────
+
+function renderBook(book) {
+    // Image
+    const img = document.getElementById("bookImage");
+    if (img) {
+        img.src = book.image || "../assets/images/default-book.jpg";
+        img.alt = book.title;
+        img.onerror = () => { img.src = "../assets/images/default-book.jpg"; };
+    }
+
+    setText("title",       "Book Title: " + book.title);
+    setText("author",      book.author);
+    setText("category",    book.genre);
+    setText("description", book.description || "No description available.");
+
+    // Borrow/Return button logic
+    const borrowBtn = document.querySelector(".btn-outline");
+    if (!borrowBtn) return;
+
+    const session       = getSessionSafe();
+    const borrowedList  = session?.borrowedList || [];
+    const alreadyBorrowed = borrowedList.some(b => String(b.id) === String(book.id));
+
+    updateStatusUI(alreadyBorrowed ? "borrowed" : book.status, borrowBtn);
+
+    borrowBtn.onclick = () => handleBorrowReturn(book, borrowBtn, session);
+}
+
+// ── Borrow / Return ───────────────────────────────────────────────────────────
+
+async function handleBorrowReturn(book, btn, session) {
     if (!session) {
-      alert("You must be logged in to borrow books.");
-      window.location.href = "../pages/login.html";
-      return;
+        alert("You must be logged in to borrow books.");
+        window.location.href = "../pages/login.html";
+        return;
     }
 
     session.borrowedList  = session.borrowedList  || [];
@@ -40,55 +81,98 @@ if (!book) {
     session.totalBorrowed = session.totalBorrowed || 0;
 
     const isCurrentlyBorrowed = session.borrowedList.some(
-      b => String(b.id) === String(book.id)
+        b => String(b.id) === String(book.id)
     );
 
     if (isCurrentlyBorrowed) {
-      // ── Return Book ──
-      if (!confirm(`Return "${book.title}"?`)) return;
+        // ── Return ──
+        if (!confirm(`Return "${book.title}"?`)) return;
 
-      const today = new Date().toISOString().split("T")[0];
-      const bookEntry = session.borrowedList.find(b => String(b.id) === String(book.id));
+        try {
+            const res = await fetch(`${API_BASE}/api/books/${book.id}/`, {
+                method:  "PATCH",
+                headers: authHeaders(),
+                body:    JSON.stringify({ status: "available" }),
+            });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        } catch (err) {
+            console.warn("Could not update book status on server:", err);
+            // Continue with local update anyway
+        }
 
-      session.borrowedList = session.borrowedList.filter(
-        b => String(b.id) !== String(book.id)
-      );
+        const today     = new Date().toISOString().split("T")[0];
+        const bookEntry = session.borrowedList.find(b => String(b.id) === String(book.id));
+        session.borrowedList = session.borrowedList.filter(b => String(b.id) !== String(book.id));
+        session.returnedList.push({ ...bookEntry, returnDate: today });
+        session.returnedCount = session.returnedList.length;
 
-      session.returnedList.push({ ...bookEntry, returnDate: today });
-      session.returnedCount = session.returnedList.length;
-
-      // Update book status in library
-      toggleBookStatus(book.id);
-
-      saveSession(session);
-
-      borrowBtn.textContent = "Borrow Book";
-      document.getElementById("status").textContent = "available";
+        saveSession(session);
+        updateStatusUI("available", btn);
 
     } else {
-      // ── Borrow Book ──
-      const today = new Date();
-      const format = d => d.toISOString().split("T")[0];
-      const dueDate = new Date();
-      dueDate.setDate(dueDate.getDate() + 7);
+        // ── Borrow ──
+        if (book.status !== "available") {
+            alert("This book is currently not available.");
+            return;
+        }
 
-      const newBook = {
-        id:    book.id,
-        title: book.title,
-        date:  format(today),
-        due:   format(dueDate)
-      };
+        try {
+            const res = await fetch(`${API_BASE}/api/books/${book.id}/`, {
+                method:  "PATCH",
+                headers: authHeaders(),
+                body:    JSON.stringify({ status: "borrowed" }),
+            });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        } catch (err) {
+            console.warn("Could not update book status on server:", err);
+        }
 
-      session.borrowedList.push(newBook);
-      session.totalBorrowed++;
+        const today   = new Date();
+        const fmt     = d => d.toISOString().split("T")[0];
+        const dueDate = new Date();
+        dueDate.setDate(dueDate.getDate() + 7);
 
-      // Update book status in library
-      toggleBookStatus(book.id);
+        session.borrowedList.push({
+            id:    book.id,
+            title: book.title,
+            date:  fmt(today),
+            due:   fmt(dueDate),
+        });
+        session.totalBorrowed++;
 
-      saveSession(session);
-
-      borrowBtn.textContent = "Return Book";
-      document.getElementById("status").textContent = "borrowed";
+        saveSession(session);
+        updateStatusUI("borrowed", btn);
     }
-  };
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function setText(id, text) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text || "";
+}
+
+function updateStatusUI(bookStatus, btn) {
+    const statusEl = document.getElementById("status");
+    if (statusEl) statusEl.textContent = bookStatus;
+    if (btn) btn.textContent = bookStatus === "borrowed" ? "Return Book" : "Borrow Book";
+}
+
+function showError(msg) {
+    document.body.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:center;
+                    height:60vh;font-family:'Segoe UI',sans-serif;color:#ef4444;">
+            <h2>${msg}</h2>
+        </div>`;
+}
+
+function getSessionSafe() {
+    try { return getSession(); }
+    catch { return JSON.parse(localStorage.getItem("session") || "null"); }
+}
+
+function saveSession(session) {
+    try { /* use your existing saveSession if available */ }
+    catch {}
+    localStorage.setItem("session", JSON.stringify(session));
 }

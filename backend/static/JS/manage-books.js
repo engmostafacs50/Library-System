@@ -1,13 +1,11 @@
-// manage-books.js  —  connected to Django REST API
+// manage-books.js — connected to Django REST API
 const API_BASE = "http://localhost:8000"; // ← change to your actual API URL
 
-// Reads the auth token from localStorage (set this when the admin logs in)
-function authHeaders() {
+function authHeaders(contentType = "application/json") {
     const token = localStorage.getItem("authToken");
-    return {
-        "Content-Type": "application/json",
-        ...(token ? { Authorization: `Token ${token}` } : {}),
-    };
+    const headers = { ...(token ? { Authorization: `Token ${token}` } : {}) };
+    if (contentType) headers["Content-Type"] = contentType;
+    return headers;
 }
 
 // ── Bootstrap ────────────────────────────────────────────────────────────────
@@ -38,8 +36,8 @@ async function renderTable() {
 
         tbody.innerHTML = "";
         books.forEach((book, i) => tbody.appendChild(createRow(book, i)));
-
         updateEmptyState();
+
     } catch (err) {
         console.error("Failed to load books:", err);
         tbody.innerHTML = `
@@ -54,7 +52,6 @@ function createRow(book, i = 0) {
     tr.dataset.id = book.id;
     tr.style.cssText = "opacity:0;transform:translateY(16px);transition:opacity 0.4s ease,transform 0.4s ease;";
 
-    // Image: base64 data-URL stored in TextField, or emoji fallback
     const coverCell = book.image
         ? `<img src="${book.image}" alt="${escapeHtml(book.title)}"
                style="width:40px;height:55px;object-fit:cover;border-radius:4px;"
@@ -82,7 +79,6 @@ function createRow(book, i = 0) {
         tr.style.transform = "translateY(0)";
     }, 80 + i * 60);
 
-    // Attach listeners immediately (no global re-init needed)
     tr.querySelector(".btn-delete").addEventListener("click", () => handleDelete(book, tr));
     tr.querySelector(".btn-edit").addEventListener("click",   () => handleEdit(book, tr));
 
@@ -96,7 +92,7 @@ function handleDelete(book, row) {
         try {
             const res = await fetch(`${API_BASE}/api/books/${book.id}/`, {
                 method:  "DELETE",
-                headers: authHeaders(),
+                headers: authHeaders(null),
             });
 
             if (res.status === 204 || res.ok) {
@@ -120,7 +116,7 @@ function handleDelete(book, row) {
     });
 }
 
-// ── Edit (inline row) ────────────────────────────────────────────────────────
+// ── Edit (inline row with image upload) ──────────────────────────────────────
 
 function handleEdit(book, row) {
     if (row.classList.contains("editing")) return;
@@ -130,9 +126,28 @@ function handleEdit(book, row) {
 
     const originalHTML = row.innerHTML;
 
+    // Current image preview (base64 or empty)
+    let pendingImageB64 = book.image || null;
+
+    const previewId    = `img-preview-${book.id}`;
+    const fileInputId  = `img-file-${book.id}`;
+
+    const currentThumb = pendingImageB64
+        ? `<img id="${previewId}" src="${pendingImageB64}"
+               style="width:40px;height:55px;object-fit:cover;border-radius:4px;display:block;margin-bottom:4px;">`
+        : `<span id="${previewId}" style="font-size:24px;display:block;margin-bottom:4px;">📖</span>`;
+
     row.innerHTML = `
         <td>${book.id}</td>
-        <td><span style="font-size:24px;">📖</span></td>
+        <td>
+            ${currentThumb}
+            <label for="${fileInputId}"
+                style="cursor:pointer;font-size:11px;color:#818cf8;display:block;text-align:center;">
+                Change
+            </label>
+            <input type="file" id="${fileInputId}" accept="image/*"
+                style="display:none;">
+        </td>
         <td><input class="edit-input" data-field="title"  value="${escapeAttr(book.title)}"  /></td>
         <td><input class="edit-input" data-field="author" value="${escapeAttr(book.author)}" /></td>
         <td>
@@ -153,27 +168,52 @@ function handleEdit(book, row) {
             <button class="btn-cancel" data-id="${book.id}">Cancel</button>
         </td>`;
 
+    // Image file picker → convert to base64 and preview
+    const fileInput   = row.querySelector(`#${fileInputId}`);
+    const previewEl   = row.querySelector(`#${previewId}`);
+
+    fileInput.addEventListener("change", () => {
+        const file = fileInput.files[0];
+        if (!file) return;
+
+        if (file.size > 5 * 1024 * 1024) {
+            showNotification("Image must be under 5 MB.", "error");
+            fileInput.value = "";
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = e => {
+            pendingImageB64 = e.target.result; // data:image/...;base64,...
+
+            // Replace preview element with an <img>
+            const img = document.createElement("img");
+            img.id    = previewId;
+            img.src   = pendingImageB64;
+            img.style.cssText = "width:40px;height:55px;object-fit:cover;border-radius:4px;display:block;margin-bottom:4px;";
+            previewEl.replaceWith(img);
+        };
+        reader.readAsDataURL(file);
+    });
+
     // Save
     row.querySelector(".btn-save").addEventListener("click", async () => {
+        const payload = { image: pendingImageB64 };
         row.querySelectorAll(".edit-input").forEach(inp => {
-            book[inp.dataset.field] = inp.value.trim();
+            payload[inp.dataset.field] = inp.value.trim();
         });
 
         try {
             const res = await fetch(`${API_BASE}/api/books/${book.id}/`, {
                 method:  "PATCH",
                 headers: authHeaders(),
-                body:    JSON.stringify({
-                    title:  book.title,
-                    author: book.author,
-                    genre:  book.genre,
-                    status: book.status,
-                }),
+                body:    JSON.stringify(payload),
             });
 
             if (!res.ok) {
                 if (res.status === 403) throw new Error("Permission denied.");
-                throw new Error(`HTTP ${res.status}`);
+                const errData = await res.json().catch(() => ({}));
+                throw new Error(errData.detail || `HTTP ${res.status}`);
             }
 
             const updated = await res.json();
@@ -192,32 +232,55 @@ function handleEdit(book, row) {
     row.querySelector(".btn-cancel").addEventListener("click", () => {
         row.classList.remove("editing");
         row.innerHTML = originalHTML;
-        // Re-attach original listeners
         row.querySelector(".btn-delete").addEventListener("click", () => handleDelete(book, row));
         row.querySelector(".btn-edit").addEventListener("click",   () => handleEdit(book, row));
     });
 }
 
-// ── Search (client-side filter on already-loaded rows) ───────────────────────
+// ── Search (hits backend ?search= param) ─────────────────────────────────────
 
 function initSearch() {
     const input = document.getElementById("searchInput");
     if (!input) return;
 
+    let debounceTimer;
+
     input.addEventListener("input", () => {
-        const q    = input.value.trim().toLowerCase();
-        const rows = document.querySelectorAll("tbody tr:not(#emptyStateRow)");
-        let   hits = 0;
-        rows.forEach(row => {
-            const show = row.textContent.toLowerCase().includes(q);
-            row.style.display = show ? "" : "none";
-            if (show) hits++;
-        });
-        updateEmptyState(hits === 0 && q !== "");
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => fetchAndRender(input.value.trim()), 300);
     });
 }
 
-// ── Sortable headers ─────────────────────────────────────────────────────────
+async function fetchAndRender(query = "") {
+    const tbody = document.querySelector("tbody");
+    tbody.innerHTML = `
+        <tr><td colspan="7" style="text-align:center;padding:20px;color:#94a3b8;">
+            Searching…
+        </td></tr>`;
+
+    const url = query
+        ? `${API_BASE}/api/books/?search=${encodeURIComponent(query)}`
+        : `${API_BASE}/api/books/`;
+
+    try {
+        const res = await fetch(url, { headers: { Accept: "application/json" } });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data  = await res.json();
+        const books = Array.isArray(data) ? data : (data.results ?? []);
+
+        tbody.innerHTML = "";
+        books.forEach((book, i) => tbody.appendChild(createRow(book, i)));
+        updateEmptyState();
+    } catch (err) {
+        console.error("Search failed:", err);
+        tbody.innerHTML = `
+            <tr><td colspan="7" style="text-align:center;padding:20px;color:#ef4444;">
+                Search failed. Try again.
+            </td></tr>`;
+    }
+}
+
+// ── Sortable headers ──────────────────────────────────────────────────────────
 
 function initSortableHeaders() {
     const headers    = document.querySelectorAll("thead th");
