@@ -1,5 +1,10 @@
 // search.js — connected to Django REST API
-const API_BASE = "http://localhost:8000"; // ← change to your actual API URL
+const API_BASE = "";
+
+
+const BOOK_DETAILS_BASE = typeof BOOK_DETAILS_URL !== "undefined"
+    ? BOOK_DETAILS_URL
+    : "/pages/book-details/";
 
 document.addEventListener("DOMContentLoaded", () => {
     const input     = document.querySelector(".search-box input");
@@ -100,9 +105,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let books = [];
         try {
-            const res = await fetch(
+           const res = await fetch(
                 `${API_BASE}/api/books/?search=${encodeURIComponent(query)}`,
-                { headers: { Accept: "application/json" } }
+                { 
+                    headers: { Accept: "application/json" },
+                    credentials: "include",
+                }
             );
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const data = await res.json();
@@ -126,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
         books.forEach((book, i) => {
             const card = document.createElement("a");
             card.className = "book-card card-reveal";
-            card.href      = `book-details.html?id=${book.id}`;
+            card.href      = `${BOOK_DETAILS_BASE}?id=${book.id}`; // ✅ updated
             card.style.animationDelay = `${i * 50}ms`;
             card.dataset.category = (book.genre || "").toLowerCase();
 

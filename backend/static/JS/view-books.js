@@ -1,6 +1,11 @@
 // view-books.js  —  connected to Django REST API
 const API_BASE = "http://localhost:8000"; // ← change to your actual API URL
 
+// ✅ Fall back if template variable isn't available
+const BOOK_DETAILS_BASE = typeof BOOK_DETAILS_URL !== "undefined"
+    ? BOOK_DETAILS_URL
+    : "/pages/book-details/";
+
 document.addEventListener("DOMContentLoaded", () => {
     // Handle ?category= query param (sets the dropdown before first render)
     const params           = new URLSearchParams(window.location.search);
@@ -78,9 +83,10 @@ async function renderBooks() {
         const statusLabel    = book.status === "available" ? "✓ Available" : "✗ Borrowed";
 
         return `
-            <a href="book-details.html?id=${book.id}" class="book-card"
+            <a href="${BOOK_DETAILS_BASE}?id=${book.id}" class="book-card"
                data-category="${escapeHtml(book.genre?.toLowerCase() || "")}">
                 <img src="${imgSrc}" alt="${escapeHtml(book.title)}"
+                     style="cursor:pointer;"
                      onerror="this.src='../assets/images/default-book.jpg'">
                 <div class="book-info">
                     <h3>${escapeHtml(book.title)}</h3>
@@ -96,7 +102,7 @@ async function renderBooks() {
     }).join("");
 }
 
-// ── helpers ──────────────────────────────────────────────────────────────────
+
 
 function escapeHtml(str) {
     if (!str) return "";
