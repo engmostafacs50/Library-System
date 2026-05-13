@@ -1,10 +1,11 @@
 from django.urls import path
-from .views import BookListCreateView, BookDetailView, BookByGenreView
+from .views import BookListCreateView, BookDetailView, BookByGenreView, add_book
 
 urlpatterns = [
     path('', BookListCreateView.as_view(), name='book-list-create'),
     path('<int:pk>/', BookDetailView.as_view(), name='book-detail'),
     path('genre/<str:genre>/', BookByGenreView.as_view(), name='book-by-genre'),
+    path("api/books/add/", add_book, name="add-book"),
 ]
 
 from rest_framework import generics, filters

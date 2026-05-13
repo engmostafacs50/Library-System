@@ -1,10 +1,13 @@
+/* ── API ── */
+const API_BASE = "/api/books/";
+
 /* ── add-book.js ── */
 
-const dropZone   = document.getElementById("dropZone");
-const dropInner  = document.getElementById("dropInner");
+const dropZone = document.getElementById("dropZone");
+const dropInner = document.getElementById("dropInner");
 const imageInput = document.getElementById("imageInput");
-const preview    = document.getElementById("imagePreview");
-const removeBtn  = document.getElementById("removeImg");
+const preview = document.getElementById("imagePreview");
+const removeBtn = document.getElementById("removeImg");
 
 let selectedImage = null; // base64 string
 
@@ -75,37 +78,105 @@ removeBtn.addEventListener("click", (e) => {
   hidePreview();
 });
 
+/**
+ * POST a new book to the Django REST API.
+ * Reads the auth token from localStorage (key: "authToken").
+ * Returns the created book object on success, throws on failure.
+ */
+async function addBook({ title, author, genre, status, description, image }) {
+  const token = localStorage.getItem("authToken");
+
+  const payload = { title, author, genre, status, description };
+
+  // Only include the image field when one was actually chosen.
+  // The backend is expected to accept a base64 data-URL string.
+  if (image) {
+    payload.image = image;
+  }
+
+  const response = await fetch(API_BASE, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token && { Authorization: `Token ${token}` }),
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (response.status === 401 || response.status === 403) {
+    throw new Error("You must be logged in as an admin to add books.");
+  }
+
+  if (!response.ok) {
+    // Surface field-level validation errors from DRF when available.
+    let detail = `Server error (${response.status}).`;
+    try {
+      const err = await response.json();
+      // DRF returns errors as { field: ["msg", ...] } or { detail: "msg" }
+      const messages = Object.entries(err)
+        .map(([field, msgs]) =>
+          field === "detail"
+            ? msgs
+            : `${field}: ${Array.isArray(msgs) ? msgs.join(", ") : msgs}`,
+        )
+        .join(" | ");
+      if (messages) detail = messages;
+    } catch (_) {
+      /* ignore JSON parse failure */
+    }
+    throw new Error(detail);
+  }
+
+  return response.json();
+}
+
 /* ── Save Book ── */
-function handleAddBook() {
-  const title  = document.getElementById("bookTitle").value.trim();
+async function handleAddBook() {
+  const title = document.getElementById("bookTitle").value.trim();
   const author = document.getElementById("bookAuthor").value.trim();
-  const genre  = document.getElementById("bookGenre").value;
+  const genre = document.getElementById("bookGenre").value;
   const status = document.getElementById("bookStatus").value;
-  const desc   = document.getElementById("bookDesc").value.trim();
+  const desc = document.getElementById("bookDesc").value.trim();
 
   if (!title || !author) {
     showToast("Title and Author are required.", "error");
     return;
   }
 
-  const newBook = addBook({
-    title,
-    author,
-    genre,
-    status,
-    description: desc,
-    image: selectedImage || null,
-  });
+  // Disable the save button while the request is in flight.
+  const saveBtn = document.querySelector("[onclick='handleAddBook()']");
+  if (saveBtn) {
+    saveBtn.disabled = true;
+    saveBtn.textContent = "Saving…";
+  }
 
-  showToast(`"${newBook.title}" added successfully!`, "success");
-  clearForm();
+  try {
+    const newBook = await addBook({
+      title,
+      author,
+      genre,
+      status,
+      description: desc,
+      image: selectedImage || null,
+    });
+
+    showToast(`"${newBook.title}" added successfully!`, "success");
+    clearForm();
+  } catch (err) {
+    showToast(err.message || "Failed to add book.", "error");
+  } finally {
+    if (saveBtn) {
+      saveBtn.disabled = false;
+      saveBtn.textContent = "Save Book";
+    }
+  }
 }
 
 /* ── Clear Form ── */
 function clearForm() {
-  document.getElementById("bookTitle").value  = "";
+  document.getElementById("bookTitle").value = "";
   document.getElementById("bookAuthor").value = "";
-  document.getElementById("bookDesc").value   = "";
+  document.getElementById("bookDesc").value = "";
   document.getElementById("bookGenre").selectedIndex = 0;
   document.getElementById("bookStatus").selectedIndex = 0;
   hidePreview();
@@ -117,5 +188,7 @@ function showToast(msg, type = "success") {
   toast.textContent = msg;
   toast.className = `toast ${type}`;
   toast.style.display = "block";
-  setTimeout(() => { toast.style.display = "none"; }, 3500);
+  setTimeout(() => {
+    toast.style.display = "none";
+  }, 3500);
 }
