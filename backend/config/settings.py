@@ -135,7 +135,7 @@ AUTH_USER_MODEL = 'users.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'users.authentication.CookieJWTAuthentication',  # reads from HttpOnly cookie
+        'users.authentication.CookieJWTAuthentication', # reads from HttpOnly cookie
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -145,13 +145,12 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME':    timedelta(days=1),
-    'REFRESH_TOKEN_LIFETIME':   timedelta(days=7),
-    'ROTATE_REFRESH_TOKENS':    True,
-    'BLACKLIST_AFTER_ROTATION': True,
-    'AUTH_HEADER_TYPES':        ('Bearer',),
-    'USER_ID_FIELD':            'id',
-    'USER_ID_CLAIM':            'user_id',
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "AUTH_COOKIE": "access_token",        # must match what your login view sets
+    "AUTH_COOKIE_SAMESITE": "None",       # ← required for cross-origin (different ports)
+    "AUTH_COOKIE_SECURE": False,          # ← False for localhost (no HTTPS)
+    "AUTH_COOKIE_HTTP_ONLY": True,
 }
 
 # ── LOGGING ────────────────────────────────────────────────

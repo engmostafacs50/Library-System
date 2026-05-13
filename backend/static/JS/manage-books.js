@@ -1,9 +1,18 @@
 // manage-books.js — connected to Django REST API
-const API_BASE = "http://localhost:8000"; // ← change to your actual API URL
+const API_BASE = ""; // ← change to your actual API URL
+
+// ── Auth Helpers ─────────────────────────────────────────────────────────────
+// Token is stored in an HttpOnly cookie — JS cannot read it directly.
+// The browser sends it automatically via credentials: "include".
+// We only need to read the CSRF token (which is NOT HttpOnly).
+
+function getCsrfToken() {
+    const match = document.cookie.match(/(^|;)\s*csrftoken=([^;]+)/);
+    return match ? match[2] : null;
+}
 
 function authHeaders(contentType = "application/json") {
-    const token = localStorage.getItem("authToken");
-    const headers = { ...(token ? { Authorization: `Token ${token}` } : {}) };
+    const headers = { "X-CSRFToken": getCsrfToken() };
     if (contentType) headers["Content-Type"] = contentType;
     return headers;
 }
@@ -28,6 +37,7 @@ async function renderTable() {
     try {
         const res = await fetch(`${API_BASE}/api/books/`, {
             headers: { Accept: "application/json" },
+            credentials: "include", // sends HttpOnly JWT cookie automatically
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
@@ -91,8 +101,9 @@ function handleDelete(book, row) {
     showConfirmToast(`Delete "${book.title}"?`, async () => {
         try {
             const res = await fetch(`${API_BASE}/api/books/${book.id}/`, {
-                method:  "DELETE",
-                headers: authHeaders(null),
+                method:      "DELETE",
+                headers:     authHeaders(null),
+                credentials: "include", // sends HttpOnly JWT cookie automatically
             });
 
             if (res.status === 204 || res.ok) {
@@ -129,8 +140,8 @@ function handleEdit(book, row) {
     // Current image preview (base64 or empty)
     let pendingImageB64 = book.image || null;
 
-    const previewId    = `img-preview-${book.id}`;
-    const fileInputId  = `img-file-${book.id}`;
+    const previewId   = `img-preview-${book.id}`;
+    const fileInputId = `img-file-${book.id}`;
 
     const currentThumb = pendingImageB64
         ? `<img id="${previewId}" src="${pendingImageB64}"
@@ -169,8 +180,8 @@ function handleEdit(book, row) {
         </td>`;
 
     // Image file picker → convert to base64 and preview
-    const fileInput   = row.querySelector(`#${fileInputId}`);
-    const previewEl   = row.querySelector(`#${previewId}`);
+    const fileInput = row.querySelector(`#${fileInputId}`);
+    const previewEl = row.querySelector(`#${previewId}`);
 
     fileInput.addEventListener("change", () => {
         const file = fileInput.files[0];
@@ -205,9 +216,10 @@ function handleEdit(book, row) {
 
         try {
             const res = await fetch(`${API_BASE}/api/books/${book.id}/`, {
-                method:  "PATCH",
-                headers: authHeaders(),
-                body:    JSON.stringify(payload),
+                method:      "PATCH",
+                headers:     authHeaders(), // sends X-CSRFToken header
+                credentials: "include",     // sends HttpOnly JWT cookie automatically
+                body:        JSON.stringify(payload),
             });
 
             if (!res.ok) {
@@ -263,7 +275,10 @@ async function fetchAndRender(query = "") {
         : `${API_BASE}/api/books/`;
 
     try {
-        const res = await fetch(url, { headers: { Accept: "application/json" } });
+        const res = await fetch(url, {
+            headers:     { Accept: "application/json" },
+            credentials: "include", // sends HttpOnly JWT cookie automatically
+        });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data  = await res.json();
         const books = Array.isArray(data) ? data : (data.results ?? []);

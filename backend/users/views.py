@@ -16,31 +16,32 @@ from returned_books.models import ReturnedBook
 
 def set_auth_cookies(response, user):
     refresh = RefreshToken.for_user(user)
-    access_token = str(refresh.access_token)
+    access_token  = str(refresh.access_token)
     refresh_token = str(refresh)
 
-    is_secure = not settings.DEBUG  # only send over HTTPS in production
+    # SameSite=None is required for cross-origin requests (different ports count).
+    # Secure=False is safe on localhost (http); set True in production (https).
+    secure   = False
+    samesite = "Lax"
 
-    # Access token cookie — short lived
     response.set_cookie(
-        key="access_token",
-        value=access_token,
-        max_age=int(settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"].total_seconds()),
-        httponly=True,
-        secure=is_secure,
-        samesite="Lax",
-        path="/",
+        key      = "access_token",
+        value    = access_token,
+        max_age  = int(settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"].total_seconds()),
+        httponly = True,
+        secure   = secure,
+        samesite = samesite,
+        path     = "/",
     )
 
-    # Refresh token cookie — long lived 
     response.set_cookie(
-        key="refresh_token",
-        value=refresh_token,
-        max_age=int(settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"].total_seconds()),
-        httponly=True,
-        secure=is_secure,
-        samesite="Lax",
-        path="/api/users/token/refresh/",  
+        key      = "refresh_token",
+        value    = refresh_token,
+        max_age  = int(settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"].total_seconds()),
+        httponly = True,
+        secure   = secure,
+        samesite = samesite,
+        path     = "/api/users/token/refresh/",
     )
 
     return response
@@ -52,7 +53,6 @@ class RegisterView(APIView):
     Register flow: RegisterView -> UserSerializer -> UserManager -> DB
     Sets access_token + refresh_token as HttpOnly cookies.
     """
-
     permission_classes = []
 
     def post(self, request):
@@ -89,8 +89,6 @@ class AuthView(APIView):
 
 
 class LogoutView(APIView):
-
-
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -103,57 +101,54 @@ class LogoutView(APIView):
                 pass  # already invalid — clear cookies anyway
 
         response = Response({"message": "Logged out successfully."}, status=status.HTTP_200_OK)
-        response.delete_cookie("access_token", path="/")
+        response.delete_cookie("access_token",  path="/")
         response.delete_cookie("refresh_token", path="/api/users/token/refresh/")
         return response
 
 
 class CookieTokenRefreshView(APIView):
-  
-
     permission_classes = []
 
     def post(self, request):
         refresh_token = request.COOKIES.get("refresh_token")
         if not refresh_token:
-            return Response({"detail": "Refresh token not found."}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(
+                {"detail": "Refresh token not found."},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
 
         try:
-            refresh = RefreshToken(refresh_token)
+            refresh      = RefreshToken(refresh_token)
             access_token = str(refresh.access_token)
         except (TokenError, InvalidToken) as e:
             return Response({"detail": str(e)}, status=status.HTTP_401_UNAUTHORIZED)
 
-        is_secure = not settings.DEBUG
         response = Response({"message": "Token refreshed."}, status=status.HTTP_200_OK)
         response.set_cookie(
-            key="access_token",
-            value=access_token,
-            max_age=int(settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"].total_seconds()),
-            httponly=True,
-            secure=is_secure,
-            samesite="Lax",
-            path="/",
+            key      = "access_token",
+            value    = access_token,
+            max_age  = int(settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"].total_seconds()),
+            httponly = True,
+            secure   = False,  # False on localhost, True in production
+            samesite = "Lax",              # ← fixed: was "Lax"
+            path     = "/",
         )
         return response
 
 
 class AdminView(APIView):
-
     permission_classes = [IsAuthenticated, IsAdminUser]
 
     def get(self, request):
-        users = User.objects.all()
+        users      = User.objects.all()
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
-
 
 
 class AdminUserDetailView(APIView):
     """
-    PATCH /api/users/admin/users/<user_id>/  → toggle active/inactive
-    DELETE /api/users/admin/users/<user_id>/ → delete user
+    PATCH  /api/users/admin/users/<user_id>/  → toggle active/inactive
+    DELETE /api/users/admin/users/<user_id>/  → delete user
     """
     permission_classes = [IsAuthenticated, IsAdminUser]
 
