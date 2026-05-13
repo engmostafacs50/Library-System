@@ -4,9 +4,9 @@
     <head>
         <meta charset="UTF-8">
         <title>Online Library | Manage Books</title>
-        <link rel="icon" href="../assets/images/Icon.png" type="image/png">
-        <link rel="stylesheet" href="../CSS/manage-books.css">
-        <link rel="stylesheet" href="../CSS/navbar.css">
+        <link rel="icon" href="{% static 'assets/images/Icon.png' %}" type="image/png">
+        <link rel="stylesheet" href="{% static 'CSS/manage-books.css' %}">
+        <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
     </head>
     <body>
 
@@ -20,12 +20,12 @@
             <div class="nav-links">
 
                 <!-- <a href="homepage.html">Homepage</a> -->
-                <a href="dashboard.html">Dashboard</a>
-                <a href="add-book.html">Add Book</a>
-                <a href="manage-books.html" class="active">Manage Books</a>
+                <a href="{% static 'dashboard.html' %}">Dashboard</a>
+                <a href="{% static 'add-book.html' %}">Add Book</a>
+                <a href="{% static 'manage-books.html' %}" class="active">Manage Books</a>
                 <!-- <a href="view-books.html">Books</a> -->
             </div>
-            <div class="nav-logout"><a href="../index.html">Logout</a></div>
+            <div class="nav-logout"><a href="{% static 'index.html' %}">Logout</a></div>
         </nav>
 
         <hr>
@@ -37,7 +37,7 @@
                     placeholder="Search by title, author, category…" />
             </div>
             <div class="top-bar">
-                <a href="add-book.html" class="btn btn-add">+ Add Book</a>
+                <a href="{% static 'add-book.html' %}" class="btn btn-add">+ Add Book</a>
             </div>
 
             <div class="table-wrapper">
@@ -59,7 +59,6 @@
                 </table>
             </div>
         </div>
-        <script src="../JS/books-data.js"></script>
-        <script src="../JS/manage-books.js"></script>
+        <script src="{% static 'JS/manage-books.js' %}"></script>
     </body>
 </html>
