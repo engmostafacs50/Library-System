@@ -1,35 +1,39 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>Online Library | User Dashboard</title>
-    <link rel="icon" href="../assets/images/Icon.png" type="image/png">
-    <link rel="stylesheet" href="../CSS/UserDashboard-BorrowedBooks.css" />
-    <link rel="stylesheet" href="../CSS/navbar.css">
-    <link rel="stylesheet" href="../CSS/background.css">
-</head>
+    <link rel="icon" href="{% static 'assets/images/Icon.png' %}"
+      type="image/png">
+    <link rel="stylesheet" href="{% static 'CSS/background.css' %}">
+    <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
+    <link rel="stylesheet"
+      href="{% static 'CSS/UserDashboard-BorrowedBooks.css' %}">
+  </head>
   <body>
     <div class="bg-orbs">
-    <div class="orb orb1"></div>
-    <div class="orb orb2"></div>
-    <div class="orb orb3"></div>
-  </div>
-    <nav>
-    <span class="nav-brand">Library System</span>
-    <div class="nav-links">
-      <a href="homepage.html">Home</a>
-      <a href="user-dashboard.html" class="active">Profile</a>
-      <a href="search-books.html">Search</a>
-      <a href="view-books.html">Books</a>
-      <a href="borrowed-books.html">Borrowed</a>
-      <a href="returned-books.html">Returned</a>
+      <div class="orb orb1"></div>
+      <div class="orb orb2"></div>
+      <div class="orb orb3"></div>
     </div>
-    <div class="nav-logout"><a href="../index.html">Logout</a></div>
-  </nav>
+    <nav>
+      <span class="nav-brand">Library System</span>
+      <div class="nav-links">
+        <a href="{% url 'homepage' %}">Home</a>
+        <a href="{% url 'user-dashboard' %}"
+          class="active">Profile</a>
+        <a href="{% url 'search-books' %}">Search</a>
+        <a href="{% url 'view-books' %}">Books</a>
+        <a href="{% url 'borrowed-books' %}">Borrowed</a>
+        <a href="{% url 'returned-books' %}">Returned</a>
+      </div>
+      <div class="nav-logout"><a href="../index.html">Logout</a></div>
+    </nav>
 
     <div class="container">
       <div class="user-header">
-        <img src="" class="profile-img" id="user-avatar" />
+        <img src class="profile-img" id="user-avatar" />
         <h1 id="user-welcome">Welcome!</h1>
         <p class="subtitle">
           "A reader lives a thousand lives before he dies."
@@ -61,7 +65,7 @@
       </div>
     </div>
     <script src="../JS/Users-data.js"></script>
-    <script src = "../JS/books-data.js"></script>
+    <script src="../JS/books-data.js"></script>
     <script src="../JS/UserDashboard-BorrowedBooks.js"></script>
   </body>
 </html>

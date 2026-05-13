@@ -1,31 +1,34 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>Online Library | Borrowed Books</title>
-    <link rel="icon" href="../assets/images/Icon.png" type="image/png">
-    <link rel="stylesheet" href="../CSS/UserDashboard-BorrowedBooks.css" />
-  <link rel="stylesheet" href="../CSS/navbar.css">
-  <link rel="stylesheet" href="../CSS/background.css">
-</head>
+    <link rel="icon" href="{% static 'assets/images/Icon.png' %}"
+      type="image/png">
+    <link rel="stylesheet" href="{% static 'CSS/background.css' %}">
+    <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
+    <link rel="stylesheet"
+      href="{% static 'CSS/UserDashboard-BorrowedBooks.css' %}">
+  </head>
   <body>
     <div class="bg-orbs">
-    <div class="orb orb1"></div>
-    <div class="orb orb2"></div>
-    <div class="orb orb3"></div>
-  </div>
-    <nav>
-    <span class="nav-brand">Library System</span>
-    <div class="nav-links">
-      <a href="homepage.html">Home</a>
-      <a href="user-dashboard.html">Profile</a>
-      <a href="search-books.html">Search</a>
-      <a href="view-books.html">Books</a>
-      <a href="borrowed-books.html" class="active">Borrowed</a>
-      <a href="returned-books.html">Returned</a>
+      <div class="orb orb1"></div>
+      <div class="orb orb2"></div>
+      <div class="orb orb3"></div>
     </div>
-    <div class="nav-logout"><a href="../index.html">Logout</a></div>
-  </nav>
+    <nav>
+      <span class="nav-brand">Library System</span>
+      <div class="nav-links">
+        <a href="{% url 'homepage' %}">Home</a>
+        <a href="{% url 'user-dashboard' %}">Profile</a>
+        <a href="{% url 'search-books' %}">Search</a>
+        <a href="{% url 'view-books' %}">Books</a>
+        <a href="{% url 'borrowed-books' %}" class="active">Borrowed</a>
+        <a href="{% url 'returned-books' %}">Returned</a>
+      </div>
+      <div class="nav-logout"><a href="../index.html">Logout</a></div>
+    </nav>
 
     <div class="container">
       <h1>My Borrowed Books</h1>

@@ -1,84 +1,91 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Online Library | Home page</title>
-    <link rel="icon" href="{% static 'assets/images/Icon.png' %}" type="image/png">
-    <link rel="stylesheet" href="{% static 'CSS/background.css' %}">
-    <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
-    <link rel="stylesheet" href="{% static 'CSS/homepage-bookdetails.css' %}">
-</head>
-<body>
+    <head>
+        <title>Online Library | Home page</title>
+        <link rel="icon" href="{% static 'assets/images/Icon.png' %}"
+            type="image/png">
+        <link rel="stylesheet" href="{% static 'CSS/background.css' %}">
+        <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
+        <link rel="stylesheet"
+            href="{% static 'CSS/homepage-bookdetails.css' %}">
+    </head>
+    <body>
 
-<nav>
-    <span class="nav-brand">Library System</span>
-    <div class="nav-links">
-      <!-- <a href="homepage.html" class="active">Home</a> -->
-      <a href="user-dashboard.html">Profile</a>
-      <!-- <a href="search-books.html">Search</a> -->
-      <a href="view-books.html">Books</a>
-      <a href="borrowed-books.html">Borrowed</a>
-      <a href="returned-books.html">Returned</a>
-    </div>
-    <div class="nav-logout"><a href="../index.html">Logout</a></div>
-</nav>
+        <nav>
+            <span class="nav-brand">Library System</span>
+            <div class="nav-links">
+                <a href="{% url 'homepage' %}" class="active">Home</a>
+                <a href="{% url 'user-dashboard' %}"
+                    >Profile</a>
+                <a href="{% url 'search-books' %}">Search</a>
+                <a href="{% url 'view-books' %}">Books</a>
+                <a href="{% url 'borrowed-books' %}">Borrowed</a>
+                <a href="{% url 'returned-books' %}">Returned</a>
+            </div>
+            <div class="nav-logout"><a href="../index.html">Logout</a></div>
+        </nav>
 
-<div class="hero">
-    <h1>Discover Your Next Favorite Book</h1>
-    <p>Search through thousands of titles and borrow them instantly.</p>
+        <div class="hero">
+            <h1>Discover Your Next Favorite Book</h1>
+            <p>Search through thousands of titles and borrow them instantly.</p>
 
-    <a href="search-books.html" class="hero-search-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-        Search Books
-    </a>
-</div>
-
-<h2 style="text-align: center; margin-top: 40px; font-size: 32px;">Featured Books</h2>
-
-<!-- Featured Book -->
-
-<div class="featured-book">
-     <div class="book-card" id="featuredBooks"></div>
-</div>
-
-
-<!-- Categories -->
-<div class="categories">
-    <h2>Explore Categories</h2>
-
-    <div class="cat-grid">
-        <div class="cat-card">
-            <img src="../assets/images/prg.jpg">
-            <h3>programming</h3>
-            <a href="view-books.html?category=programming">
-                <button>Explore</button>
+            <a href="{% url 'search-books'}" class="hero-search-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8" /><line x1="21" y1="21"
+                        x2="16.65" y2="16.65" />
+                </svg>
+                Search Books
             </a>
         </div>
 
-        <div class="cat-card">
-            <img src="../assets/images/history.jpg">
-            <h3>History</h3>
-            <a href="view-books.html?category=history">
-                <button>Explore</button>
-            </a>
+        <h2
+            style="text-align: center; margin-top: 40px; font-size: 32px;">Featured
+            Books</h2>
+
+        <!-- Featured Book -->
+
+        <div class="featured-book">
+            <div class="book-card" id="featuredBooks"></div>
         </div>
 
-        <div class="cat-card">
-            <img src="../assets/images/entertainment.jpg">
-            <h3>Fiction</h3>
-            <a href="view-books.html?category=fiction">
-                <button>Explore</button>
-            </a>
+        <!-- Categories -->
+        <div class="categories">
+            <h2>Explore Categories</h2>
+
+            <div class="cat-grid">
+                <div class="cat-card">
+                    <img src="../assets/images/prg.jpg">
+                    <h3>programming</h3>
+                    <a href="view-books.html?category=programming">
+                        <button>Explore</button>
+                    </a>
+                </div>
+
+                <div class="cat-card">
+                    <img src="../assets/images/history.jpg">
+                    <h3>History</h3>
+                    <a href="view-books.html?category=history">
+                        <button>Explore</button>
+                    </a>
+                </div>
+
+                <div class="cat-card">
+                    <img src="../assets/images/entertainment.jpg">
+                    <h3>Fiction</h3>
+                    <a href="view-books.html?category=fiction">
+                        <button>Explore</button>
+                    </a>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
 
-<h6>2026 Online Library System</h6>
+        <h6>2026 Online Library System</h6>
 
-
-<script>
+        <script>
     const container = document.getElementById("featuredBooks");
 
     const books = getBooks();
@@ -101,5 +108,5 @@
         });
     }
 </script>
-</body>
+    </body>
 </html>

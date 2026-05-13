@@ -1,120 +1,123 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Online Library | Admin Dashboard</title>
-  <link rel="icon" href="{% static 'assets/images/Icon.png' %}" type="image/png">
-  <link rel="stylesheet" href="{% static 'CSS/background.css' %}">
-  <link rel="stylesheet" href="{% static 'CSS/dashboard.css' %}">
-  <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8">
+    <title>Online Library | Admin Dashboard</title>
+    <link rel="icon" href="{% static 'assets/images/Icon.png' %}"
+      type="image/png">
+    <link rel="stylesheet" href="{% static 'CSS/background.css' %}">
+    <link rel="stylesheet" href="{% static 'CSS/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
+  </head>
+  <body>
 
-  <div class="bg-orbs">
-    <div class="orb orb1"></div>
-    <div class="orb orb2"></div>
-    <div class="orb orb3"></div>
-  </div>
-
-  <nav>
-    <span class="nav-brand">
-      Library System</span>
-    <div class="nav-links">
-      <a href="dashboard.html" class="active">Dashboard</a>
-      <a href="add-book.html">Add Book</a>
-      <a href="manage-books.html">Manage Books</a>
-      <!-- <a href="view-books.html">Books</a> -->
+    <div class="bg-orbs">
+      <div class="orb orb1"></div>
+      <div class="orb orb2"></div>
+      <div class="orb orb3"></div>
     </div>
-    <div class="nav-logout"><a href="../index.html">Logout</a></div>
-  </nav>
 
-  <div class="page-wrapper">
-
-    <!-- Header -->
-    <header class="page-header">
-      <div>
-        <p class="page-subtitle">Admin Dashboard</p>
-        <h1>Welcome, Admin</h1>
+    <nav>
+      <span class="nav-brand">
+        Library System</span>
+      <div class="nav-links">
+        <a href="{% url 'dashboard' %}" class="active">Dashboard</a>
+        <a href="{% url 'add-book' %}">Add Book</a>
+        <a href="{% url 'manage-books' %}">Manage Books</a>
+        <!-- <a href="view-books.html">Books</a> -->
       </div>
-      <div class="header-date" id="headerDate"></div>
-    </header>
+      <div class="nav-logout"><a href="../index.html">Logout</a></div>
+    </nav>
 
-    <!-- Stat Cards -->
-    <section class="stats-grid">
-      <div class="stat-card accent">
-        
-        <div class="stat-info">
-          <span class="stat-label">Total Users</span>
-          <span class="stat-value" id="totalUsers">0</span>
+    <div class="page-wrapper">
+
+      <!-- Header -->
+      <header class="page-header">
+        <div>
+          <p class="page-subtitle">Admin Dashboard</p>
+          <h1>Welcome, Admin</h1>
         </div>
-      </div>
-      <div class="stat-card">
-        
-        <div class="stat-info">
-          <span class="stat-label">Active Users</span>
-          <span class="stat-value" id="activeUsers">0</span>
+        <div class="header-date" id="headerDate"></div>
+      </header>
+
+      <!-- Stat Cards -->
+      <section class="stats-grid">
+        <div class="stat-card accent">
+
+          <div class="stat-info">
+            <span class="stat-label">Total Users</span>
+            <span class="stat-value" id="totalUsers">0</span>
+          </div>
         </div>
-      </div>
-      <div class="stat-card">
-        
-        <div class="stat-info">
-          <span class="stat-label">Total Books</span>
-          <span class="stat-value" id="totalBooks">0</span>
+        <div class="stat-card">
+
+          <div class="stat-info">
+            <span class="stat-label">Active Users</span>
+            <span class="stat-value" id="activeUsers">0</span>
+          </div>
         </div>
-      </div>
-      <div class="stat-card">
-        
-        <div class="stat-info">
-          <span class="stat-label">Books Borrowed</span>
-          <span class="stat-value" id="borrowedBooks">0</span>
+        <div class="stat-card">
+
+          <div class="stat-info">
+            <span class="stat-label">Total Books</span>
+            <span class="stat-value" id="totalBooks">0</span>
+          </div>
         </div>
-      </div>
-    </section>
+        <div class="stat-card">
 
-    <!-- Quick Actions -->
-    <section class="quick-actions">
-      <p class="section-title">Quick Actions</p>
-      <div class="action-buttons">
-        <a href="add-book.html" class="btn btn-primary">+ Add New Book</a>
-        <a href="manage-books.html" class="btn btn-secondary">Manage Books</a>
-      </div>
-    </section>
-
-    <!-- Users Table -->
-    <section class="table-section">
-      <div class="section-header">
-        <p class="section-title">Registered Users</p>
-        <div class="search-bar">
-          <input type="text" id="userSearch" placeholder="Search users…" oninput="filterUsers()">
+          <div class="stat-info">
+            <span class="stat-label">Books Borrowed</span>
+            <span class="stat-value" id="borrowedBooks">0</span>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Avatar</th>
-              <th>Full Name</th>
-              <th>Username</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Status</th>
-              <th>Joined</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="usersTableBody"></tbody>
-        </table>
-        <p class="empty-msg" id="emptyMsg" style="display:none;">No users found.</p>
-      </div>
-    </section>
+      <!-- Quick Actions -->
+      <section class="quick-actions">
+        <p class="section-title">Quick Actions</p>
+        <div class="action-buttons">
+          <a href="add-book.html" class="btn btn-primary">+ Add New Book</a>
+          <a href="manage-books.html" class="btn btn-secondary">Manage Books</a>
+        </div>
+      </section>
 
-  </div>
+      <!-- Users Table -->
+      <section class="table-section">
+        <div class="section-header">
+          <p class="section-title">Registered Users</p>
+          <div class="search-bar">
+            <input type="text" id="userSearch" placeholder="Search users…"
+              oninput="filterUsers()">
+          </div>
+        </div>
 
-  <script src="../JS/books-data.js"></script>
-  <script src="../JS/users-data.js"></script>
-  <script src="../JS/dashboard.js"></script>
-</body>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Avatar</th>
+                <th>Full Name</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Joined</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody"></tbody>
+          </table>
+          <p class="empty-msg" id="emptyMsg" style="display:none;">No users
+            found.</p>
+        </div>
+      </section>
+
+    </div>
+
+    <script src="../JS/books-data.js"></script>
+    <script src="../JS/users-data.js"></script>
+    <script src="../JS/dashboard.js"></script>
+  </body>
 </html>
