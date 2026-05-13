@@ -115,5 +115,4 @@ BorrowManager --> BorrowedBook : manages
 BorrowedBook --> BorrowStatus : has
 BorrowedBook "many" --> "1" User : belongs to
 BorrowedBook "many" --> "1" Book : references
-
 @enduml
