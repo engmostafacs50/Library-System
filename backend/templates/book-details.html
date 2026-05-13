@@ -1,51 +1,52 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Online Library | Book Details</title>
     <link rel="icon" href="../assets/images/Icon.png" type="image/png">
     <link rel="stylesheet" href="../CSS/background.css">
     <link rel="stylesheet" href="../CSS/homepage-bookdetails.css">
     <link rel="stylesheet" href="../CSS/navbar.css">
     <link rel="stylesheet" href="../CSS/book-details.css">
-</head>
-<body>
+  </head>
+  <body>
 
-<nav>
-    <span class="nav-brand">Library System</span>
-    <div class="nav-links">
-      <a href="homepage.html">Home</a>
-      <a href="user-dashboard.html">Profile</a>
-      <a href="search-books.html">Search</a>
-      <a href="view-books.html">Books</a>
-      <a href="borrowed-books.html">Borrowed</a>
-      <a href="returned-books.html">Returned</a>
+    <nav>
+      <span class="nav-brand">Library System</span>
+      <div class="nav-links">
+        <a href="{% url 'homepage' %}">Home</a>
+        <a href="{% url 'user-dashboard' %}"
+          class="active">Profile</a>
+        <a href="{% url 'search-books' %}">Search</a>
+        <a href="{% url 'view-books' %}">Books</a>
+        <a href="{% url 'borrowed-books' %}">Borrowed</a>
+        <a href="{% url 'returned-books' %}">Returned</a>
+      </div>
+      <div class="nav-logout"><a href="../index.html">Logout</a></div>
+    </nav>
+
+    <hr>
+
+    <h2>Book Details</h2>
+
+    <div class="book-card">
+      <div class="image-container">
+        <img id="bookImage" width="150">
+      </div>
+
+      <div class="book-info"> <!-- ← add this wrapper -->
+        <h3 id="title"></h3>
+        <p><strong>Author:</strong> <span id="author"></span></p>
+        <hr>
+        <p><strong>Category:</strong> <span id="category"></span></p>
+        <hr>
+        <p><strong>Description:</strong> <span id="description"></span></p>
+        <hr>
+        <p><strong>Status:</strong> <span id="status"></span></p>
+        <button class="btn-outline">Borrow Book</button>
+      </div> <!-- ← close wrapper -->
     </div>
-    <div class="nav-logout"><a href="../index.html">Logout</a></div>
-  </nav>
-
-<hr>
-
-<h2>Book Details</h2>
-
-<div class="book-card">
-  <div class = "image-container">
-    <img id="bookImage" width="150">
-  </div>
-  
-
-  <div class="book-info">           <!-- ← add this wrapper -->
-    <h3 id="title"></h3>
-      <p><strong>Author:</strong> <span id="author"></span></p>
-      <hr>
-      <p><strong>Category:</strong> <span id="category"></span></p>
-      <hr>
-      <p><strong>Description:</strong> <span id="description"></span></p>
-      <hr>
-      <p><strong>Status:</strong> <span id="status"></span></p>
-      <button class="btn-outline">Borrow Book</button>
-  </div>                            <!-- ← close wrapper -->
-</div>
-<script src="../JS/books-data.js"></script>
-<script src="../JS/book-details.js"></script>
-</body>
+    <script src="../JS/books-data.js"></script>
+    <script src="../JS/book-details.js"></script>
+  </body>
 </html>

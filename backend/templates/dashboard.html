@@ -1,37 +1,37 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Online Library | Admin Dashboard</title>
-  <link rel="icon" href="{% static 'assets/images/Icon.png' %}" type="image/png">
-  <link rel="stylesheet" href="{% static 'CSS/background.css' %}">
-  <link rel="stylesheet" href="{% static 'CSS/dashboard.css' %}">
-  <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8">
+    <title>Online Library | Admin Dashboard</title>
+    <link rel="icon" href="{% static 'assets/images/Icon.png' %}"
+      type="image/png">
+    <link rel="stylesheet" href="{% static 'CSS/background.css' %}">
+    <link rel="stylesheet" href="{% static 'CSS/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
+  </head>
+  <body>
 
-  <div class="bg-orbs">
-    <div class="orb orb1"></div>
-    <div class="orb orb2"></div>
-    <div class="orb orb3"></div>
-  </div>
-
-  <nav>
-    <span class="nav-brand">Library System</span>
-    <div class="nav-links">
-      <a href="{% url 'dashboard' %}" class="active">Dashboard</a>
-      <a href="{% url 'add-book' %}">Add Book</a>
-      <a href="{% url 'manage-books' %}">Manage Books</a>
+    <div class="bg-orbs">
+      <div class="orb orb1"></div>
+      <div class="orb orb2"></div>
+      <div class="orb orb3"></div>
     </div>
-    <div class="nav-logout">
-      <a href="{% url 'logout' %}">Logout</a>
-    </div>
-  </nav>
 
-  <div class="page-wrapper">
+    <nav>
+      <span class="nav-brand">
+        Library System</span>
+      <div class="nav-links">
+        <a href="{% url 'dashboard' %}" class="active">Dashboard</a>
+        <a href="{% url 'add-book' %}">Add Book</a>
+        <a href="{% url 'manage-books' %}">Manage Books</a>
+        <!-- <a href="view-books.html">Books</a> -->
+      </div>
+      <div class="nav-logout"><a href="../index.html">Logout</a></div>
+    </nav>
 
-    <!-- Header -->
+    <div class="page-wrapper">
+       <!-- Header -->
     <header class="page-header">
       <div>
         <p class="page-subtitle">Admin Dashboard</p>
@@ -69,8 +69,7 @@
           <span class="stat-label">Books Borrowed</span>
           <span class="stat-value" id="borrowedBooks">0</span>
         </div>
-      </div>
-    </section>
+        <div class="stat-card">
 
     <!-- Quick Actions -->
     <section class="quick-actions">
@@ -88,30 +87,41 @@
         <div class="search-bar">
           <input type="text" id="userSearch" placeholder="Search users…">
         </div>
-      </div>
+      </section>
 
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Avatar</th>
-              <th>Full Name</th>
-              <th>Username</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Status</th>
-              <th>Joined</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="usersTableBody"></tbody>
-        </table>
-        <p class="empty-msg" id="emptyMsg" style="display:none;">No users found.</p>
-      </div>
-    </section>
+      <!-- Users Table -->
+      <section class="table-section">
+        <div class="section-header">
+          <p class="section-title">Registered Users</p>
+          <div class="search-bar">
+            <input type="text" id="userSearch" placeholder="Search users…"
+              oninput="filterUsers()">
+          </div>
+        </div>
 
-  </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Avatar</th>
+                <th>Full Name</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Joined</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody"></tbody>
+          </table>
+          <p class="empty-msg" id="emptyMsg" style="display:none;">No users
+            found.</p>
+        </div>
+      </section>
+
+    </div>
 
   <!-- ── History Modal ── -->
   <div id="historyModal" class="modal-backdrop" style="display:none;">
