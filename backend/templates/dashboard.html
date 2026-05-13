@@ -31,54 +31,61 @@
     </nav>
 
     <div class="page-wrapper">
+       <!-- Header -->
+    <header class="page-header">
+      <div>
+        <p class="page-subtitle">Admin Dashboard</p>
+        <h1>Welcome, Admin</h1>
+      </div>
+      <div class="header-date" id="headerDate"></div>
+    </header>
 
-      <!-- Header -->
-      <header class="page-header">
-        <div>
-          <p class="page-subtitle">Admin Dashboard</p>
-          <h1>Welcome, Admin</h1>
+    <!-- Stat Cards -->
+    <section class="stats-grid">
+      <div class="stat-card accent">
+        <div class="stat-icon">👥</div>
+        <div class="stat-info">
+          <span class="stat-label">Total Users</span>
+          <span class="stat-value" id="totalUsers">0</span>
         </div>
-        <div class="header-date" id="headerDate"></div>
-      </header>
-
-      <!-- Stat Cards -->
-      <section class="stats-grid">
-        <div class="stat-card accent">
-
-          <div class="stat-info">
-            <span class="stat-label">Total Users</span>
-            <span class="stat-value" id="totalUsers">0</span>
-          </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-info">
+          <span class="stat-label">Active Users</span>
+          <span class="stat-value" id="activeUsers">0</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📚</div>
+        <div class="stat-info">
+          <span class="stat-label">Total Books</span>
+          <span class="stat-value" id="totalBooks">0</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📖</div>
+        <div class="stat-info">
+          <span class="stat-label">Books Borrowed</span>
+          <span class="stat-value" id="borrowedBooks">0</span>
         </div>
         <div class="stat-card">
 
-          <div class="stat-info">
-            <span class="stat-label">Active Users</span>
-            <span class="stat-value" id="activeUsers">0</span>
-          </div>
-        </div>
-        <div class="stat-card">
+    <!-- Quick Actions -->
+    <section class="quick-actions">
+      <p class="section-title">Quick Actions</p>
+      <div class="action-buttons">
+        <a href="{% url 'add-book' %}" class="btn btn-primary">+ Add New Book</a>
+        <a href="{% url 'manage-books' %}" class="btn btn-secondary">Manage Books</a>
+      </div>
+    </section>
 
-          <div class="stat-info">
-            <span class="stat-label">Total Books</span>
-            <span class="stat-value" id="totalBooks">0</span>
-          </div>
-        </div>
-        <div class="stat-card">
-
-          <div class="stat-info">
-            <span class="stat-label">Books Borrowed</span>
-            <span class="stat-value" id="borrowedBooks">0</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- Quick Actions -->
-      <section class="quick-actions">
-        <p class="section-title">Quick Actions</p>
-        <div class="action-buttons">
-          <a href="add-book.html" class="btn btn-primary">+ Add New Book</a>
-          <a href="manage-books.html" class="btn btn-secondary">Manage Books</a>
+    <!-- Users Table -->
+    <section class="table-section">
+      <div class="section-header">
+        <p class="section-title">Registered Users</p>
+        <div class="search-bar">
+          <input type="text" id="userSearch" placeholder="Search users…">
         </div>
       </section>
 
@@ -116,8 +123,25 @@
 
     </div>
 
-    <script src="../JS/books-data.js"></script>
-    <script src="../JS/users-data.js"></script>
-    <script src="../JS/dashboard.js"></script>
-  </body>
+  <!-- ── History Modal ── -->
+  <div id="historyModal" class="modal-backdrop" style="display:none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="modalTitle" class="modal-title">User History</h2>
+        <button class="modal-close" onclick="closeHistoryModal()">✕</button>
+      </div>
+      <div id="modalBody" class="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ── Toast Notification ── -->
+  <div id="toast" class="toast"></div>
+
+  <script>
+    window.CSRF_TOKEN = "{{ csrf_token }}";
+  </script>
+
+  <script src="{% static 'JS/dashboard.js' %}"></script>
+
+</body>
 </html>
