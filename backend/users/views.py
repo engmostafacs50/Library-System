@@ -67,11 +67,6 @@ class RegisterView(APIView):
 
 
 class AuthView(APIView):
-    """
-    POST /api/users/login/
-    Login flow: AuthView -> LoginSerializer -> authenticate() -> JWT cookies
-    """
-
     permission_classes = []
 
     def post(self, request):

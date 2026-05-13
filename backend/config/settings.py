@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     # Our Apps
     'users',
     'books',
+    'borrowed_books',
+    'returned_books',
 ]
 
 

@@ -15,7 +15,10 @@ urlpatterns = [
     # ── Apps ───────────────────────────────────────────────
     path('api/books/', include('books.urls')),
     path('api/users/', include('users.urls')),  
-    path('api/returned/', include('returned_books.urls')),
+    path("api/borrow/", include("borrowed_books.urls", namespace="borrowed_books")),
+
+    # Returned Books
+    path("api/return/", include("returned_books.urls", namespace="returned_books")),
     
     # Frontend pages
     path('',                TemplateView.as_view(template_name='index.html'),           name='index'),

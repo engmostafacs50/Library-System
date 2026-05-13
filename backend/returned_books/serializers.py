@@ -1,79 +1,69 @@
-from datetime import date
-
 from rest_framework import serializers
 
-from .models import BorrowedBook, BorrowManager, BorrowStatus
+from .models import BookCondition, ReturnedBook, ReturnManager
 
 
-class BorrowSerializer(serializers.ModelSerializer):
+class ReturnSerializer(serializers.ModelSerializer):
 
-    is_overdue = serializers.SerializerMethodField(read_only=True)
+   # Nested read-only info
+    borrower_username = serializers.SerializerMethodField(read_only=True)
+    book_title        = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
-        model  = BorrowedBook
+        model  = ReturnedBook
         fields = [
             "id",
-            "user",
-            "book",
-            "borrow_date",
-            "due_date",
-            "status",
+            "borrowed_book",
+            "return_date",
+            "condition",
             "created_at",
-            "is_overdue",
+            "borrower_username",
+            "book_title",
         ]
-        read_only_fields = ["id", "borrow_date", "status", "created_at", "is_overdue"]
-        
+        read_only_fields = [
+            "id", "return_date", "created_at",
+            
+            "borrower_username", "book_title",
+        ]
+
+
+
     def validate(self, data: dict) -> dict:
-        book     = data.get("book")
-        due_date = data.get("due_date")
+        from borrowed_books.models import BorrowStatus  
+        borrowed_book = data.get("borrowed_book")
 
-        # 1. due_date must be in the future
-        if due_date and due_date <= date.today():
+
+        if borrowed_book and borrowed_book.status != BorrowStatus.ACTIVE:
             raise serializers.ValidationError(
-                {"due_date": "due_date must be a future date."}
+                {"borrowed_book": "This borrow is already closed or returned."}
             )
 
-        # 2. book must be available
-        if book and not BorrowManager().is_book_available(book.pk):
+        # 2. Must not already have a return record
+        if borrowed_book and hasattr(borrowed_book, "return_record"):
             raise serializers.ValidationError(
-                {"book": "This book is not available for borrowing."}
+                {"borrowed_book": "A return record already exists for this borrow."}
             )
-
-        # 3. user must not already have an active borrow for the same book
-        user = data.get("user")
-        if user and book:
-            already_borrowed = BorrowedBook.objects.filter(
-                user=user, book=book, status=BorrowStatus.ACTIVE
-            ).exists()
-            if already_borrowed:
-                raise serializers.ValidationError(
-                    "You already have an active borrow for this book."
-                )
 
         return data
 
 
-    def create(self, validated_data: dict) -> BorrowedBook:
-        from django.db import transaction
 
-        with transaction.atomic():
-            book = validated_data["book"]
+    def create(self, validated_data: dict) -> ReturnedBook:
+        borrowed_book = validated_data["borrowed_book"]
+        condition     = validated_data.get("condition", BookCondition.GOOD)
 
-            # Re-fetch with a row-level lock to avoid race conditions
-            book.__class__.objects.select_for_update().get(pk=book.pk)
-            book.refresh_from_db()
+   
+        return ReturnedBook.objects.process_return(
+            borrowed_book_id=borrowed_book.pk,
+            condition=condition,
+        )
 
-            if book.quantity <= 0 or not book.available:
-                raise serializers.ValidationError(
-                    {"book": "This book is not available (race condition)."}
-                )
+ 
 
-            book.quantity -= 1
-            if book.quantity == 0:
-                book.available = False
-            book.save(update_fields=["quantity", "available"])
 
-            return BorrowedBook.objects.create(**validated_data)
 
-    def get_is_overdue(self, obj: BorrowedBook) -> bool:
-        return obj.is_overdue()
+    def get_borrower_username(self, obj: ReturnedBook) -> str:
+        return obj.borrowed_book.user.username
+
+    def get_book_title(self, obj: ReturnedBook) -> str:
+        return obj.borrowed_book.book.title
