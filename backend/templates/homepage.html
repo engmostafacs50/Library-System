@@ -3,12 +3,10 @@
 <html>
     <head>
         <title>Online Library | Home page</title>
-        <link rel="icon" href="{% static 'assets/images/Icon.png' %}"
-            type="image/png">
+        <link rel="icon" href="{% static 'assets/images/Icon.png' %}" type="image/png">
         <link rel="stylesheet" href="{% static 'CSS/background.css' %}">
         <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
-        <link rel="stylesheet"
-            href="{% static 'CSS/homepage-bookdetails.css' %}">
+        <link rel="stylesheet" href="{% static 'CSS/homepage-bookdetails.css' %}">
     </head>
     <body>
 
@@ -16,67 +14,60 @@
             <span class="nav-brand">Library System</span>
             <div class="nav-links">
                 <a href="{% url 'homepage' %}" class="active">Home</a>
-                <a href="{% url 'user-dashboard' %}"
-                    >Profile</a>
+                <a href="{% url 'user-dashboard' %}">Profile</a>
                 <a href="{% url 'search-books' %}">Search</a>
                 <a href="{% url 'view-books' %}">Books</a>
                 <a href="{% url 'borrowed-books' %}">Borrowed</a>
                 <a href="{% url 'returned-books' %}">Returned</a>
             </div>
-            <div class="nav-logout"><a href="../index.html">Logout</a></div>
+            <div class="nav-logout">
+                <a href="{% url 'logout' %}">Logout</a>
+            </div>
         </nav>
 
         <div class="hero">
             <h1>Discover Your Next Favorite Book</h1>
             <p>Search through thousands of titles and borrow them instantly.</p>
-
-            <a href="{% url 'search-books'}" class="hero-search-btn">
+            <a href="{% url 'search-books' %}" class="hero-search-btn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2.5" stroke-linecap="round"
-                    stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8" /><line x1="21" y1="21"
-                        x2="16.65" y2="16.65" />
+                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
                 </svg>
                 Search Books
             </a>
         </div>
 
-        <h2
-            style="text-align: center; margin-top: 40px; font-size: 32px;">Featured
-            Books</h2>
-
-        <!-- Featured Book -->
+        <h2 style="text-align:center;margin-top:40px;font-size:32px;">Featured Books</h2>
 
         <div class="featured-book">
-            <div class="book-card" id="featuredBooks"></div>
+            <div class="book-card" id="featuredBooks">
+                <p style="color:#94a3b8;text-align:center;">Loading…</p>
+            </div>
         </div>
 
-        <!-- Categories -->
         <div class="categories">
             <h2>Explore Categories</h2>
-
             <div class="cat-grid">
                 <div class="cat-card">
-                    <img src="../assets/images/prg.jpg">
-                    <h3>programming</h3>
-                    <a href="view-books.html?category=programming">
+                    <img src="{% static 'assets/images/prg.jpg' %}">
+                    <h3>Programming</h3>
+                    <a href="{% url 'view-books' %}?category=programming">
                         <button>Explore</button>
                     </a>
                 </div>
-
                 <div class="cat-card">
-                    <img src="../assets/images/history.jpg">
+                    <img src="{% static 'assets/images/history.jpg' %}">
                     <h3>History</h3>
-                    <a href="view-books.html?category=history">
+                    <a href="{% url 'view-books' %}?category=history">
                         <button>Explore</button>
                     </a>
                 </div>
-
                 <div class="cat-card">
-                    <img src="../assets/images/entertainment.jpg">
+                    <img src="{% static 'assets/images/entertainment.jpg' %}">
                     <h3>Fiction</h3>
-                    <a href="view-books.html?category=fiction">
+                    <a href="{% url 'view-books' %}?category=fiction">
                         <button>Explore</button>
                     </a>
                 </div>
@@ -86,27 +77,35 @@
         <h6>2026 Online Library System</h6>
 
         <script>
-    const container = document.getElementById("featuredBooks");
+            const container = document.getElementById("featuredBooks");
 
-    const books = getBooks();
+            fetch("/api/books/", {
+                headers: { Accept: "application/json" },
+                credentials: "include",
+            })
+            .then(res => res.json())
+            .then(data => {
+                const books = Array.isArray(data) ? data : (data.results ?? []);
+                const featured = books.slice(0, 3);
 
-    const featured = books.slice(0, 3);
+                if (featured.length === 0) {
+                    container.innerHTML = "<p>No books available</p>";
+                    return;
+                }
 
-    if (featured.length === 0) {
-        container.innerHTML = "<p>No books available</p>";
-    } else {
-        featured.forEach(book => {
-            container.innerHTML += `
-            <img src="${book.image || '../assets/images/default-book.png'}" width="150">
-            <h3>${book.title}</h3>
-            <p>${book.author}</p>
-            <a href="book-details.html?id=${book.id}">
-                <button class="btn-outline">View Details</button>
-            </a>
-            <hr>
-        `;
-        });
-    }
-</script>
+                container.innerHTML = featured.map(book => `
+                    <img src="${book.image || '{% static "assets/images/default-book.png" %}'}" width="150">
+                    <h3>${book.title}</h3>
+                    <p>${book.author}</p>
+                    <a href="{% url 'book-details' %}?id=${book.id}">
+                        <button class="btn-outline">View Details</button>
+                    </a>
+                    <hr>
+                `).join("");
+            })
+            .catch(() => {
+                container.innerHTML = "<p style='color:#ef4444'>Failed to load books.</p>";
+            });
+        </script>
     </body>
 </html>
