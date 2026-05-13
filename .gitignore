@@ -5,14 +5,7 @@
 # Django
 db.sqlite3
 *.sqlite3
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.so
-*.egg-info/
-dist/
-build/
+
 
 # VS Code
 .vscode/
