@@ -5,10 +5,11 @@ from .views import (
     BorrowPendingView,
     BorrowApproveView,
     BorrowRejectView,
-    BorrowReturnView,
     BorrowOverdueView,
 )
+
 app_name = "borrowed_books"
+
 urlpatterns = [
     path("",                                BorrowView.as_view()),
 

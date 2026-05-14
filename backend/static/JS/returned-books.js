@@ -1,57 +1,100 @@
+"use strict";
+
 const API_RETURN = "/api/return/";
 const API_BORROW = "/api/borrow/";
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+    return null;
+}
+
+function authHeaders() {
+    return {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCookie("csrftoken") || "",
+    };
+}
+
 function show(id) { document.getElementById(id).style.display = "block"; }
 function hide(id) { document.getElementById(id).style.display = "none";  }
 
-function conditionBadge(condition) {
-    const map = { good: "Good ✅", damaged: "Damaged ⚠️", lost: "Lost ❌" };
-    return `<span class="condition-badge condition-${condition}">
-                ${map[condition] || condition}
-            </span>`;
+function formatDate(dateStr) {
+    if (!dateStr) return "—";
+    return new Date(dateStr).toLocaleDateString("en-US", {
+        year: "numeric", month: "short", day: "numeric",
+    });
 }
 
-// ── Load returned books from backend ─────────────────────────────────────────
+function conditionBadge(condition) {
+    const map = {
+        good:    { label: "Good ✅",     cls: "condition-good"    },
+        damaged: { label: "Damaged ⚠️",  cls: "condition-damaged" },
+        lost:    { label: "Lost ❌",     cls: "condition-lost"    },
+    };
+    const c = map[condition] || { label: condition, cls: "" };
+    return `<span class="condition-badge ${c.cls}">${c.label}</span>`;
+}
+
+function fineBadge(fine) {
+    const amount = parseFloat(fine);
+    if (!amount) return "";
+    return `<span class="fine-badge">💸 Fine: $${amount.toFixed(2)}</span>`;
+}
+
 async function loadReturnedBooks() {
     const container = document.getElementById("returnedList");
 
     try {
         const res = await fetch(API_RETURN, {
             method:      "GET",
-            credentials: "include",         // sends JWT cookie automatically
+            credentials: "include",
+            headers:     authHeaders(),
         });
 
         hide("loadingMsg");
 
         if (res.status === 401) {
-            window.location.href = "/";     // not logged in → login page
+            window.location.href = "/login/";
             return;
         }
 
         if (!res.ok) throw new Error(`Server error: ${res.status}`);
 
         const data = await res.json();
+        // handle paginated or plain array
+        const records = Array.isArray(data) ? data : (data.results || []);
+
         container.innerHTML = "";
 
-        if (data.length === 0) {
+        if (!records.length) {
             show("emptyMsg");
             return;
         }
 
-        data.forEach(record => {
+        records.forEach((record, i) => {
             const item = document.createElement("div");
             item.className = "book-history-item";
+            item.style.animationDelay = `${i * 0.07}s`;
+
             item.innerHTML = `
-                <h4>${record.book_title}</h4>
-                <p>📅 Returned: ${record.return_date}</p>
-                <p>👤 ${record.borrower_username}</p>
-                ${conditionBadge(record.condition)}
+                <div class="book-card-header">
+                    <h4>${record.book_title || "—"}</h4>
+                    ${conditionBadge(record.condition)}
+                </div>
+                <div class="book-card-meta">
+                    <p><span>Borrowed:</span> ${formatDate(record.borrow_date)}</p>
+                    <p><span>Returned:</span> ${formatDate(record.return_date)}</p>
+                    <p><span>Due was:</span>  ${formatDate(record.due_date)}</p>
+                </div>
+                ${fineBadge(record.fine)}
                 <button
                     class="borrow-again-btn"
                     id="btn-${record.borrowed_book}"
                     onclick="borrowAgain(${record.borrowed_book}, this)">
-                    🔄 Borrow Again
+                     Borrow Again
                 </button>
             `;
             container.appendChild(item);
@@ -66,57 +109,55 @@ async function loadReturnedBooks() {
     }
 }
 
-// ── Borrow Again ─────────────────────────────────────────────────────────────
+// ── Borrow Again ──────────────────────────────────────────────────────────────
 window.borrowAgain = async (borrowedBookId, btn) => {
-    const due_date = prompt("Enter new due date (YYYY-MM-DD):");
-    if (!due_date) return;
-
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(due_date)) {
-        alert("Invalid date format. Use YYYY-MM-DD.");
-        return;
-    }
-
     btn.disabled    = true;
-    btn.textContent = "Processing...";
+    btn.textContent = "Processing…";
 
     try {
-        // 1. Get original borrow to find the book ID
-        const borrowRes = await fetch(API_BORROW, { credentials: "include" });
-        const borrows   = await borrowRes.json();
-        const record    = borrows.find(b => b.id === borrowedBookId);
+        // 1. Get all borrows to find the book id from the original borrow
+        const borrowRes = await fetch(API_BORROW, {
+            credentials: "include",
+            headers:     authHeaders(),
+        });
+        const borrowData = await borrowRes.json();
+        const borrows    = Array.isArray(borrowData) ? borrowData : (borrowData.results || []);
+        const record     = borrows.find(b => b.id === borrowedBookId);
 
         if (!record) {
-            alert("Could not find original borrow record.");
+            // fallback: get book id from return record list
+            alert("Could not find original borrow record. Please try from the books page.");
             btn.disabled    = false;
-            btn.textContent = "🔄 Borrow Again";
+            btn.textContent = "Borrow Again";
             return;
         }
 
-        // 2. Create new borrow
+        // 2. Create new borrow (no due_date – admin sets it on approval)
         const res = await fetch(API_BORROW, {
             method:      "POST",
             credentials: "include",
-            headers:     { "Content-Type": "application/json" },
-            body:        JSON.stringify({ book: record.book, due_date }),
+            headers:     authHeaders(),
+            body:        JSON.stringify({ book: record.book }),
         });
 
         if (res.ok) {
-            alert("✅ Book borrowed again successfully!");
+            alert("Borrow request submitted! Awaiting admin approval.");
             window.location.href = "/borrowed-books/";
         } else {
             const err = await res.json();
-            alert("Error: " + JSON.stringify(err));
+            const msg = err.detail || JSON.stringify(err);
+            alert("Error: " + msg);
             btn.disabled    = false;
-            btn.textContent = "🔄 Borrow Again";
+            btn.textContent = "Borrow Again";
         }
 
     } catch (err) {
         alert("Something went wrong. Please try again.");
         btn.disabled    = false;
-        btn.textContent = "🔄 Borrow Again";
+        btn.textContent = "Borrow Again";
         console.error(err);
     }
 };
 
-// ── Init ─────────────────────────────────────────────────────────────────────
+// ── Init ──────────────────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", loadReturnedBooks);

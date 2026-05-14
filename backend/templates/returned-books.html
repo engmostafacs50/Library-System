@@ -5,7 +5,7 @@
     <title>Online Library | Returned Books</title>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon"       href="{% static 'assets/images/Icon.png' %}"   type="image/png">
+    <link rel="icon"       href="{% static 'assets/images/Icon.png' %}" type="image/png">
     <link rel="stylesheet" href="{% static 'CSS/background.css' %}">
     <link rel="stylesheet" href="{% static 'CSS/returned-books.css' %}">
     <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
@@ -42,18 +42,14 @@
         <h1 class="main-title">My Returned Books</h1>
         <p class="subtitle">Log and track your return history</p>
 
-        <hr>
-
-        <div style="width: 80%; height: 1px; background: rgba(255,255,255,0.1); margin: 30px 0;"></div>
-
-        <div class="history-section" style="width: 90%; max-width: 950px;">
-            <h2 class="section-title" style="text-align: center; border: none; margin-bottom: 30px;">
-                📚 Your Returned History
+        <div class="history-section">
+            <h2 class="section-title" style="text-align:center; border:none; margin-bottom:30px;">
+                📚 Your Return History
             </h2>
 
-            <div id="loadingMsg" class="loading-spinner">Loading your returns...</div>
-            <div id="errorMsg"   class="error-msg"      style="display: none;"></div>
-            <p   id="emptyMsg"                          style="display: none;">No returns recorded yet.</p>
+            <div id="loadingMsg" class="loading-spinner">Loading your returns…</div>
+            <div id="errorMsg"   class="error-msg"     style="display:none;"></div>
+            <p   id="emptyMsg"                         style="display:none;">No returns recorded yet.</p>
             <div id="returnedList" class="returned-grid"></div>
         </div>
 

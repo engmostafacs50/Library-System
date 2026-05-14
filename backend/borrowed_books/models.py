@@ -34,7 +34,7 @@ class BorrowManager(models.Manager):
         from books.models import Book
         try:
             book = Book.objects.get(pk=book_id)
-            return book.status == 'available' and book.quantity > 0
+            return book.status == 'available'
         except Book.DoesNotExist:
             return False
 
