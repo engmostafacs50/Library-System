@@ -36,7 +36,6 @@ class ReturnManager(models.Manager):
         ).filter(borrowed_book__user_id=user_id)
 
     def calculate_fine(self, borrowed_book) -> Decimal:
-
         today = timezone.now().date()
         if today <= borrowed_book.due_date:
             return Decimal("0.00")
@@ -44,9 +43,8 @@ class ReturnManager(models.Manager):
         return (overdue_days * FINE_RATE_PER_DAY).quantize(Decimal("0.01"))
 
     def process_return(self, borrowed_book_id: int, condition: str) -> "ReturnedBook":
-
         from django.db import transaction
-        from borrowed_books.models import BorrowedBook, BorrowStatus  # adjust if needed
+        from borrowed_books.models import BorrowedBook, BorrowStatus
 
         with transaction.atomic():
             # 1. Lock the borrow row
@@ -74,18 +72,17 @@ class ReturnManager(models.Manager):
             borrowed_book.status = BorrowStatus.RETURNED
             borrowed_book.save(update_fields=["status"])
 
-            # 5. Restore book stock
+            # 5. Restore book status
             book = borrowed_book.book
-            book.quantity += 1
-            book.available = True
-            book.save(update_fields=["quantity", "available"])
+            book.status = 'available'
+            book.save(update_fields=["status"])
 
         return returned
 
 
 class ReturnedBook(models.Model):
     borrowed_book = models.OneToOneField(
-        "borrowed_books.BorrowedBook",          # adjust to your app label
+        "borrowed_books.BorrowedBook",
         on_delete=models.CASCADE,
         related_name="return_record",
     )
