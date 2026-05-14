@@ -1,0 +1,45 @@
+.btn-outline {
+  transition: background 0.25s ease, color 0.25s ease,
+              border-color 0.25s ease, box-shadow 0.25s ease,
+              transform 0.15s ease;
+}
+
+/* Available / Borrow Again / Rejected-retry → green */
+.btn-outline.state-available {
+  border-color: rgba(34, 197, 94, 0.5);
+  color: #86efac;
+}
+.btn-outline.state-available:hover {
+  background: rgba(34, 197, 94, 0.12);
+  box-shadow: 0 4px 20px rgba(34, 197, 94, 0.25);
+  transform: translateY(-2px);
+}
+
+/* Pending → amber, disabled */
+.btn-outline.state-pending {
+  border-color: rgba(234, 179, 8, 0.4);
+  color: #fde047;
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+/* Active (already borrowed) → blue, disabled */
+.btn-outline.state-active {
+  border-color: rgba(14, 165, 233, 0.4);
+  color: #7dd3fc;
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+/* Unavailable → red, disabled */
+.btn-outline.state-unavailable {
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+/* Disabled state catch-all */
+.btn-outline:disabled {
+  pointer-events: none;
+}
