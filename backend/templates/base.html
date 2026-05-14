@@ -1,0 +1,34 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'CSS/background.css' %}">
+    <link rel="icon" href="{% static 'assets/images/Icon.png' %}" type="image/png">
+
+    {% block extra_css %}{% endblock %}
+
+    <title>{% block title %}Library System{% endblock %}</title>
+  </head>
+  <body>
+
+    {% if user.is_authenticated %}
+    <nav class="top-nav">
+      <span>Welcome, {{ user.username }}</span>
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+      </form>
+    </nav>
+    {% endif %}
+
+    <div class="bg-orbs">
+      <div class="orb orb1"></div>
+      <div class="orb orb2"></div>
+      <div class="orb orb3"></div>
+    </div>
+    {% block content %}{% endblock %}
+
+  </body>
+</html>

@@ -1,62 +1,55 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Online Library | View Books</title>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" href="{% static 'assets/images/Icon.png' %}"
-            type="image/png">
-        <link rel="stylesheet" href="{% static 'CSS/background.css' %}">
-        <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
-        <link rel="stylesheet"
-            href="{% static 'CSS/view-books.css' %}">
-    </head>
-    <body>
 
-        <div class="bg-orbs">
-            <div class="orb orb1"></div>
-            <div class="orb orb2"></div>
-            <div class="orb orb3"></div>
-        </div>
+{% block title %}Online Library | View Books{% endblock %}
 
-        <nav>
-            <span class="nav-brand">Library System</span>
-            <div class="nav-links">
-                <a href="{% url 'homepage' %}">Home</a>
-                <a href="{% url 'user-dashboard' %}">Profile</a>
-                <a href="{% url 'search-books' %}">Search</a>
-                <a href="{% url 'view-books' %}" class="active">Books</a>
-                <a href="{% url 'borrowed-books' %}">Borrowed</a>
-                <a href="{% url 'returned-books' %}">Returned</a>
-            </div>
-            <div class="nav-logout"><a href="../index.html">Logout</a></div>
-        </nav>
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
+  <link rel="stylesheet" href="{% static 'CSS/view-books.css' %}">
+{% endblock %}
 
-        <div class="main-wrapper">
-            <h1 class="main-title">Library Collection</h1>
-            <p class="subtitle">Explore our available books and resources</p>
+{% block content %}
 
-            <div class="filter-section">
-                <label for="select-by-category">Select By Category:</label>
-                <select id="select-by-category" class="dark-input">
-                    <option value="all">All Categories</option>
-                    <option value="programming">Programming</option>
-                    <option value="science">Science</option>
-                    <option value="history">History</option>
-                    <option value="entertainment">Entertainment</option>
-                    <option value="fiction">Fiction</option>
-                </select>
-            </div>
+  <nav>
+    <span class="nav-brand">Library System</span>
+    <div class="nav-links">
+      <a href="{% url 'homepage' %}">Home</a>
+      <a href="{% url 'user-dashboard' %}">Profile</a>
+      <a href="{% url 'search-books' %}">Search</a>
+      <a href="{% url 'view-books' %}" class="active">Books</a>
+      <a href="{% url 'borrowed-books' %}">Borrowed</a>
+      <a href="{% url 'returned-books' %}">Returned</a>
+    </div>
 
-            <div id="booksContainer" class="books-grid">
+    <!-- ✅ Proper logout form replacing the broken <a> link -->
+    <div class="nav-logout">
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+      </form>
+    </div>
+  </nav>
 
-            </div>
-        </div>
+  <div class="main-wrapper">
+    <h1 class="main-title">Library Collection</h1>
+    <p class="subtitle">Explore our available books and resources</p>
 
-        <script>
-            const BOOK_DETAILS_URL = "{% url 'book-details' %}";
-        </script>
-        <script src="{% static 'JS/view-books.js' %}"></script>
-    </body>
-</html>
+    <div class="filter-section">
+      <label for="select-by-category">Select By Category:</label>
+      <select id="select-by-category" class="dark-input">
+        <option value="all">All Categories</option>
+        <option value="programming">Programming</option>
+        <option value="science">Science</option>
+        <option value="history">History</option>
+        <option value="fiction">Fiction</option>
+      </select>
+    </div>
+
+    <div id="booksContainer" class="books-grid"></div>
+  </div>
+
+  <script>
+    const BOOK_DETAILS_URL = "{% url 'book-details' %}";
+  </script>
+  <script src="{% static 'JS/view-books.js' %}"></script>
+{% endblock %}
