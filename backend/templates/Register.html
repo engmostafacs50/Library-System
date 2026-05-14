@@ -6,61 +6,116 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Register</title>
     <link rel="icon" href="../assets/images/Icon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'CSS/background.css' %}">
     <link rel="stylesheet" href="{% static 'CSS/register.css' %}">
-    <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
   </head>
   <body>
+
     <div class="bg-orbs">
-    <div class="orb orb1"></div>
-    <div class="orb orb2"></div>
-    <div class="orb orb3"></div>
-  </div>
+      <div class="orb orb1"></div>
+      <div class="orb orb2"></div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
     <div class="container">
-      <div class="register-box">
-        <h1>Register</h1>
+      <div class="card">
 
-        <div class="Parent">
-          <label for="UserName">User Name</label>
-          <input
-            required
-            id="UserName"
-            type="text"
-            name="UserName"
-            placeholder="Ex: Ahmed"
-          />
+        <div class="logo">
+          <div class="logo-icon">📚</div>
+          <span class="logo-text">LIBRARY SYSTEM</span>
+        </div>
 
-          <label for="userEmail">User Email</label>
-          <input
-            required
-            id="userEmail"
-            type="email"
-            name="userEmail"
-            placeholder="Ex: user123@gmail.com"
-          />
+        <h1>Create account</h1>
+        <p class="subtitle">Join the library and start exploring</p>
 
-          <label for="Password">Password</label>
-          <input required id="Password" type="password" name="Password" />
+        <form onsubmit="return false;">
+          {% csrf_token %}
 
-          <label for="ConfirmPassword">Confirm Password</label>
-          <input
-            required
-            id="ConfirmPassword"
-            type="password"
-            name="ConfirmPassword"
-          />
-
-
-         
-          <div class="buttons">
-              <button onclick="ResetForm()" type="button" class="reset">Reset</button>
-              <button onclick="AddUser()" type="button">Submit</button>
+          <!-- Full Name -->
+          <div class="field">
+            <label for="UserName">Full name</label>
+            <div class="input-wrap">
+              <svg class="field-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+              </svg>
+              <input required id="UserName" type="text" name="UserName" placeholder="Ex: Ahmed Ali" autocomplete="name"/>
+            </div>
           </div>
 
+          <!-- Email -->
+          <div class="field">
+            <label for="userEmail">Email address</label>
+            <div class="input-wrap">
+              <svg class="field-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+              </svg>
+              <input required id="userEmail" type="email" name="userEmail" placeholder="user@example.com" autocomplete="email"/>
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="field">
+            <label for="Password">Password</label>
+            <div class="input-wrap">
+              <svg class="field-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <input required id="Password" type="password" name="Password" placeholder="Min 8 chars, letters & numbers" autocomplete="new-password"/>
+              <button type="button" class="eye-btn" onclick="togglePw('Password','eyeIcon1')" aria-label="Toggle password">
+                <svg id="eyeIcon1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            </div>
+            <!-- Strength bar -->
+            <div class="strength-bar" id="strengthBar">
+              <div class="strength-fill" id="strengthFill"></div>
+            </div>
+            <span class="strength-label" id="strengthLabel"></span>
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="field">
+            <label for="ConfirmPassword">Confirm password</label>
+            <div class="input-wrap">
+              <svg class="field-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+              <input required id="ConfirmPassword" type="password" name="ConfirmPassword" placeholder="Repeat your password" autocomplete="new-password"/>
+              <button type="button" class="eye-btn" onclick="togglePw('ConfirmPassword','eyeIcon2')" aria-label="Toggle confirm password">
+                <svg id="eyeIcon2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            </div>
+            <span class="match-label" id="matchLabel"></span>
+          </div>
+
+          <!-- Buttons -->
+          <div class="btn-row">
+            <button type="button" class="btn-reset" onclick="ResetForm()">Reset</button>
+            <button type="button" class="btn-submit" id="submitBtn" onclick="handleSubmit(this)">
+              <span id="btnText">Create account</span>
+              <span class="loading-dots" id="dots"><span></span><span></span><span></span></span>
+            </button>
+          </div>
+
+        </form>
+
+        <div class="divider"><span>or</span></div>
+
         <p class="login-link">
-          Already have an account?
-          <a href="/login/">Login</a>
+          Already have an account? <a href="/login/">Sign in</a>
         </p>
+
       </div>
     </div>
 
