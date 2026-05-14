@@ -19,5 +19,4 @@ urlpatterns = [
 
     path("admin/<int:borrow_id>/approve/",  BorrowApproveView.as_view()),
     path("admin/<int:borrow_id>/reject/",   BorrowRejectView.as_view()),
-    path("admin/<int:borrow_id>/return/",   BorrowReturnView.as_view()),
 ]
