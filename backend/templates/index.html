@@ -4,40 +4,135 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="{% static 'CSS/background.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'CSS/index.css' %}">
     <title>Library System</title>
-    <link rel="icon" href="{% static 'assets/images/Icon.png' %}" type="image/png">
   </head>
   <body>
-    <div class="bg-orbs">
-      <div class="orb orb1"></div>
-      <div class="orb orb2"></div>
-      <div class="orb orb3"></div>
-    </div>
+
+    <nav class="top-banner">
+      <div class="banner-left">
+        <span class="b-logo">Lib<span class="b-logo-white">Sys</span></span>
+        <div class="b-sep"></div>
+        <div class="b-quote">
+          <span id="typed"></span>
+        </div>
+      </div>
+      <div class="banner-right">
+        <div class="b-dot"></div>
+        <div class="b-dot"></div>
+        <div class="b-dot"></div>
+      </div>
+    </nav>
+
+    
     <div class="container">
+
       <div class="left">
-        <img
-          src="{% static 'assets/images/many-old-books-bookshelf-library_129479-5458 (1).avif' %}"
-          alt="Error"
-        />
-        <div class="layer">
-          <h2>Your Degital Library System</h2>
-          <p>
-            Discover, borrow, and enjoy thousands of books from the comfort of
-            your home
+        <div class="l-accent"></div>
+        <div class="l-big-num">Digital Library</div>
+
+        <div class="left-content">
+          <div class="tag">
+            <div class="tag-line"></div>
+            <span class="tag-text">Digital Library</span>
+          </div>
+
+          <h2 class="headline">
+            Read<br>
+            <em>Beyond</em><br>
+            Limits
+          </h2>
+
+          <p class="sub-line">— Est. 2025</p>
+
+          <p class="desc">
+            Your gateway to thousands of books, resources, and knowledge.
+            Explore the future of reading with our seamless digital experience.
           </p>
+
+          <div class="stats">
+            <div class="stat-item">
+              <span class="stat-num">∞</span>
+              <span class="stat-label">Books</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-num">Top</span>
+              <span class="stat-label">Authors</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-num">24/7</span>
+              <span class="stat-label">Access</span>
+            </div>
+          </div>
         </div>
       </div>
 
       <div class="right">
-        <div class="content">
-          <h1>Degital Library System</h1>
-          <h2>SIGN IN NOW!!</h2>
-          <a href="{% url 'login' %}"><button>Sign In</button></a>
-          <a href="{% url 'register' %}"><button>Create Account</button></a>
+        <div class="r-grid"></div>
+
+        <div class="auth-card">
+          <div class="card-tag">Access Portal</div>
+
+          <div class="welcome-section">
+            <h1>Welcome<br>Back.</h1>
+            <p>Login or register to access your personal reading dashboard and continue your journey.</p>
+          </div>
+
+          <div class="button-container">
+            <a href="{% url 'login' %}" class="btn btn-primary">Sign In →</a>
+            <a href="{% url 'register' %}" class="btn btn-outline">Create Account</a>
+          </div>
+
+          <div class="card-footer">
+            <span class="foot-item">Secure</span>
+            <div class="foot-dot"></div>
+            <span class="foot-item">Free</span>
+            <div class="foot-dot"></div>
+            <span class="foot-item">All Devices</span>
+          </div>
         </div>
       </div>
+
     </div>
+
+      <div class="bg-orbs">
+      <div class="orb orb1"></div>
+      <div class="orb orb2"></div>
+      <div class="orb orb3"></div>
+
+      
+    </div>
+    <script>
+      const quotes = [
+        '"A reader lives a thousand lives before he dies."',
+        '"Not all those who wander are lost."',
+        '"A room without books is like a body without a soul."',
+        '"The more that you read, the more things you will know."'
+      ];
+
+      let qi = 0, ci = 0, deleting = false, pause = 0;
+      const el = document.getElementById('typed');
+
+      function type() {
+        if (pause > 0) { pause--; setTimeout(type, 50); return; }
+        const q = quotes[qi];
+        if (!deleting) {
+          el.textContent = q.slice(0, ci + 1);
+          ci++;
+          if (ci === q.length) { deleting = true; pause = 60; setTimeout(type, 50); }
+          else setTimeout(type, 55);
+        } else {
+          el.textContent = q.slice(0, ci - 1);
+          ci--;
+          if (ci === 0) { deleting = false; qi = (qi + 1) % quotes.length; pause = 10; setTimeout(type, 50); }
+          else setTimeout(type, 28);
+        }
+      }
+
+      type();
+    </script>
+
   </body>
 </html>
