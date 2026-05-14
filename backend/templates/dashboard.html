@@ -4,8 +4,7 @@
   <head>
     <meta charset="UTF-8">
     <title>Online Library | Admin Dashboard</title>
-    <link rel="icon" href="{% static 'assets/images/Icon.png' %}"
-      type="image/png">
+    <link rel="icon" href="{% static 'assets/images/Icon.png' %}" type="image/png">
     <link rel="stylesheet" href="{% static 'CSS/background.css' %}">
     <link rel="stylesheet" href="{% static 'CSS/dashboard.css' %}">
     <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
@@ -71,16 +70,22 @@
             <span class="stat-value" id="borrowedBooks">0</span>
           </div>
         </div>
+        <!-- NEW: Pending stat card -->
+        <div class="stat-card stat-card-pending">
+          <div class="stat-icon">🕐</div>
+          <div class="stat-info">
+            <span class="stat-label">Pending Requests</span>
+            <span class="stat-value" id="pendingCount">0</span>
+          </div>
+        </div>
       </section>
 
       <!-- Quick Actions -->
       <section class="quick-actions">
         <p class="section-title">Quick Actions</p>
         <div class="action-buttons">
-          <a href="{% url 'add-book' %}" class="btn btn-primary">+ Add New
-            Book</a>
-          <a href="{% url 'manage-books' %}" class="btn btn-secondary">Manage
-            Books</a>
+          <a href="{% url 'add-book' %}" class="btn btn-primary">+ Add New Book</a>
+          <a href="{% url 'manage-books' %}" class="btn btn-secondary">Manage Books</a>
         </div>
       </section>
 
@@ -92,7 +97,6 @@
             <input type="text" id="userSearch" placeholder="Search users…">
           </div>
         </div>
-
         <div class="table-wrapper">
           <table>
             <thead>
@@ -110,14 +114,58 @@
             </thead>
             <tbody id="usersTableBody"></tbody>
           </table>
-          <p class="empty-msg" id="emptyMsg" style="display:none;">No users
-            found.</p>
+          <p class="empty-msg" id="emptyMsg" style="display:none;">No users found.</p>
+        </div>
+      </section>
+
+      <!-- NEW: Pending Borrow Requests -->
+      <section class="table-section">
+        <div class="section-header">
+          <p class="section-title">🕐 Pending Borrow Requests</p>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Book</th>
+                <th>User</th>
+                <th>Requested</th>
+                <th>Status</th>
+                <th style="text-align:center;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="pendingTableBody"></tbody>
+          </table>
+          <p class="empty-msg" id="pendingEmptyMsg" style="display:none;">No pending requests.</p>
+        </div>
+      </section>
+
+      <!-- NEW: Overdue Borrows -->
+      <section class="table-section">
+        <div class="section-header">
+          <p class="section-title">⚠️ Overdue Borrows</p>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Book</th>
+                <th>User</th>
+                <th>Due Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="overdueTableBody"></tbody>
+          </table>
+          <p class="empty-msg" id="overdueEmptyMsg" style="display:none;">No overdue borrows.</p>
         </div>
       </section>
 
     </div>
 
-    <!-- ── History Modal ── -->
+    <!-- History Modal -->
     <div id="historyModal" class="modal-backdrop" style="display:none;">
       <div class="modal-card">
         <div class="modal-header">
@@ -128,16 +176,13 @@
       </div>
     </div>
 
-    <!-- ── Toast Notification ── -->
+    <!-- Toast Notification -->
     <div id="toast" class="toast"></div>
 
-    <!-- CSRF token for JS fetch requests -->
     <script>
-    // Make CSRF token available to dashboard.js
-    window.CSRF_TOKEN = "{{ csrf_token }}";
-  </script>
+      window.CSRF_TOKEN = "{{ csrf_token }}";
+    </script>
 
     <script src="{% static 'JS/dashboard.js' %}"></script>
-
   </body>
 </html>

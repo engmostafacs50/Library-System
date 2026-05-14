@@ -1,20 +1,19 @@
 "use strict";
 
-/* ── API base ─────────────────────────────────────────────────── */
+/* ── API ─────────────────────────────────────────────────────────── */
 const API = {
   BASE: "/api",
 
   async request(method, path, body = null) {
     const opts = {
       method,
-      credentials: "include",          // send HttpOnly cookies
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
     };
     if (body) opts.body = JSON.stringify(body);
 
     const res = await fetch(`${API.BASE}${path}`, opts);
 
-    // 401 → try a silent token refresh, then retry once
     if (res.status === 401) {
       const refreshed = await API.refreshToken();
       if (refreshed) {
@@ -22,7 +21,6 @@ const API = {
         if (!retry.ok) throw new Error(await retry.text());
         return retry.status === 204 ? null : retry.json();
       }
-      // refresh failed → redirect to login
       window.location.href = "/login/";
       return;
     }
@@ -40,24 +38,28 @@ const API = {
   async refreshToken() {
     try {
       const res = await fetch(`${API.BASE}/users/token/refresh/`, {
-        method: "POST",
-        credentials: "include",
+        method: "POST", credentials: "include",
       });
       return res.ok;
-    } catch (_) {
-      return false;
-    }
+    } catch (_) { return false; }
   },
 
-  getUsers:   ()       => API.request("GET",    "/users/admin/users/"),
-  toggleUser: (id)     => API.request("PATCH",  `/users/admin/users/${id}/`),
-  deleteUser: (id)     => API.request("DELETE", `/users/admin/users/${id}/`),
-  userHistory:(id)     => API.request("GET",    `/users/admin/users/${id}/history/`),
-  allBorrows: ()       => API.request("GET",    "/borrow/admin/"),
+  /* Users */
+  getUsers:    ()   => API.request("GET",    "/users/admin/users/"),
+  toggleUser:  (id) => API.request("PATCH",  `/users/admin/users/${id}/`),
+  deleteUser:  (id) => API.request("DELETE", `/users/admin/users/${id}/`),
+  userHistory: (id) => API.request("GET",    `/users/admin/users/${id}/history/`),
+
+  /* Borrows */
+  allBorrows:     ()   => API.request("GET",   "/borrow/admin/"),
+  pendingBorrows: ()   => API.request("GET",   "/borrow/admin/pending/"),
+  overdueBorrows: ()   => API.request("GET",   "/borrow/admin/overdue/"),
+  approveBorrow:  (id) => API.request("PATCH", `/borrow/admin/${id}/approve/`),
+  rejectBorrow:   (id) => API.request("PATCH", `/borrow/admin/${id}/reject/`),
 };
 
 
-/* ── Live date in header ───────────────────────────────────────── */
+/* ── Live date ───────────────────────────────────────────────────── */
 (function () {
   const el = document.getElementById("headerDate");
   if (!el) return;
@@ -67,7 +69,7 @@ const API = {
 })();
 
 
-/* ── Utility helpers ───────────────────────────────────────────── */
+/* ── Helpers ─────────────────────────────────────────────────────── */
 function formatDate(dateStr) {
   if (!dateStr) return "—";
   return new Date(dateStr).toLocaleDateString("en-US", {
@@ -88,8 +90,6 @@ function animateCount(id, target) {
 }
 
 function showToast(msg, type = "success") {
-  // Requires a #toast element in your HTML:
-  // <div id="toast"></div>
   const toast = document.getElementById("toast");
   if (!toast) return;
   toast.textContent = msg;
@@ -97,28 +97,37 @@ function showToast(msg, type = "success") {
   setTimeout(() => toast.classList.remove("show"), 3000);
 }
 
+/* Animate a table row out then remove it */
+function removeRow(rowId) {
+  const row = document.getElementById(rowId);
+  if (!row) return;
+  row.classList.add("row-removing");
+  row.addEventListener("animationend", () => row.remove(), { once: true });
+}
 
-/* ── Stats ─────────────────────────────────────────────────────── */
+
+/* ── Stats ───────────────────────────────────────────────────────── */
 async function renderStats(users) {
-  // users already fetched — avoid a second round-trip
-  const active   = users.filter((u) => u.is_active).length;
-
+  const active = users.filter((u) => u.is_active).length;
   animateCount("totalUsers",  users.length);
   animateCount("activeUsers", active);
 
-  // Borrow stats come from the borrow endpoint
   try {
-    const borrows  = await API.allBorrows();
+    const [borrows, pending] = await Promise.all([
+      API.allBorrows(),
+      API.pendingBorrows(),
+    ]);
     const borrowed = borrows.filter((b) => b.status === "active").length;
-    animateCount("totalBooks",   borrows.length);   // adjust if you have a books endpoint
+    animateCount("totalBooks",    borrows.length);
     animateCount("borrowedBooks", borrowed);
+    animateCount("pendingCount",  pending.length);
   } catch (_) {
-    // borrow stats are non-critical; leave counters at 0
+    // non-critical — leave counters at 0
   }
 }
 
 
-/* ── Users table ────────────────────────────────────────────────── */
+/* ── Users table ─────────────────────────────────────────────────── */
 let allUsers = [];
 
 function renderUsersTable(users) {
@@ -138,23 +147,22 @@ function renderUsersTable(users) {
     const tr = document.createElement("tr");
     tr.style.animationDelay = `${idx * 40}ms`;
 
-    const initials  = (user.full_name || user.fullName || user.username || "?")
-                        .split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase();
+    const initials   = (user.full_name || user.fullName || user.username || "?")
+                         .split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase();
     const avatarHTML = user.avatar
       ? `<img src="${user.avatar}" alt="${initials}">`
       : `<span class="avatar-initials">${initials}</span>`;
 
-    // Support both snake_case (DRF default) and camelCase field names
-    const fullName = user.full_name   || user.fullName   || "—";
-    const username = user.username    || "—";
-    const email    = user.email       || "—";
+    const fullName = user.full_name  || user.fullName || "—";
+    const username = user.username   || "—";
+    const email    = user.email      || "—";
     const role     = user.is_staff || user.is_superuser ? "admin" : "user";
     const active   = user.is_active !== undefined ? user.is_active : user.status === "active";
     const joined   = user.date_joined || user.joined;
 
-    const roleBadge   = role === "admin" ? "badge-admin"    : "badge-user";
-    const statusBadge = active           ? "badge-active"   : "badge-inactive";
-    const statusLabel = active           ? "active"         : "inactive";
+    const roleBadge   = role === "admin" ? "badge-admin"  : "badge-user";
+    const statusBadge = active           ? "badge-active" : "badge-inactive";
+    const statusLabel = active           ? "active"       : "inactive";
 
     tr.innerHTML = `
       <td class="muted">${user.id}</td>
@@ -185,20 +193,20 @@ function renderUsersTable(users) {
 }
 
 
-/* ── Search / filter (client-side) ──────────────────────────────── */
+/* ── Search ──────────────────────────────────────────────────────── */
 function filterUsers() {
   const q = (document.getElementById("userSearch")?.value || "").toLowerCase();
   const filtered = allUsers.filter(
     (u) =>
-      (u.full_name   || u.fullName  || "").toLowerCase().includes(q) ||
-      (u.username    || "").toLowerCase().includes(q) ||
-      (u.email       || "").toLowerCase().includes(q)
+      (u.full_name  || u.fullName || "").toLowerCase().includes(q) ||
+      (u.username   || "").toLowerCase().includes(q) ||
+      (u.email      || "").toLowerCase().includes(q)
   );
   renderUsersTable(filtered);
 }
 
 
-/* ── Action handlers ─────────────────────────────────────────────── */
+/* ── User action handlers ────────────────────────────────────────── */
 async function handleToggleStatus(id) {
   try {
     await API.toggleUser(id);
@@ -225,17 +233,111 @@ async function handleDeleteUser(id, name) {
 }
 
 
+/* ── Pending Borrow Requests ─────────────────────────────────────── */
+async function renderPendingBorrows() {
+  const tbody = document.getElementById("pendingTableBody");
+  const empty = document.getElementById("pendingEmptyMsg");
+  if (!tbody) return;
 
+  tbody.innerHTML = `<tr><td colspan="6" class="muted center">Loading…</td></tr>`;
+
+  try {
+    const pending = await API.pendingBorrows();
+
+    if (!pending.length) {
+      tbody.innerHTML = "";
+      if (empty) empty.style.display = "block";
+      return;
+    }
+    if (empty) empty.style.display = "none";
+
+    tbody.innerHTML = pending.map((b) => `
+      <tr id="pending-row-${b.id}">
+        <td class="muted">${b.id}</td>
+        <td>${b.book_title || b.book || "—"}</td>
+        <td class="muted">@${b.username || b.user || "—"}</td>
+        <td class="muted">${formatDate(b.created_at)}</td>
+        <td><span class="badge badge-pending">Pending</span></td>
+        <td style="text-align:center;">
+          <button class="action-btn btn-approve"
+                  onclick="handleApproveBorrow(${b.id})">Approve</button>
+          <button class="action-btn btn-reject"
+                  onclick="handleRejectBorrow(${b.id})">Reject</button>
+        </td>
+      </tr>`).join("");
+
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="6" class="muted center">Failed to load: ${err.message}</td></tr>`;
+  }
+}
+
+async function handleApproveBorrow(id) {
+  try {
+    await API.approveBorrow(id);
+    removeRow(`pending-row-${id}`);
+    showToast("Borrow request approved ✅");
+    renderStats(allUsers);   // refresh pending counter
+  } catch (err) {
+    showToast(`Error: ${err.message}`, "error");
+  }
+}
+
+async function handleRejectBorrow(id) {
+  if (!confirm("Reject this borrow request?")) return;
+  try {
+    await API.rejectBorrow(id);
+    removeRow(`pending-row-${id}`);
+    showToast("Borrow request rejected.");
+    renderStats(allUsers);
+  } catch (err) {
+    showToast(`Error: ${err.message}`, "error");
+  }
+}
+
+
+/* ── Overdue Borrows ─────────────────────────────────────────────── */
+async function renderOverdueBorrows() {
+  const tbody = document.getElementById("overdueTableBody");
+  const empty = document.getElementById("overdueEmptyMsg");
+  if (!tbody) return;
+
+  tbody.innerHTML = `<tr><td colspan="5" class="muted center">Loading…</td></tr>`;
+
+  try {
+    const overdue = await API.overdueBorrows();
+
+    if (!overdue.length) {
+      tbody.innerHTML = "";
+      if (empty) empty.style.display = "block";
+      return;
+    }
+    if (empty) empty.style.display = "none";
+
+    tbody.innerHTML = overdue.map((b) => `
+      <tr>
+        <td class="muted">${b.id}</td>
+        <td>${b.book_title || b.book || "—"}</td>
+        <td class="muted">@${b.username || b.user || "—"}</td>
+        <td class="muted">${formatDate(b.due_date)}</td>
+        <td><span class="badge badge-overdue">Overdue</span></td>
+      </tr>`).join("");
+
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="5" class="muted center">Failed to load: ${err.message}</td></tr>`;
+  }
+}
+
+
+/* ── History Modal ───────────────────────────────────────────────── */
 async function openHistoryModal(userId, userName) {
   const modal = document.getElementById("historyModal");
   const body  = document.getElementById("modalBody");
   const title = document.getElementById("modalTitle");
-
   if (!modal || !body) return;
 
-  title.textContent = `History — ${userName}`;
-  body.innerHTML    = `<p class="modal-loading">Loading…</p>`;
-  modal.style.display = "flex";
+  title.textContent    = `History — ${userName}`;
+  body.innerHTML       = `<p class="modal-loading">Loading…</p>`;
+  modal.style.display  = "flex";
 
   try {
     const { borrows, returns } = await API.userHistory(userId);
@@ -250,19 +352,10 @@ function closeHistoryModal() {
   if (modal) modal.style.display = "none";
 }
 
-// Close on backdrop click
-document.addEventListener("click", (e) => {
-  if (e.target.id === "historyModal") closeHistoryModal();
-});
-
-// Close on Escape
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") closeHistoryModal();
-});
-
+document.addEventListener("click",   (e) => { if (e.target.id === "historyModal") closeHistoryModal(); });
+document.addEventListener("keydown",  (e) => { if (e.key === "Escape") closeHistoryModal(); });
 
 function buildHistoryHTML(borrows = [], returns = []) {
-  /* ── Borrows table ── */
   const borrowRows = borrows.length
     ? borrows.map((b) => `
         <tr>
@@ -270,11 +363,10 @@ function buildHistoryHTML(borrows = [], returns = []) {
           <td>${b.book_title || b.book || "—"}</td>
           <td>${formatDate(b.borrow_date || b.created_at)}</td>
           <td>${formatDate(b.due_date)}</td>
-          <td><span class="badge ${b.status === "active" ? "badge-active" : "badge-inactive"}">${b.status}</span></td>
+          <td><span class="badge ${b.status === "active" ? "badge-active" : b.status === "pending" ? "badge-pending" : "badge-inactive"}">${b.status}</span></td>
         </tr>`).join("")
     : `<tr><td colspan="5" class="muted center">No borrow records.</td></tr>`;
 
-  /* ── Returns table ── */
   const returnRows = returns.length
     ? returns.map((r) => `
         <tr>
@@ -291,25 +383,16 @@ function buildHistoryHTML(borrows = [], returns = []) {
       <h3 class="modal-section-title">📚 Borrowed Books <span class="count-badge">${borrows.length}</span></h3>
       <div class="table-scroll">
         <table class="modal-table">
-          <thead>
-            <tr>
-              <th>#</th><th>Book</th><th>Borrowed</th><th>Due</th><th>Status</th>
-            </tr>
-          </thead>
+          <thead><tr><th>#</th><th>Book</th><th>Borrowed</th><th>Due</th><th>Status</th></tr></thead>
           <tbody>${borrowRows}</tbody>
         </table>
       </div>
     </section>
-
     <section class="modal-section">
       <h3 class="modal-section-title">🔄 Returned Books <span class="count-badge">${returns.length}</span></h3>
       <div class="table-scroll">
         <table class="modal-table">
-          <thead>
-            <tr>
-              <th>#</th><th>Book</th><th>Returned</th><th>Fine</th><th>Status</th>
-            </tr>
-          </thead>
+          <thead><tr><th>#</th><th>Book</th><th>Returned</th><th>Fine</th><th>Status</th></tr></thead>
           <tbody>${returnRows}</tbody>
         </table>
       </div>
@@ -323,11 +406,11 @@ function buildHistoryHTML(borrows = [], returns = []) {
     allUsers = await API.getUsers();
     await renderStats(allUsers);
     renderUsersTable(allUsers);
+    renderPendingBorrows();
+    renderOverdueBorrows();
 
-    // Wire up the search input
     const searchInput = document.getElementById("userSearch");
     if (searchInput) searchInput.addEventListener("input", filterUsers);
-
   } catch (err) {
     showToast(`Failed to load dashboard: ${err.message}`, "error");
     console.error(err);

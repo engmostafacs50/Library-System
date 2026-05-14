@@ -1,178 +1,255 @@
-// book-details.js — connected to Django REST API
-const API_BASE = "http://localhost:8000"; // ← change to your actual API URL
+"use strict";
 
-function authHeaders(extra = {}) {
-    const token = localStorage.getItem("authToken");
-    return {
-        "Content-Type": "application/json",
-        ...(token ? { Authorization: `Token ${token}` } : {}),
-        ...extra,
+/* ── API ─────────────────────────────────────────────────────────── */
+const API = {
+  BASE: "/api",
+
+  async request(method, path, body = null) {
+    const opts = {
+      method,
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
     };
-}
+    if (body) opts.body = JSON.stringify(body);
 
-// ── Bootstrap ────────────────────────────────────────────────────────────────
+    const res = await fetch(`${API.BASE}${path}`, opts);
 
-document.addEventListener("DOMContentLoaded", async () => {
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get("id");
-
-    if (!id) {
-        showError("No book ID provided.");
-        return;
+    if (res.status === 401) {
+      const refreshed = await API.refreshToken();
+      if (refreshed) {
+        const retry = await fetch(`${API.BASE}${path}`, opts);
+        if (!retry.ok) throw new Error(await retry.text());
+        return retry.status === 204 ? null : retry.json();
+      }
+      window.location.href = "/login/";
+      return;
     }
 
+    if (!res.ok) {
+      const errText = await res.text();
+      let msg = errText;
+      try { msg = JSON.parse(errText).detail || errText; } catch (_) {}
+      throw new Error(msg);
+    }
+
+    return res.status === 204 ? null : res.json();
+  },
+
+  async refreshToken() {
     try {
-        const res = await fetch(`${API_BASE}/api/books/${id}/`, {
-            headers: { Accept: "application/json" },
-        });
+      const res = await fetch(`${API.BASE}/users/token/refresh/`, {
+        method: "POST", credentials: "include",
+      });
+      return res.ok;
+    } catch (_) { return false; }
+  },
 
-        if (res.status === 404) { showError("Book not found."); return; }
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  getBook:      (id)      => API.request("GET",  `/books/${id}/`),
+  getUserBorrows:()       => API.request("GET",  "/borrow/"),          // current user's borrows
+  createBorrow: (bookId)  => API.request("POST", "/borrow/", { book: bookId }),
+};
 
-        const book = await res.json();
-        renderBook(book);
 
-    } catch (err) {
-        console.error("Failed to load book:", err);
-        showError("Could not load book details. Please try again later.");
-    }
-});
+/* ── Bootstrap ───────────────────────────────────────────────────── */
+document.addEventListener("DOMContentLoaded", async () => {
+  const params = new URLSearchParams(window.location.search);
+  const bookId = params.get("id");
 
-// ── Render ───────────────────────────────────────────────────────────────────
+  if (!bookId) { showError("No book ID provided."); return; }
 
-function renderBook(book) {
-    // Image
-    const img = document.getElementById("bookImage");
-    if (img) {
-        img.src = book.image || "../assets/images/default-book.jpg";
-        img.alt = book.title;
-        img.onerror = () => { img.src = "../assets/images/default-book.jpg"; };
-    }
+  try {
+    // Load book + user's existing borrows in parallel
+    const [book, borrows] = await Promise.all([
+      API.getBook(bookId),
+      API.getUserBorrows().catch(() => []),   // graceful — guests see no borrow state
+    ]);
 
-    setText("title",       "Book Title: " + book.title);
-    setText("author",      book.author);
-    setText("category",    book.genre);
-    setText("description", book.description || "No description available.");
-
-    // Borrow/Return button logic
-    const borrowBtn = document.querySelector(".btn-outline");
-    if (!borrowBtn) return;
-
-    const session       = getSessionSafe();
-    const borrowedList  = session?.borrowedList || [];
-    const alreadyBorrowed = borrowedList.some(b => String(b.id) === String(book.id));
-
-    updateStatusUI(alreadyBorrowed ? "borrowed" : book.status, borrowBtn);
-
-    borrowBtn.onclick = () => handleBorrowReturn(book, borrowBtn, session);
-}
-
-// ── Borrow / Return ───────────────────────────────────────────────────────────
-
-async function handleBorrowReturn(book, btn, session) {
-    if (!session) {
-        alert("You must be logged in to borrow books.");
-        window.location.href = "../pages/login.html";
-        return;
-    }
-
-    session.borrowedList  = session.borrowedList  || [];
-    session.returnedList  = session.returnedList  || [];
-    session.totalBorrowed = session.totalBorrowed || 0;
-
-    const isCurrentlyBorrowed = session.borrowedList.some(
-        b => String(b.id) === String(book.id)
+    const existingBorrow = borrows.find(
+      (b) => String(b.book) === String(bookId)
     );
 
-    if (isCurrentlyBorrowed) {
-        // ── Return ──
-        if (!confirm(`Return "${book.title}"?`)) return;
+    renderBook(book, existingBorrow);
 
-        try {
-            const res = await fetch(`${API_BASE}/api/books/${book.id}/`, {
-                method:  "PATCH",
-                headers: authHeaders(),
-                body:    JSON.stringify({ status: "available" }),
-            });
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        } catch (err) {
-            console.warn("Could not update book status on server:", err);
-            // Continue with local update anyway
-        }
+  } catch (err) {
+    console.error("Failed to load book:", err);
+    showError("Could not load book details. Please try again later.");
+  }
+});
 
-        const today     = new Date().toISOString().split("T")[0];
-        const bookEntry = session.borrowedList.find(b => String(b.id) === String(book.id));
-        session.borrowedList = session.borrowedList.filter(b => String(b.id) !== String(book.id));
-        session.returnedList.push({ ...bookEntry, returnDate: today });
-        session.returnedCount = session.returnedList.length;
 
-        saveSession(session);
-        updateStatusUI("available", btn);
+/* ── Render ──────────────────────────────────────────────────────── */
+function renderBook(book, existingBorrow) {
+  // Image
+  const img = document.getElementById("bookImage");
+  if (img) {
+    img.src    = book.image || "../assets/images/default-book.jpg";
+    img.alt    = book.title;
+    img.onerror = () => { img.src = "../assets/images/default-book.jpg"; };
+  }
 
-    } else {
-        // ── Borrow ──
-        if (book.status !== "available") {
-            alert("This book is currently not available.");
-            return;
-        }
+  setText("title",       book.title);
+  setText("author",      book.author);
+  setText("category",    book.genre);
+  setText("description", book.description || "No description available.");
 
-        try {
-            const res = await fetch(`${API_BASE}/api/books/${book.id}/`, {
-                method:  "PATCH",
-                headers: authHeaders(),
-                body:    JSON.stringify({ status: "borrowed" }),
-            });
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        } catch (err) {
-            console.warn("Could not update book status on server:", err);
-        }
+  const btn = document.querySelector(".btn-outline");
+  if (!btn) return;
 
-        const today   = new Date();
-        const fmt     = d => d.toISOString().split("T")[0];
-        const dueDate = new Date();
-        dueDate.setDate(dueDate.getDate() + 7);
+  // Determine UI state from real borrow record
+  if (existingBorrow) {
+    applyBorrowState(existingBorrow.status, btn);
+  } else {
+    // No borrow record — show based on book availability
+    applyBorrowState(book.available ? "available" : "unavailable", btn);
+  }
 
-        session.borrowedList.push({
-            id:    book.id,
-            title: book.title,
-            date:  fmt(today),
-            due:   fmt(dueDate),
-        });
-        session.totalBorrowed++;
-
-        saveSession(session);
-        updateStatusUI("borrowed", btn);
-    }
+  btn.onclick = () => handleBorrow(book, btn, existingBorrow);
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
 
+/* ── State → UI mapping ──────────────────────────────────────────── */
+/*
+  States handled:
+    "available"   — book is free, user hasn't borrowed it
+    "unavailable" — book is out of stock, no borrow by this user
+    "pending"     — user has a pending request awaiting admin approval
+    "active"      — user has an approved active borrow
+    "returned"    — user previously returned this book
+    "rejected"    — user's request was rejected
+*/
+function applyBorrowState(state, btn) {
+  const statusEl = document.getElementById("status");
+
+  // Reset classes
+  btn.className = "btn-outline";
+  btn.disabled  = false;
+
+  switch (state) {
+    case "available":
+      setText("status", "Available");
+      if (statusEl) statusEl.style.color = "#86efac";
+      btn.textContent = "Borrow Book";
+      btn.classList.add("state-available");
+      break;
+
+    case "unavailable":
+      setText("status", "Not Available");
+      if (statusEl) statusEl.style.color = "#fca5a5";
+      btn.textContent = "Not Available";
+      btn.disabled    = true;
+      btn.classList.add("state-unavailable");
+      break;
+
+    case "pending":
+      setText("status", "Request Pending");
+      if (statusEl) statusEl.style.color = "#fde047";
+      btn.textContent = "Request Sent · Awaiting Approval";
+      btn.disabled    = true;
+      btn.classList.add("state-pending");
+      break;
+
+    case "active":
+      setText("status", "Borrowed by you");
+      if (statusEl) statusEl.style.color = "#7dd3fc";
+      btn.textContent = "Currently Borrowed";
+      btn.disabled    = true;
+      btn.classList.add("state-active");
+      break;
+
+    case "returned":
+      setText("status", "Returned");
+      if (statusEl) statusEl.style.color = "#a5b4fc";
+      btn.textContent  = "Borrow Again";
+      btn.classList.add("state-available");
+      break;
+
+    case "rejected":
+      setText("status", "Request Rejected");
+      if (statusEl) statusEl.style.color = "#fca5a5";
+      btn.textContent = "Request Rejected · Try Again";
+      btn.classList.add("state-available");   // allow re-request
+      break;
+
+    default:
+      setText("status", state);
+      btn.textContent = "Borrow Book";
+  }
+}
+
+
+/* ── Borrow handler ──────────────────────────────────────────────── */
+async function handleBorrow(book, btn, existingBorrow) {
+  // If user already has a live pending/active borrow → do nothing (button is disabled)
+  if (existingBorrow && ["pending", "active"].includes(existingBorrow.status)) return;
+
+  // Confirm
+  if (!confirm(`Request to borrow "${book.title}"?`)) return;
+
+  // Optimistic UI
+  btn.disabled    = true;
+  btn.textContent = "Sending request…";
+
+  try {
+    await API.createBorrow(book.id);
+
+    // Success → show pending state
+    applyBorrowState("pending", btn);
+    showToast("Borrow request sent! Awaiting admin approval.", "success");
+
+  } catch (err) {
+    // Restore previous state on failure
+    applyBorrowState(
+      existingBorrow ? existingBorrow.status : (book.available ? "available" : "unavailable"),
+      btn
+    );
+    showToast(`Could not send request: ${err.message}`, "error");
+  }
+}
+
+
+/* ── Helpers ─────────────────────────────────────────────────────── */
 function setText(id, text) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = text || "";
-}
-
-function updateStatusUI(bookStatus, btn) {
-    const statusEl = document.getElementById("status");
-    if (statusEl) statusEl.textContent = bookStatus;
-    if (btn) btn.textContent = bookStatus === "borrowed" ? "Return Book" : "Borrow Book";
+  const el = document.getElementById(id);
+  if (el) el.textContent = text || "";
 }
 
 function showError(msg) {
-    document.body.innerHTML = `
-        <div style="display:flex;align-items:center;justify-content:center;
-                    height:60vh;font-family:'Segoe UI',sans-serif;color:#ef4444;">
-            <h2>${msg}</h2>
-        </div>`;
+  document.body.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:center;
+                height:60vh;font-family:'Segoe UI',sans-serif;color:#ef4444;">
+      <h2>${msg}</h2>
+    </div>`;
 }
 
-function getSessionSafe() {
-    try { return getSession(); }
-    catch { return JSON.parse(localStorage.getItem("session") || "null"); }
-}
+function showToast(msg, type = "success") {
+  // Re-use existing #toast element if present, otherwise create one
+  let toast = document.getElementById("toast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "toast";
+    toast.style.cssText = `
+      position:fixed;bottom:28px;right:28px;z-index:200;
+      padding:12px 22px;border-radius:12px;font-size:14px;
+      font-weight:500;color:white;opacity:0;transform:translateY(12px);
+      transition:opacity .3s ease,transform .3s ease;
+      pointer-events:none;max-width:320px;backdrop-filter:blur(8px);
+    `;
+    document.body.appendChild(toast);
+  }
 
-function saveSession(session) {
-    try { /* use your existing saveSession if available */ }
-    catch {}
-    localStorage.setItem("session", JSON.stringify(session));
+  const styles = {
+    success: "background:rgba(34,197,94,.18);border:1px solid rgba(34,197,94,.3);box-shadow:0 8px 32px rgba(34,197,94,.2);",
+    error:   "background:rgba(239,68,68,.18);border:1px solid rgba(239,68,68,.3);box-shadow:0 8px 32px rgba(239,68,68,.2);",
+  };
+
+  toast.textContent  = msg;
+  toast.style.cssText += styles[type] || styles.success;
+  toast.style.opacity         = "1";
+  toast.style.transform       = "translateY(0)";
+  toast.style.pointerEvents   = "auto";
+
+  setTimeout(() => {
+    toast.style.opacity   = "0";
+    toast.style.transform = "translateY(12px)";
+  }, 3500);
 }

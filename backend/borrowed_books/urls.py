@@ -1,21 +1,23 @@
 from django.urls import path
-
-from .views import BorrowAdminView, BorrowOverdueView, BorrowReturnView, BorrowView
-
+from .views import (
+    BorrowView,
+    BorrowAdminView,
+    BorrowPendingView,
+    BorrowApproveView,
+    BorrowRejectView,
+    BorrowReturnView,
+    BorrowOverdueView,
+)
 app_name = "borrowed_books"
-
 urlpatterns = [
-    path("", BorrowView.as_view(), name="borrow"),
-    
-    path("admin/", BorrowAdminView.as_view(), name="admin-list"),
+    path("",                                BorrowView.as_view()),
 
-    path("admin/overdue/", BorrowOverdueView.as_view(), name="admin-overdue"),
+    path("admin/",                          BorrowAdminView.as_view()),
+    path("admin/pending/",                  BorrowPendingView.as_view()),
+    path("admin/overdue/",                  BorrowOverdueView.as_view()),
+    path("admin/<int:user_id>/",            BorrowAdminView.as_view()),
 
-    path("admin/<int:user_id>/", BorrowAdminView.as_view(), name="admin-by-user"),
-
-    path(
-        "admin/<int:borrow_id>/return/",
-        BorrowReturnView.as_view(),
-        name="admin-return",
-    ),
+    path("admin/<int:borrow_id>/approve/",  BorrowApproveView.as_view()),
+    path("admin/<int:borrow_id>/reject/",   BorrowRejectView.as_view()),
+    path("admin/<int:borrow_id>/return/",   BorrowReturnView.as_view()),
 ]
