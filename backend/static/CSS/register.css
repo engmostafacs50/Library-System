@@ -391,3 +391,12 @@
     border-color: rgba(16, 185, 129, 0.4);
     color: #6ee7b7;
 }
+
+.container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
