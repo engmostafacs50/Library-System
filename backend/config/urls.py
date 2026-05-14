@@ -35,7 +35,7 @@ urlpatterns = [
     path('returned-books/', TemplateView.as_view(template_name='returned-books.html'),  name='returned-books'),
     path('user-dashboard/', TemplateView.as_view(template_name='user-dashboard.html'),  name='user-dashboard'),
     path('forgetpass1/',    TemplateView.as_view(template_name='forgetpass1.html'),     name='forgetpass1'),
-    path('forgetpass2/',    TemplateView.as_view(template_name='forgetpass2.html'),    name='forgetpass2')
+    path('forgetpass2/',    TemplateView.as_view(template_name='forgetpass2.html'),    name='forgetpass2'),
     
 ]
 

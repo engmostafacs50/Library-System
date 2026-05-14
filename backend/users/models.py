@@ -11,6 +11,7 @@ class Role(models.TextChoices):
 class User(AbstractBaseUser, PermissionsMixin):
     id = models.BigAutoField(primary_key=True)
     username = models.CharField(max_length=150, unique=True)
+    first_name = models.CharField(max_length=150, blank=True)
     email = models.EmailField(unique=True)
     role = models.CharField(max_length=10, choices=Role.choices, default=Role.USER)
     is_active = models.BooleanField(default=True)

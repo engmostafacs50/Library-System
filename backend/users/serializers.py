@@ -8,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
  
     class Meta:
         model = User
-        fields = ["id", "username", "email", "password", "role", "is_active", "created_at"]
+        fields = ["id", "username", "first_name", "email", "password", "role", "is_active", "created_at"]
         read_only_fields = ["id", "created_at"]
  
     def validate(self, data):
@@ -30,11 +30,20 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
  
     def validate(self, data):
-        user = authenticate(username=data["email"], password=data["password"])
-        if not user:
+        email    = data.get("email", "").lower().strip()
+        password = data.get("password", "")
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
             raise serializers.ValidationError("Invalid email or password.")
+
+        if not user.check_password(password):
+            raise serializers.ValidationError("Invalid email or password.")
+
         if not user.is_active:
             raise serializers.ValidationError("This account is inactive.")
+
         data["user"] = user
         return data
  

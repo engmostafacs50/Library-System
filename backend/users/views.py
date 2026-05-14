@@ -193,3 +193,8 @@ class AdminUserHistoryView(APIView):
             "borrows": BorrowSerializer(borrows, many=True).data,
             "returns": ReturnSerializer(returns, many=True).data,
         }, status=status.HTTP_200_OK)
+        
+class MeView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        return Response(UserSerializer(request.user).data, status=status.HTTP_200_OK)

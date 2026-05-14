@@ -153,12 +153,12 @@ function renderUsersTable(users) {
     const fullName    = user.full_name  || user.fullName || "—";
     const username    = user.username   || "—";
     const email       = user.email      || "—";
-    const role        = user.is_staff || user.is_superuser ? "admin" : "user";
-    const active      = user.is_active !== undefined ? user.is_active : user.status === "active";
-    const joined      = user.date_joined || user.joined;
+    const role        = (user.role || "USER").toUpperCase() === "ADMIN" ? "admin" : "user";
+    const active      = user.is_active;
+    const joined      = user.created_at;
     const roleBadge   = role === "admin" ? "badge-admin"  : "badge-user";
-    const statusBadge = active           ? "badge-active" : "badge-inactive";
-    const statusLabel = active           ? "active"       : "inactive";
+    const statusBadge = active          ? "badge-active" : "badge-inactive";
+    const statusLabel = active          ? "active"       : "inactive";
 
     tr.innerHTML = `
       <td class="muted">${user.id}</td>
@@ -189,7 +189,13 @@ function renderUsersTable(users) {
 }
 
 
-/* ── Search ──────────────────────────────────────────────────────── */
+function formatDate(dateStr) {
+  if (!dateStr) return "—";
+  return new Date(dateStr).toLocaleString("en-US", {
+    year: "numeric", month: "short", day: "numeric",
+    hour: "2-digit", minute: "2-digit",
+  });
+}
 function filterUsers() {
   const q = (document.getElementById("userSearch")?.value || "").toLowerCase();
   const filtered = allUsers.filter(
