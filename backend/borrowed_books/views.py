@@ -13,10 +13,6 @@ from .serializers import BorrowSerializer
 DEFAULT_BORROW_DAYS = 14
 
 
-# ─────────────────────────────────────────────────────────────
-# User-facing views
-# ─────────────────────────────────────────────────────────────
-
 class BorrowView(APIView):
     authentication_classes = [CookieJWTAuthentication]
     permission_classes     = [IsAuthenticated]
@@ -34,10 +30,6 @@ class BorrowView(APIView):
         serializer = BorrowSerializer(borrows, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
-# ─────────────────────────────────────────────────────────────
-# Admin views
-# ─────────────────────────────────────────────────────────────
 
 class BorrowAdminView(APIView):
     authentication_classes = [CookieJWTAuthentication]
@@ -76,7 +68,6 @@ class BorrowApproveView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # Accept custom days from request body, fallback to default
         try:
             days = int(request.data.get("days", DEFAULT_BORROW_DAYS))
             if days <= 0:
@@ -89,15 +80,17 @@ class BorrowApproveView(APIView):
 
         with transaction.atomic():
             book = borrow.book.__class__.objects.select_for_update().get(pk=borrow.book.pk)
-
-            if book.status != 'available':
+            
+            if not book.available or book.quantity <= 0:
                 return Response(
                     {"detail": "Book is no longer available."},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
-            book.status = 'borrowed'
-            book.save(update_fields=["status"])
+            book.quantity -= 1
+            if book.quantity == 0:
+                book.available = False
+            book.save(update_fields=["quantity", "available"])
 
             borrow.status   = BorrowStatus.ACTIVE
             borrow.due_date = date.today() + timedelta(days=days)
@@ -124,35 +117,8 @@ class BorrowRejectView(APIView):
 
         borrow.status = BorrowStatus.REJECTED
         borrow.save(update_fields=["status"])
-
         return Response(BorrowSerializer(borrow).data, status=status.HTTP_200_OK)
 
-
-class BorrowReturnView(APIView):
-    authentication_classes = [CookieJWTAuthentication]
-    permission_classes     = [IsAdminUser]
-
-    def patch(self, request, borrow_id):
-        try:
-            borrow = BorrowedBook.objects.select_related("book").get(pk=borrow_id)
-        except BorrowedBook.DoesNotExist:
-            return Response({"detail": "Borrow record not found."}, status=status.HTTP_404_NOT_FOUND)
-
-        if borrow.status != BorrowStatus.ACTIVE:
-            return Response(
-                {"detail": f"Borrow is already '{borrow.status}'."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        with transaction.atomic():
-            book        = borrow.book
-            book.status = 'available'
-            book.save(update_fields=["status"])
-
-            borrow.status = BorrowStatus.RETURNED
-            borrow.save(update_fields=["status"])
-
-        return Response(BorrowSerializer(borrow).data, status=status.HTTP_200_OK)
 
 
 class BorrowOverdueView(APIView):

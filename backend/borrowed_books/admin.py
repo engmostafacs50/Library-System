@@ -7,7 +7,6 @@ from .models import BorrowedBook, BorrowStatus
 
 DEFAULT_BORROW_DAYS = 14
 
-
 @admin.register(BorrowedBook)
 class BorrowedBookAdmin(admin.ModelAdmin):
     list_display    = ("id", "user", "book", "borrow_date", "due_date", "status", "is_overdue_display")
@@ -16,7 +15,7 @@ class BorrowedBookAdmin(admin.ModelAdmin):
     ordering        = ("-created_at",)
     readonly_fields = ("borrow_date", "created_at")
 
-    actions = ["approve_borrows", "reject_borrows", "mark_as_returned", "mark_as_overdue"]
+    actions = ["approve_borrows", "reject_borrows", "mark_as_overdue"]
 
     @admin.display(boolean=True, description="Overdue?")
     def is_overdue_display(self, obj):
@@ -29,13 +28,12 @@ class BorrowedBookAdmin(admin.ModelAdmin):
         with transaction.atomic():
             for borrow in queryset.filter(status=BorrowStatus.PENDING).select_related("book"):
                 book = borrow.book.__class__.objects.select_for_update().get(pk=borrow.book.pk)
-                if book.quantity <= 0 or not book.available:
+                if book.status == 'borrowed':
                     skipped += 1
                     continue
-                book.quantity -= 1
-                if book.quantity == 0:
-                    book.available = False
-                book.save(update_fields=["quantity", "available"])
+
+                book.status = 'borrowed'
+                book.save(update_fields=["status"])
 
                 borrow.status   = BorrowStatus.ACTIVE
                 borrow.due_date = date.today() + timedelta(days=DEFAULT_BORROW_DAYS)
@@ -51,18 +49,6 @@ class BorrowedBookAdmin(admin.ModelAdmin):
     def reject_borrows(self, request, queryset):
         updated = queryset.filter(status=BorrowStatus.PENDING).update(status=BorrowStatus.REJECTED)
         self.message_user(request, f"{updated} borrow(s) rejected.")
-
-    @admin.action(description="Mark selected borrows as Returned")
-    def mark_as_returned(self, request, querrows):
-        with transaction.atomic():
-            for borrow in querrows.filter(status=BorrowStatus.ACTIVE).select_related("book"):
-                book           = borrow.book
-                book.quantity += 1
-                book.available = True
-                book.save(update_fields=["quantity", "available"])
-                borrow.status  = BorrowStatus.RETURNED
-                borrow.save(update_fields=["status"])
-        self.message_user(request, "Selected borrows marked as returned.")
 
     @admin.action(description="Mark selected active+overdue borrows as Overdue")
     def mark_as_overdue(self, request, queryset):
