@@ -1,60 +1,60 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Online Library | Returned Books</title>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon"       href="{% static 'assets/images/Icon.png' %}" type="image/png">
-    <link rel="stylesheet" href="{% static 'CSS/background.css' %}">
-    <link rel="stylesheet" href="{% static 'CSS/returned-books.css' %}">
-    <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
-</head>
-<body>
 
-    <nav>
-        <span class="nav-brand">Library System</span>
-        <div class="nav-links">
-            <a href="{% url 'homepage' %}">Home</a>
-            <a href="{% url 'user-dashboard' %}">Profile</a>
-            <a href="{% url 'search-books' %}">Search</a>
-            <a href="{% url 'view-books' %}">Books</a>
-            <a href="{% url 'borrowed-books' %}">Borrowed</a>
-            <a href="{% url 'returned-books' %}" class="active">Returned</a>
-        </div>
-        <div class="nav-logout">
-            <a href="{% url 'index' %}">Logout</a>
-        </div>
-    </nav>
+{% block title %}Online Library | Returned Books{% endblock %}
 
-    <div class="bg-orbs">
-        <div class="orb orb1"></div>
-        <div class="orb orb2"></div>
-        <div class="orb orb3"></div>
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
+  <link rel="stylesheet" href="{% static 'CSS/returned-books.css' %}">
+{% endblock %}
+
+{% block content %}
+
+  <nav>
+    <span class="nav-brand">Library System</span>
+    <div class="nav-links">
+      <a href="{% url 'homepage' %}">Home</a>
+      <a href="{% url 'user-dashboard' %}">Profile</a>
+      <a href="{% url 'search-books' %}">Search</a>
+      <a href="{% url 'view-books' %}">Books</a>
+      <a href="{% url 'borrowed-books' %}">Borrowed</a>
+      <a href="{% url 'returned-books' %}" class="active">Returned</a>
+    </div>
+    <div class="nav-logout">
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+      </form>
+    </div>
+  </nav>
+
+  <div class="bg-orbs">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+  </div>
+
+  <div class="main-wrapper">
+
+    <div class="top-action" style="margin-top: 30px;">
+      <a href="{% url 'borrowed-books' %}" class="btn-secondary">← Go to Borrowed Books</a>
     </div>
 
-    <div class="main-wrapper">
+    <h1 class="main-title">My Returned Books</h1>
+    <p class="subtitle">Log and track your return history</p>
 
-        <div class="top-action" style="margin-top: 30px;">
-            <a href="{% url 'borrowed-books' %}" class="btn-secondary">← Go to Borrowed Books</a>
-        </div>
-
-        <h1 class="main-title">My Returned Books</h1>
-        <p class="subtitle">Log and track your return history</p>
-
-        <div class="history-section">
-            <h2 class="section-title" style="text-align:center; border:none; margin-bottom:30px;">
-                📚 Your Return History
-            </h2>
-
-            <div id="loadingMsg" class="loading-spinner">Loading your returns…</div>
-            <div id="errorMsg"   class="error-msg"     style="display:none;"></div>
-            <p   id="emptyMsg"                         style="display:none;">No returns recorded yet.</p>
-            <div id="returnedList" class="returned-grid"></div>
-        </div>
-
+    <div class="history-section">
+      <h2 class="section-title" style="text-align:center; border:none; margin-bottom:30px;">
+        📚 Your Return History
+      </h2>
+      <div id="loadingMsg" class="loading-spinner">Loading your returns…</div>
+      <div id="errorMsg" class="error-msg" style="display:none;"></div>
+      <p id="emptyMsg" style="display:none;">No returns recorded yet.</p>
+      <div id="returnedList" class="returned-grid"></div>
     </div>
 
-    <script src="{% static 'JS/returned-books.js' %}"></script>
-</body>
-</html>
+  </div>
+
+  <script src="{% static 'JS/returned-books.js' %}"></script>
+
+{% endblock %}

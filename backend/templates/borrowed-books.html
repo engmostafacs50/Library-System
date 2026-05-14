@@ -1,54 +1,58 @@
+{% extends "base.html" %}
 {% load static %}
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Online Library | Borrowed Books</title>
-    <link rel="icon" href="{% static 'assets/images/Icon.png' %}"
-      type="image/png">
-    <link rel="stylesheet" href="{% static 'CSS/background.css' %}">
-    <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
-    <link rel="stylesheet"
-      href="{% static 'CSS/UserDashboard-BorrowedBooks.css' %}">
-  </head>
-  <body>
-    <div class="bg-orbs">
-      <div class="orb orb1"></div>
-      <div class="orb orb2"></div>
-      <div class="orb orb3"></div>
+
+{% block title %}Online Library | Borrowed Books{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
+  <link rel="stylesheet" href="{% static 'CSS/UserDashboard-BorrowedBooks.css' %}">
+{% endblock %}
+
+{% block content %}
+
+  <nav>
+    <span class="nav-brand">Library System</span>
+    <div class="nav-links">
+      <a href="{% url 'homepage' %}">Home</a>
+      <a href="{% url 'user-dashboard' %}">Profile</a>
+      <a href="{% url 'search-books' %}">Search</a>
+      <a href="{% url 'view-books' %}">Books</a>
+      <a href="{% url 'borrowed-books' %}" class="active">Borrowed</a>
+      <a href="{% url 'returned-books' %}">Returned</a>
     </div>
-    <nav>
-      <span class="nav-brand">Library System</span>
-      <div class="nav-links">
-        <a href="{% url 'homepage' %}">Home</a>
-        <a href="{% url 'user-dashboard' %}">Profile</a>
-        <a href="{% url 'search-books' %}">Search</a>
-        <a href="{% url 'view-books' %}">Books</a>
-        <a href="{% url 'borrowed-books' %}" class="active">Borrowed</a>
-        <a href="{% url 'returned-books' %}">Returned</a>
-      </div>
-      <div class="nav-logout"><a href="../index.html">Logout</a></div>
-    </nav>
-
-    <div class="container">
-      <h1>My Borrowed Books</h1>
-      <p class="subtitle">Manage your current loans</p>
-
-      <div class="card">
-        <table>
-          <thead>
-            <tr>
-              <th>Book Title</th>
-              <th>Borrow Date</th>
-              <th>Due Date</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="borrowed-table-body"></tbody>
-        </table>
-      </div>
+    <div class="nav-logout">
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+      </form>
     </div>
-    <script src="{% static 'JS/UserDashboard-BorrowedBooks.js' %}"></script>
+  </nav>
 
-  </body>
-</html>
+  <div class="bg-orbs">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+  </div>
+
+  <div class="container">
+    <h1>My Borrowed Books</h1>
+    <p class="subtitle">Manage your current loans</p>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Book Title</th>
+            <th>Borrow Date</th>
+            <th>Due Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="borrowed-table-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="{% static 'JS/UserDashboard-BorrowedBooks.js' %}"></script>
+
+{% endblock %}

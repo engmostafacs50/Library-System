@@ -12,7 +12,7 @@ from borrowed_books.serializers import BorrowSerializer
 from borrowed_books.models import BorrowedBook
 from returned_books.serializers import ReturnSerializer
 from returned_books.models import ReturnedBook
-
+from django.shortcuts import redirect
 
 def set_auth_cookies(response, user):
     refresh = RefreshToken.for_user(user)
@@ -48,11 +48,6 @@ def set_auth_cookies(response, user):
 
 
 class RegisterView(APIView):
-    """
-    POST /api/users/register/
-    Register flow: RegisterView -> UserSerializer -> UserManager -> DB
-    Sets access_token + refresh_token as HttpOnly cookies.
-    """
     permission_classes = []
 
     def post(self, request):
@@ -100,7 +95,7 @@ class LogoutView(APIView):
             except (TokenError, InvalidToken):
                 pass  # already invalid — clear cookies anyway
 
-        response = Response({"message": "Logged out successfully."}, status=status.HTTP_200_OK)
+        response = redirect('/login/')
         response.delete_cookie("access_token",  path="/")
         response.delete_cookie("refresh_token", path="/api/users/token/refresh/")
         return response
@@ -146,10 +141,6 @@ class AdminView(APIView):
 
 
 class AdminUserDetailView(APIView):
-    """
-    PATCH  /api/users/admin/users/<user_id>/  → toggle active/inactive
-    DELETE /api/users/admin/users/<user_id>/  → delete user
-    """
     permission_classes = [IsAuthenticated, IsAdminUser]
 
     def patch(self, request, user_id):

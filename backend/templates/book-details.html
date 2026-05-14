@@ -1,52 +1,56 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Online Library | Book Details</title>
-    <link rel="icon" href="{% static 'assets/images/Icon.png' %}" type="image/png">
-    <link rel="stylesheet" href="{% static 'CSS/background.css' %}">
-    <link rel="stylesheet" href="{% static 'CSS/homepage-bookdetails.css' %}">
-    <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
-    <link rel="stylesheet" href="{% static 'CSS/book-details.css' %}">
-    <link rel="stylesheet" href="{% static 'CSS/details-states.css' %}">
-  </head>
-  <body>
 
-    <nav>
-      <span class="nav-brand">Library System</span>
-      <div class="nav-links">
-        <a href="{% url 'homepage' %}">Home</a>
-        <a href="{% url 'user-dashboard' %}"
-          class="active">Profile</a>
-        <a href="{% url 'search-books' %}">Search</a>
-        <a href="{% url 'view-books' %}">Books</a>
-        <a href="{% url 'borrowed-books' %}">Borrowed</a>
-        <a href="{% url 'returned-books' %}">Returned</a>
-      </div>
-      <div class="nav-logout"><a href="../index.html">Logout</a></div>
-    </nav>
+{% block title %}Online Library | Book Details{% endblock %}
 
-    <hr>
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
+  <link rel="stylesheet" href="{% static 'CSS/homepage-bookdetails.css' %}">
+  <link rel="stylesheet" href="{% static 'CSS/book-details.css' %}">
+  <link rel="stylesheet" href="{% static 'CSS/details-states.css' %}">
+{% endblock %}
 
-    <h2>Book Details</h2>
+{% block content %}
 
-    <div class="book-card">
-      <div class="image-container">
-        <img id="bookImage" width="150">
-      </div>
-
-      <div class="book-info"> <!-- ← add this wrapper -->
-        <h3 id="title"></h3>
-        <p><strong>Author:</strong> <span id="author"></span></p>
-        <hr>
-        <p><strong>Category:</strong> <span id="category"></span></p>
-        <hr>
-        <p><strong>Description:</strong> <span id="description"></span></p>
-        <hr>
-        <p><strong>Status:</strong> <span id="status"></span></p>
-        <button class="btn-outline">Borrow Book</button>
-      </div> <!-- ← close wrapper -->
+  <nav>
+    <span class="nav-brand">Library System</span>
+    <div class="nav-links">
+      <a href="{% url 'homepage' %}">Home</a>
+      <a href="{% url 'user-dashboard' %}">Profile</a>
+      <a href="{% url 'search-books' %}">Search</a>
+      <a href="{% url 'view-books' %}">Books</a>
+      <a href="{% url 'borrowed-books' %}">Borrowed</a>
+      <a href="{% url 'returned-books' %}">Returned</a>
     </div>
-    <script src="{% static 'JS/book-details.js' %}"></script>
-  </body>
-</html>
+    <div class="nav-logout">
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+      </form>
+    </div>
+  </nav>
+
+  <hr>
+
+  <h2>Book Details</h2>
+
+  <div class="book-card">
+    <div class="image-container">
+      <img id="bookImage" width="150">
+    </div>
+    <div class="book-info">
+      <h3 id="title"></h3>
+      <p><strong>Author:</strong> <span id="author"></span></p>
+      <hr>
+      <p><strong>Category:</strong> <span id="category"></span></p>
+      <hr>
+      <p><strong>Description:</strong> <span id="description"></span></p>
+      <hr>
+      <p><strong>Status:</strong> <span id="status"></span></p>
+      <button class="btn-outline">Borrow Book</button>
+    </div>
+  </div>
+
+  <script src="{% static 'JS/book-details.js' %}"></script>
+
+{% endblock %}

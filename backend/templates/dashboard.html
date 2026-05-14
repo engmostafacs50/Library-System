@@ -1,188 +1,182 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>Online Library | Admin Dashboard</title>
-    <link rel="icon" href="{% static 'assets/images/Icon.png' %}" type="image/png">
-    <link rel="stylesheet" href="{% static 'CSS/background.css' %}">
-    <link rel="stylesheet" href="{% static 'CSS/dashboard.css' %}">
-    <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
-  </head>
-  <body>
 
-    <div class="bg-orbs">
-      <div class="orb orb1"></div>
-      <div class="orb orb2"></div>
-      <div class="orb orb3"></div>
+{% block title %}Online Library | Admin Dashboard{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
+  <link rel="stylesheet" href="{% static 'CSS/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+
+  <nav>
+    <span class="nav-brand">Library System</span>
+    <div class="nav-links">
+      <a href="{% url 'dashboard' %}" class="active">Dashboard</a>
+      <a href="{% url 'add-book' %}">Add Book</a>
+      <a href="{% url 'manage-books' %}">Manage Books</a>
     </div>
-
-    <nav>
-      <span class="nav-brand">Library System</span>
-      <div class="nav-links">
-        <a href="{% url 'dashboard' %}" class="active">Dashboard</a>
-        <a href="{% url 'add-book' %}">Add Book</a>
-        <a href="{% url 'manage-books' %}">Manage Books</a>
-      </div>
-      <div class="nav-logout">
-        <a href="{% url 'logout' %}">Logout</a>
-      </div>
-    </nav>
-
-    <div class="page-wrapper">
-
-      <!-- Header -->
-      <header class="page-header">
-        <div>
-          <p class="page-subtitle">Admin Dashboard</p>
-          <h1>Welcome, Admin</h1>
-        </div>
-        <div class="header-date" id="headerDate"></div>
-      </header>
-
-      <!-- Stat Cards -->
-      <section class="stats-grid">
-        <div class="stat-card accent">
-          <div class="stat-icon">👥</div>
-          <div class="stat-info">
-            <span class="stat-label">Total Users</span>
-            <span class="stat-value" id="totalUsers">0</span>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">✅</div>
-          <div class="stat-info">
-            <span class="stat-label">Active Users</span>
-            <span class="stat-value" id="activeUsers">0</span>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">📚</div>
-          <div class="stat-info">
-            <span class="stat-label">Total Books</span>
-            <span class="stat-value" id="totalBooks">0</span>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">📖</div>
-          <div class="stat-info">
-            <span class="stat-label">Books Borrowed</span>
-            <span class="stat-value" id="borrowedBooks">0</span>
-          </div>
-        </div>
-        <!-- NEW: Pending stat card -->
-        <div class="stat-card stat-card-pending">
-          <div class="stat-icon">🕐</div>
-          <div class="stat-info">
-            <span class="stat-label">Pending Requests</span>
-            <span class="stat-value" id="pendingCount">0</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- Quick Actions -->
-      <section class="quick-actions">
-        <p class="section-title">Quick Actions</p>
-        <div class="action-buttons">
-          <a href="{% url 'add-book' %}" class="btn btn-primary">+ Add New Book</a>
-          <a href="{% url 'manage-books' %}" class="btn btn-secondary">Manage Books</a>
-        </div>
-      </section>
-
-      <!-- Users Table -->
-      <section class="table-section">
-        <div class="section-header">
-          <p class="section-title">Registered Users</p>
-          <div class="search-bar">
-            <input type="text" id="userSearch" placeholder="Search users…">
-          </div>
-        </div>
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Avatar</th>
-                <th>Full Name</th>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Status</th>
-                <th>Joined</th>
-                <th style="text-align:center;">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="usersTableBody"></tbody>
-          </table>
-          <p class="empty-msg" id="emptyMsg" style="display:none;">No users found.</p>
-        </div>
-      </section>
-
-      <!-- NEW: Pending Borrow Requests -->
-      <section class="table-section">
-        <div class="section-header">
-          <p class="section-title">🕐 Pending Borrow Requests</p>
-        </div>
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Book</th>
-                <th>User</th>
-                <th>Requested</th>
-                <th>Status</th>
-                <th style="text-align:center;">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="pendingTableBody"></tbody>
-          </table>
-          <p class="empty-msg" id="pendingEmptyMsg" style="display:none;">No pending requests.</p>
-        </div>
-      </section>
-
-      <!-- NEW: Overdue Borrows -->
-      <section class="table-section">
-        <div class="section-header">
-          <p class="section-title">⚠️ Overdue Borrows</p>
-        </div>
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Book</th>
-                <th>User</th>
-                <th>Due Date</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="overdueTableBody"></tbody>
-          </table>
-          <p class="empty-msg" id="overdueEmptyMsg" style="display:none;">No overdue borrows.</p>
-        </div>
-      </section>
-
+    <div class="nav-logout">
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+      </form>
     </div>
+  </nav>
 
-    <!-- History Modal -->
-    <div id="historyModal" class="modal-backdrop" style="display:none;">
-      <div class="modal-card">
-        <div class="modal-header">
-          <h2 id="modalTitle" class="modal-title">User History</h2>
-          <button class="modal-close" onclick="closeHistoryModal()">✕</button>
-        </div>
-        <div id="modalBody" class="modal-body"></div>
+  <div class="bg-orbs">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+  </div>
+
+  <div class="page-wrapper">
+
+    <header class="page-header">
+      <div>
+        <p class="page-subtitle">Admin Dashboard</p>
+        <h1>Welcome, Admin</h1>
       </div>
+      <div class="header-date" id="headerDate"></div>
+    </header>
+
+    <section class="stats-grid">
+      <div class="stat-card accent">
+        <div class="stat-icon">👥</div>
+        <div class="stat-info">
+          <span class="stat-label">Total Users</span>
+          <span class="stat-value" id="totalUsers">0</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-info">
+          <span class="stat-label">Active Users</span>
+          <span class="stat-value" id="activeUsers">0</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📚</div>
+        <div class="stat-info">
+          <span class="stat-label">Total Books</span>
+          <span class="stat-value" id="totalBooks">0</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📖</div>
+        <div class="stat-info">
+          <span class="stat-label">Books Borrowed</span>
+          <span class="stat-value" id="borrowedBooks">0</span>
+        </div>
+      </div>
+      <div class="stat-card stat-card-pending">
+        <div class="stat-icon">🕐</div>
+        <div class="stat-info">
+          <span class="stat-label">Pending Requests</span>
+          <span class="stat-value" id="pendingCount">0</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="quick-actions">
+      <p class="section-title">Quick Actions</p>
+      <div class="action-buttons">
+        <a href="{% url 'add-book' %}" class="btn btn-primary">+ Add New Book</a>
+        <a href="{% url 'manage-books' %}" class="btn btn-secondary">Manage Books</a>
+      </div>
+    </section>
+
+    <section class="table-section">
+      <div class="section-header">
+        <p class="section-title">Registered Users</p>
+        <div class="search-bar">
+          <input type="text" id="userSearch" placeholder="Search users…">
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Avatar</th>
+              <th>Full Name</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Joined</th>
+              <th style="text-align:center;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody"></tbody>
+        </table>
+        <p class="empty-msg" id="emptyMsg" style="display:none;">No users found.</p>
+      </div>
+    </section>
+
+    <section class="table-section">
+      <div class="section-header">
+        <p class="section-title">🕐 Pending Borrow Requests</p>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Book</th>
+              <th>User</th>
+              <th>Requested</th>
+              <th>Status</th>
+              <th style="text-align:center;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="pendingTableBody"></tbody>
+        </table>
+        <p class="empty-msg" id="pendingEmptyMsg" style="display:none;">No pending requests.</p>
+      </div>
+    </section>
+
+    <section class="table-section">
+      <div class="section-header">
+        <p class="section-title">⚠️ Overdue Borrows</p>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Book</th>
+              <th>User</th>
+              <th>Due Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="overdueTableBody"></tbody>
+        </table>
+        <p class="empty-msg" id="overdueEmptyMsg" style="display:none;">No overdue borrows.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- History Modal -->
+  <div id="historyModal" class="modal-backdrop" style="display:none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="modalTitle" class="modal-title">User History</h2>
+        <button class="modal-close" onclick="closeHistoryModal()">✕</button>
+      </div>
+      <div id="modalBody" class="modal-body"></div>
     </div>
+  </div>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="toast"></div>
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
 
-    <script>
-      window.CSRF_TOKEN = "{{ csrf_token }}";
-    </script>
+  <script>
+    window.CSRF_TOKEN = "{{ csrf_token }}";
+  </script>
+  <script src="{% static 'JS/dashboard.js' %}"></script>
 
-    <script src="{% static 'JS/dashboard.js' %}"></script>
-  </body>
-</html>
+{% endblock %}

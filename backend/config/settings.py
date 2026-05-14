@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'returned_books',
 ]
 
+LOGOUT_REDIRECT_URL = '/login/'
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',

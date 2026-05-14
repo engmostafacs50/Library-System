@@ -1,64 +1,65 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Online Library | Manage Books</title>
-        <link rel="icon" href="{% static 'assets/images/Icon.png' %}" type="image/png">
-        <link rel="stylesheet" href="{% static 'CSS/manage-books.css' %}">
-        <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
-    </head>
-    <body>
 
-        <div class="bg-orbs">
-            <div class="orb orb1"></div>
-            <div class="orb orb2"></div>
-        </div>
+{% block title %}Online Library | Manage Books{% endblock %}
 
-        <nav>
-            <span class="nav-brand">Library System</span>
-            <div class="nav-links">
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
+  <link rel="stylesheet" href="{% static 'CSS/manage-books.css' %}">
+{% endblock %}
 
-                <!-- <a href="homepage.html">Homepage</a> -->
-                <a href="{% static 'dashboard.html' %}">Dashboard</a>
-                <a href="{% static 'add-book.html' %}">Add Book</a>
-                <a href="{% static 'manage-books.html' %}" class="active">Manage Books</a>
-                <!-- <a href="view-books.html">Books</a> -->
-            </div>
-            <div class="nav-logout"><a href="{% static 'index.html' %}">Logout</a></div>
-        </nav>
+{% block content %}
 
-        <hr>
+  <nav>
+    <span class="nav-brand">Library System</span>
+    <div class="nav-links">
+      <a href="{% url 'dashboard' %}">Dashboard</a>
+      <a href="{% url 'add-book' %}">Add Book</a>
+      <a href="{% url 'manage-books' %}" class="active">Manage Books</a>
+    </div>
+    <div class="nav-logout">
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+      </form>
+    </div>
+  </nav>
 
-        <div class="page-wrapper">
-            <h1>Manage Books</h1>
-            <div class="search-bar">
-                <input type="text" id="searchInput"
-                    placeholder="Search by title, author, category…" />
-            </div>
-            <div class="top-bar">
-                <a href="{% static 'add-book.html' %}" class="btn btn-add">+ Add Book</a>
-            </div>
+  <div class="bg-orbs">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+  </div>
 
-            <div class="table-wrapper">
-                <table>
-                    <caption><h2>Books List</h2></caption>
+  <hr>
 
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Image</th>
-                            <th>Title</th>
-                            <th>Author</th>
-                            <th>Category</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
-        <script src="{% static 'JS/manage-books.js' %}"></script>
-    </body>
-</html>
+  <div class="page-wrapper">
+    <h1>Manage Books</h1>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search by title, author, category…" />
+    </div>
+    <div class="top-bar">
+      <a href="{% url 'add-book' %}" class="btn btn-add">+ Add Book</a>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <caption><h2>Books List</h2></caption>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="{% static 'JS/manage-books.js' %}"></script>
+
+{% endblock %}
