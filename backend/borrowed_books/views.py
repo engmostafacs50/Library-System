@@ -80,17 +80,15 @@ class BorrowApproveView(APIView):
 
         with transaction.atomic():
             book = borrow.book.__class__.objects.select_for_update().get(pk=borrow.book.pk)
-            
-            if not book.available or book.quantity <= 0:
+
+            if book.status == 'borrowed':
                 return Response(
                     {"detail": "Book is no longer available."},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
-            book.quantity -= 1
-            if book.quantity == 0:
-                book.available = False
-            book.save(update_fields=["quantity", "available"])
+            book.status = 'borrowed'
+            book.save(update_fields=["status"])
 
             borrow.status   = BorrowStatus.ACTIVE
             borrow.due_date = date.today() + timedelta(days=days)
@@ -118,7 +116,6 @@ class BorrowRejectView(APIView):
         borrow.status = BorrowStatus.REJECTED
         borrow.save(update_fields=["status"])
         return Response(BorrowSerializer(borrow).data, status=status.HTTP_200_OK)
-
 
 
 class BorrowOverdueView(APIView):
