@@ -1,14 +1,16 @@
+from datetime import date
+
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
 
 
 class BorrowStatus(models.TextChoices):
-    PENDING  = "pending",  "Pending"   
+    PENDING  = "pending",  "Pending"
     ACTIVE   = "active",   "Active"
     RETURNED = "returned", "Returned"
     OVERDUE  = "overdue",  "Overdue"
-    REJECTED = "rejected", "Rejected"  
+    REJECTED = "rejected", "Rejected"
 
 
 class BorrowManager(models.Manager):
@@ -32,7 +34,7 @@ class BorrowManager(models.Manager):
         from books.models import Book
         try:
             book = Book.objects.get(pk=book_id)
-            return book.available and book.quantity > 0
+            return book.status == 'available'
         except Book.DoesNotExist:
             return False
 
@@ -48,8 +50,8 @@ class BorrowedBook(models.Model):
         on_delete=models.CASCADE,
         related_name="borrow_records",
     )
-    borrow_date = models.DateField(default=timezone.now)
-    due_date    = models.DateField(null=True, blank=True)  
+    borrow_date = models.DateField(default=date.today)
+    due_date    = models.DateField(null=True, blank=True)
     status      = models.CharField(
         max_length=10,
         choices=BorrowStatus.choices,

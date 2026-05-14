@@ -21,7 +21,7 @@ const API = {
         if (!retry.ok) throw new Error(await retry.text());
         return retry.status === 204 ? null : retry.json();
       }
-      window.location.href = "/login/";
+      window.location.href = "/login/?next=" + window.location.pathname + window.location.search;
       return;
     }
 
@@ -44,9 +44,9 @@ const API = {
     } catch (_) { return false; }
   },
 
-  getBook:      (id)      => API.request("GET",  `/books/${id}/`),
-  getUserBorrows:()       => API.request("GET",  "/borrow/"),          // current user's borrows
-  createBorrow: (bookId)  => API.request("POST", "/borrow/", { book: bookId }),
+  getBook:       (id)     => API.request("GET",  `/books/${id}/`),
+  getUserBorrows:()       => API.request("GET",  "/borrow/"),
+  createBorrow:  (bookId) => API.request("POST", "/borrow/", { book: bookId }),
 };
 
 
@@ -58,10 +58,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (!bookId) { showError("No book ID provided."); return; }
 
   try {
-    // Load book + user's existing borrows in parallel
     const [book, borrows] = await Promise.all([
       API.getBook(bookId),
-      API.getUserBorrows().catch(() => []),   // graceful — guests see no borrow state
+      API.getUserBorrows().catch(() => []),
     ]);
 
     const existingBorrow = borrows.find(
@@ -79,11 +78,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 /* ── Render ──────────────────────────────────────────────────────── */
 function renderBook(book, existingBorrow) {
-  // Image
   const img = document.getElementById("bookImage");
   if (img) {
-    img.src    = book.image || "../assets/images/default-book.jpg";
-    img.alt    = book.title;
+    img.src     = book.image || "../assets/images/default-book.jpg";
+    img.alt     = book.title;
     img.onerror = () => { img.src = "../assets/images/default-book.jpg"; };
   }
 
@@ -95,12 +93,11 @@ function renderBook(book, existingBorrow) {
   const btn = document.querySelector(".btn-outline");
   if (!btn) return;
 
-  // Determine UI state from real borrow record
   if (existingBorrow) {
     applyBorrowState(existingBorrow.status, btn);
   } else {
-    // No borrow record — show based on book availability
-    applyBorrowState(book.available ? "available" : "unavailable", btn);
+    // ✅ use book.status instead of book.available
+    applyBorrowState(book.status === "available" ? "available" : "unavailable", btn);
   }
 
   btn.onclick = () => handleBorrow(book, btn, existingBorrow);
@@ -108,19 +105,9 @@ function renderBook(book, existingBorrow) {
 
 
 /* ── State → UI mapping ──────────────────────────────────────────── */
-/*
-  States handled:
-    "available"   — book is free, user hasn't borrowed it
-    "unavailable" — book is out of stock, no borrow by this user
-    "pending"     — user has a pending request awaiting admin approval
-    "active"      — user has an approved active borrow
-    "returned"    — user previously returned this book
-    "rejected"    — user's request was rejected
-*/
 function applyBorrowState(state, btn) {
   const statusEl = document.getElementById("status");
 
-  // Reset classes
   btn.className = "btn-outline";
   btn.disabled  = false;
 
@@ -159,7 +146,7 @@ function applyBorrowState(state, btn) {
     case "returned":
       setText("status", "Returned");
       if (statusEl) statusEl.style.color = "#a5b4fc";
-      btn.textContent  = "Borrow Again";
+      btn.textContent = "Borrow Again";
       btn.classList.add("state-available");
       break;
 
@@ -167,7 +154,7 @@ function applyBorrowState(state, btn) {
       setText("status", "Request Rejected");
       if (statusEl) statusEl.style.color = "#fca5a5";
       btn.textContent = "Request Rejected · Try Again";
-      btn.classList.add("state-available");   // allow re-request
+      btn.classList.add("state-available");
       break;
 
     default:
@@ -179,27 +166,22 @@ function applyBorrowState(state, btn) {
 
 /* ── Borrow handler ──────────────────────────────────────────────── */
 async function handleBorrow(book, btn, existingBorrow) {
-  // If user already has a live pending/active borrow → do nothing (button is disabled)
   if (existingBorrow && ["pending", "active"].includes(existingBorrow.status)) return;
 
-  // Confirm
   if (!confirm(`Request to borrow "${book.title}"?`)) return;
 
-  // Optimistic UI
   btn.disabled    = true;
   btn.textContent = "Sending request…";
 
   try {
     await API.createBorrow(book.id);
-
-    // Success → show pending state
     applyBorrowState("pending", btn);
     showToast("Borrow request sent! Awaiting admin approval.", "success");
 
   } catch (err) {
-    // Restore previous state on failure
+    // ✅ use book.status instead of book.available
     applyBorrowState(
-      existingBorrow ? existingBorrow.status : (book.available ? "available" : "unavailable"),
+      existingBorrow ? existingBorrow.status : (book.status === "available" ? "available" : "unavailable"),
       btn
     );
     showToast(`Could not send request: ${err.message}`, "error");
@@ -222,7 +204,6 @@ function showError(msg) {
 }
 
 function showToast(msg, type = "success") {
-  // Re-use existing #toast element if present, otherwise create one
   let toast = document.getElementById("toast");
   if (!toast) {
     toast = document.createElement("div");
@@ -242,11 +223,11 @@ function showToast(msg, type = "success") {
     error:   "background:rgba(239,68,68,.18);border:1px solid rgba(239,68,68,.3);box-shadow:0 8px 32px rgba(239,68,68,.2);",
   };
 
-  toast.textContent  = msg;
-  toast.style.cssText += styles[type] || styles.success;
-  toast.style.opacity         = "1";
-  toast.style.transform       = "translateY(0)";
-  toast.style.pointerEvents   = "auto";
+  toast.textContent         = msg;
+  toast.style.cssText      += styles[type] || styles.success;
+  toast.style.opacity       = "1";
+  toast.style.transform     = "translateY(0)";
+  toast.style.pointerEvents = "auto";
 
   setTimeout(() => {
     toast.style.opacity   = "0";

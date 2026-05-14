@@ -10,7 +10,7 @@ from users.permissions import IsAuthenticated, IsAdminUser
 from .models import BorrowedBook, BorrowStatus
 from .serializers import BorrowSerializer
 
-DEFAULT_BORROW_DAYS = 14  # change to whatever default you want
+DEFAULT_BORROW_DAYS = 14
 
 
 # ─────────────────────────────────────────────────────────────
@@ -18,10 +18,6 @@ DEFAULT_BORROW_DAYS = 14  # change to whatever default you want
 # ─────────────────────────────────────────────────────────────
 
 class BorrowView(APIView):
-    """
-    POST /api/borrow/       → create a PENDING borrow request
-    GET  /api/borrow/       → list the calling user's borrows
-    """
     authentication_classes = [CookieJWTAuthentication]
     permission_classes     = [IsAuthenticated]
 
@@ -44,10 +40,6 @@ class BorrowView(APIView):
 # ─────────────────────────────────────────────────────────────
 
 class BorrowAdminView(APIView):
-    """
-    GET /api/borrow/admin/             → all borrow records
-    GET /api/borrow/admin/<user_id>/   → borrows for a specific user
-    """
     authentication_classes = [CookieJWTAuthentication]
     permission_classes     = [IsAdminUser]
 
@@ -60,9 +52,6 @@ class BorrowAdminView(APIView):
 
 
 class BorrowPendingView(APIView):
-    """
-    GET /api/borrow/admin/pending/   → all PENDING borrow requests
-    """
     authentication_classes = [CookieJWTAuthentication]
     permission_classes     = [IsAdminUser]
 
@@ -72,7 +61,6 @@ class BorrowPendingView(APIView):
 
 
 class BorrowApproveView(APIView):
-  
     authentication_classes = [CookieJWTAuthentication]
     permission_classes     = [IsAdminUser]
 
@@ -88,29 +76,37 @@ class BorrowApproveView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        # Accept custom days from request body, fallback to default
+        try:
+            days = int(request.data.get("days", DEFAULT_BORROW_DAYS))
+            if days <= 0:
+                raise ValueError
+        except (ValueError, TypeError):
+            return Response(
+                {"detail": "Invalid value for 'days'. Must be a positive integer."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         with transaction.atomic():
             book = borrow.book.__class__.objects.select_for_update().get(pk=borrow.book.pk)
 
-            if book.quantity <= 0 or not book.available:
+            if book.status != 'available':
                 return Response(
                     {"detail": "Book is no longer available."},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
-            book.quantity -= 1
-            if book.quantity == 0:
-                book.available = False
-            book.save(update_fields=["quantity", "available"])
+            book.status = 'borrowed'
+            book.save(update_fields=["status"])
 
             borrow.status   = BorrowStatus.ACTIVE
-            borrow.due_date = date.today() + timedelta(days=DEFAULT_BORROW_DAYS)
+            borrow.due_date = date.today() + timedelta(days=days)
             borrow.save(update_fields=["status", "due_date"])
 
         return Response(BorrowSerializer(borrow).data, status=status.HTTP_200_OK)
 
 
 class BorrowRejectView(APIView):
- 
     authentication_classes = [CookieJWTAuthentication]
     permission_classes     = [IsAdminUser]
 
@@ -133,7 +129,6 @@ class BorrowRejectView(APIView):
 
 
 class BorrowReturnView(APIView):
- 
     authentication_classes = [CookieJWTAuthentication]
     permission_classes     = [IsAdminUser]
 
@@ -150,10 +145,9 @@ class BorrowReturnView(APIView):
             )
 
         with transaction.atomic():
-            book           = borrow.book
-            book.quantity += 1
-            book.available = True
-            book.save(update_fields=["quantity", "available"])
+            book        = borrow.book
+            book.status = 'available'
+            book.save(update_fields=["status"])
 
             borrow.status = BorrowStatus.RETURNED
             borrow.save(update_fields=["status"])
@@ -162,7 +156,6 @@ class BorrowReturnView(APIView):
 
 
 class BorrowOverdueView(APIView):
-
     authentication_classes = [CookieJWTAuthentication]
     permission_classes     = [IsAdminUser]
 

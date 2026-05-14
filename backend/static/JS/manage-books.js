@@ -1,10 +1,7 @@
-// manage-books.js — connected to Django REST API
-const API_BASE = ""; // ← change to your actual API URL
 
-// ── Auth Helpers ─────────────────────────────────────────────────────────────
-// Token is stored in an HttpOnly cookie — JS cannot read it directly.
-// The browser sends it automatically via credentials: "include".
-// We only need to read the CSRF token (which is NOT HttpOnly).
+const API_BASE = ""; 
+
+
 
 function getCsrfToken() {
     const match = document.cookie.match(/(^|;)\s*csrftoken=([^;]+)/);

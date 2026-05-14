@@ -1,3 +1,4 @@
+API_BASE = ""
 async function Login() {
   const email    = document.getElementById("userEmail").value.trim();
   const password = document.getElementById("Password").value;

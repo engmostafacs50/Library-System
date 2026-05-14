@@ -45,17 +45,17 @@ const API = {
   },
 
   /* Users */
-  getUsers:    ()   => API.request("GET",    "/users/admin/users/"),
-  toggleUser:  (id) => API.request("PATCH",  `/users/admin/users/${id}/`),
-  deleteUser:  (id) => API.request("DELETE", `/users/admin/users/${id}/`),
-  userHistory: (id) => API.request("GET",    `/users/admin/users/${id}/history/`),
+  getUsers:    ()       => API.request("GET",    "/users/admin/users/"),
+  toggleUser:  (id)     => API.request("PATCH",  `/users/admin/users/${id}/`),
+  deleteUser:  (id)     => API.request("DELETE", `/users/admin/users/${id}/`),
+  userHistory: (id)     => API.request("GET",    `/users/admin/users/${id}/history/`),
 
   /* Borrows */
-  allBorrows:     ()   => API.request("GET",   "/borrow/admin/"),
-  pendingBorrows: ()   => API.request("GET",   "/borrow/admin/pending/"),
-  overdueBorrows: ()   => API.request("GET",   "/borrow/admin/overdue/"),
-  approveBorrow:  (id) => API.request("PATCH", `/borrow/admin/${id}/approve/`),
-  rejectBorrow:   (id) => API.request("PATCH", `/borrow/admin/${id}/reject/`),
+  allBorrows:     ()         => API.request("GET",   "/borrow/admin/"),
+  pendingBorrows: ()         => API.request("GET",   "/borrow/admin/pending/"),
+  overdueBorrows: ()         => API.request("GET",   "/borrow/admin/overdue/"),
+  approveBorrow:  (id, days) => API.request("PATCH", `/borrow/admin/${id}/approve/`, { days }),
+  rejectBorrow:   (id)       => API.request("PATCH", `/borrow/admin/${id}/reject/`),
 };
 
 
@@ -97,7 +97,6 @@ function showToast(msg, type = "success") {
   setTimeout(() => toast.classList.remove("show"), 3000);
 }
 
-/* Animate a table row out then remove it */
 function removeRow(rowId) {
   const row = document.getElementById(rowId);
   if (!row) return;
@@ -121,9 +120,7 @@ async function renderStats(users) {
     animateCount("totalBooks",    borrows.length);
     animateCount("borrowedBooks", borrowed);
     animateCount("pendingCount",  pending.length);
-  } catch (_) {
-    // non-critical — leave counters at 0
-  }
+  } catch (_) {}
 }
 
 
@@ -153,13 +150,12 @@ function renderUsersTable(users) {
       ? `<img src="${user.avatar}" alt="${initials}">`
       : `<span class="avatar-initials">${initials}</span>`;
 
-    const fullName = user.full_name  || user.fullName || "—";
-    const username = user.username   || "—";
-    const email    = user.email      || "—";
-    const role     = user.is_staff || user.is_superuser ? "admin" : "user";
-    const active   = user.is_active !== undefined ? user.is_active : user.status === "active";
-    const joined   = user.date_joined || user.joined;
-
+    const fullName    = user.full_name  || user.fullName || "—";
+    const username    = user.username   || "—";
+    const email       = user.email      || "—";
+    const role        = user.is_staff || user.is_superuser ? "admin" : "user";
+    const active      = user.is_active !== undefined ? user.is_active : user.status === "active";
+    const joined      = user.date_joined || user.joined;
     const roleBadge   = role === "admin" ? "badge-admin"  : "badge-user";
     const statusBadge = active           ? "badge-active" : "badge-inactive";
     const statusLabel = active           ? "active"       : "inactive";
@@ -272,11 +268,20 @@ async function renderPendingBorrows() {
 }
 
 async function handleApproveBorrow(id) {
+  const input = prompt("Enter number of borrow days:", "14");
+  if (input === null) return;  // cancelled
+
+  const days = parseInt(input);
+  if (isNaN(days) || days <= 0) {
+    showToast("Invalid number of days.", "error");
+    return;
+  }
+
   try {
-    await API.approveBorrow(id);
+    await API.approveBorrow(id, days);
     removeRow(`pending-row-${id}`);
-    showToast("Borrow request approved ✅");
-    renderStats(allUsers);   // refresh pending counter
+    showToast(`Borrow approved ✅ — due in ${days} days`);
+    renderStats(allUsers);
   } catch (err) {
     showToast(`Error: ${err.message}`, "error");
   }
@@ -335,9 +340,9 @@ async function openHistoryModal(userId, userName) {
   const title = document.getElementById("modalTitle");
   if (!modal || !body) return;
 
-  title.textContent    = `History — ${userName}`;
-  body.innerHTML       = `<p class="modal-loading">Loading…</p>`;
-  modal.style.display  = "flex";
+  title.textContent   = `History — ${userName}`;
+  body.innerHTML      = `<p class="modal-loading">Loading…</p>`;
+  modal.style.display = "flex";
 
   try {
     const { borrows, returns } = await API.userHistory(userId);
@@ -352,8 +357,8 @@ function closeHistoryModal() {
   if (modal) modal.style.display = "none";
 }
 
-document.addEventListener("click",   (e) => { if (e.target.id === "historyModal") closeHistoryModal(); });
-document.addEventListener("keydown",  (e) => { if (e.key === "Escape") closeHistoryModal(); });
+document.addEventListener("click",  (e) => { if (e.target.id === "historyModal") closeHistoryModal(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeHistoryModal(); });
 
 function buildHistoryHTML(borrows = [], returns = []) {
   const borrowRows = borrows.length

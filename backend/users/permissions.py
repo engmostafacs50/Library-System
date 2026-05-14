@@ -18,5 +18,5 @@ class IsAdminUser(BasePermission):
         # Prefer a custom role field; fall back to Django's is_staff
         role = getattr(request.user, "role", None)
         if role is not None:
-            return role == "admin"
+            return role == "ADMIN"
         return bool(request.user.is_staff or request.user.is_superuser)
