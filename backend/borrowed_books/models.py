@@ -1,18 +1,20 @@
 from django.db import models
-
-# Create your models here.
-from django.db import models
 from django.conf import settings
 from django.utils import timezone
 
 
 class BorrowStatus(models.TextChoices):
+    PENDING  = "pending",  "Pending"   
     ACTIVE   = "active",   "Active"
     RETURNED = "returned", "Returned"
     OVERDUE  = "overdue",  "Overdue"
+    REJECTED = "rejected", "Rejected"  
 
 
 class BorrowManager(models.Manager):
+
+    def get_pending_borrows(self):
+        return self.filter(status=BorrowStatus.PENDING)
 
     def get_active_borrows(self):
         return self.filter(status=BorrowStatus.ACTIVE)
@@ -27,7 +29,7 @@ class BorrowManager(models.Manager):
         )
 
     def is_book_available(self, book_id):
-        from books.models import Book          # adjust import to your app name
+        from books.models import Book
         try:
             book = Book.objects.get(pk=book_id)
             return book.available and book.quantity > 0
@@ -42,23 +44,23 @@ class BorrowedBook(models.Model):
         related_name="borrowed_books",
     )
     book = models.ForeignKey(
-        "books.Book",                          # adjust to your books app label
+        "books.Book",
         on_delete=models.CASCADE,
         related_name="borrow_records",
     )
     borrow_date = models.DateField(default=timezone.now)
-    due_date    = models.DateField()
+    due_date    = models.DateField(null=True, blank=True)  
     status      = models.CharField(
         max_length=10,
         choices=BorrowStatus.choices,
-        default=BorrowStatus.ACTIVE,
+        default=BorrowStatus.PENDING,
     )
-    created_at  = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     objects = BorrowManager()
 
     class Meta:
-        ordering = ["-created_at"]
+        ordering            = ["-created_at"]
         verbose_name        = "Borrowed Book"
         verbose_name_plural = "Borrowed Books"
 
@@ -68,5 +70,6 @@ class BorrowedBook(models.Model):
     def is_overdue(self) -> bool:
         return (
             self.status == BorrowStatus.ACTIVE
+            and self.due_date is not None
             and self.due_date < timezone.now().date()
         )
