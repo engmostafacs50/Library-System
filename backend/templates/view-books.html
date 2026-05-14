@@ -4,31 +4,12 @@
 {% block title %}Online Library | View Books{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
   <link rel="stylesheet" href="{% static 'CSS/view-books.css' %}">
+  <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
 {% endblock %}
 
+
 {% block content %}
-
-  <nav>
-    <span class="nav-brand">Library System</span>
-    <div class="nav-links">
-      <a href="{% url 'homepage' %}">Home</a>
-      <a href="{% url 'user-dashboard' %}">Profile</a>
-      <a href="{% url 'search-books' %}">Search</a>
-      <a href="{% url 'view-books' %}" class="active">Books</a>
-      <a href="{% url 'borrowed-books' %}">Borrowed</a>
-      <a href="{% url 'returned-books' %}">Returned</a>
-    </div>
-
-    <!-- ✅ Proper logout form replacing the broken <a> link -->
-    <div class="nav-logout">
-      <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit">Logout</button>
-      </form>
-    </div>
-  </nav>
 
   <div class="main-wrapper">
     <h1 class="main-title">Library Collection</h1>
@@ -52,4 +33,5 @@
     const BOOK_DETAILS_URL = "{% url 'book-details' %}";
   </script>
   <script src="{% static 'JS/view-books.js' %}"></script>
+
 {% endblock %}

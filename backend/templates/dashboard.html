@@ -4,32 +4,11 @@
 {% block title %}Online Library | Admin Dashboard{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
   <link rel="stylesheet" href="{% static 'CSS/dashboard.css' %}">
 {% endblock %}
 
+
 {% block content %}
-
-  <nav>
-    <span class="nav-brand">Library System</span>
-    <div class="nav-links">
-      <a href="{% url 'dashboard' %}" class="active">Dashboard</a>
-      <a href="{% url 'add-book' %}">Add Book</a>
-      <a href="{% url 'manage-books' %}">Manage Books</a>
-    </div>
-    <div class="nav-logout">
-      <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit">Logout</button>
-      </form>
-    </div>
-  </nav>
-
-  <div class="bg-orbs">
-    <div class="orb orb1"></div>
-    <div class="orb orb2"></div>
-    <div class="orb orb3"></div>
-  </div>
 
   <div class="page-wrapper">
 
@@ -160,7 +139,6 @@
 
   </div>
 
-  <!-- History Modal -->
   <div id="historyModal" class="modal-backdrop" style="display:none;">
     <div class="modal-card">
       <div class="modal-header">
@@ -171,12 +149,9 @@
     </div>
   </div>
 
-  <!-- Toast Notification -->
   <div id="toast" class="toast"></div>
 
-  <script>
-    window.CSRF_TOKEN = "{{ csrf_token }}";
-  </script>
+  <script>window.CSRF_TOKEN = "{{ csrf_token }}";</script>
   <script src="{% static 'JS/dashboard.js' %}"></script>
 
 {% endblock %}

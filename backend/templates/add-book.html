@@ -4,31 +4,10 @@
 {% block title %}Online Library | Add New Book{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
   <link rel="stylesheet" href="{% static 'CSS/add-book.css' %}">
 {% endblock %}
 
 {% block content %}
-
-  <nav>
-    <span class="nav-brand">Library System</span>
-    <div class="nav-links">
-      <a href="{% url 'dashboard' %}">Dashboard</a>
-      <a href="{% url 'add-book' %}" class="active">Add Book</a>
-      <a href="{% url 'manage-books' %}">Manage Books</a>
-    </div>
-    <div class="nav-logout">
-      <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit">Logout</button>
-      </form>
-    </div>
-  </nav>
-
-  <div class="bg-orbs">
-    <div class="orb orb1"></div>
-    <div class="orb orb2"></div>
-  </div>
 
   <div class="page-wrapper">
 
@@ -42,7 +21,6 @@
 
     <div class="form-layout">
 
-      <!-- Image Drop Zone -->
       <div class="image-panel">
         <div class="drop-zone" id="dropZone">
           <div class="drop-inner" id="dropInner">
@@ -73,18 +51,15 @@
         <input type="file" id="imageInput" accept="image/*" style="display:none;">
       </div>
 
-      <!-- Form Fields -->
       <div class="form-panel">
         <div class="form-group">
           <label for="bookTitle">Book Title <span class="req">*</span></label>
           <input type="text" id="bookTitle" placeholder="e.g. Clean Code" required>
         </div>
-
         <div class="form-group">
           <label for="bookAuthor">Author <span class="req">*</span></label>
           <input type="text" id="bookAuthor" placeholder="e.g. Robert C. Martin" required>
         </div>
-
         <div class="form-row">
           <div class="form-group">
             <label for="bookGenre">Genre <span class="req">*</span></label>
@@ -105,17 +80,14 @@
             </select>
           </div>
         </div>
-
         <div class="form-group">
           <label for="bookDesc">Description</label>
           <textarea id="bookDesc" rows="4" placeholder="Brief summary of the book…"></textarea>
         </div>
-
         <div class="form-actions">
           <button type="button" class="btn btn-primary" onclick="handleAddBook()">Save Book</button>
           <button type="button" class="btn btn-ghost" onclick="clearForm()">Clear Form</button>
         </div>
-
         <div id="toast" class="toast" style="display:none;"></div>
       </div>
 

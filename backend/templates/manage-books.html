@@ -4,33 +4,11 @@
 {% block title %}Online Library | Manage Books{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
   <link rel="stylesheet" href="{% static 'CSS/manage-books.css' %}">
+  <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
 {% endblock %}
 
 {% block content %}
-
-  <nav>
-    <span class="nav-brand">Library System</span>
-    <div class="nav-links">
-      <a href="{% url 'dashboard' %}">Dashboard</a>
-      <a href="{% url 'add-book' %}">Add Book</a>
-      <a href="{% url 'manage-books' %}" class="active">Manage Books</a>
-    </div>
-    <div class="nav-logout">
-      <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit">Logout</button>
-      </form>
-    </div>
-  </nav>
-
-  <div class="bg-orbs">
-    <div class="orb orb1"></div>
-    <div class="orb orb2"></div>
-  </div>
-
-  <hr>
 
   <div class="page-wrapper">
     <h1>Manage Books</h1>

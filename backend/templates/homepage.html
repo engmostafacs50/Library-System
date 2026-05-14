@@ -4,29 +4,12 @@
 {% block title %}Online Library | Home page{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
   <link rel="stylesheet" href="{% static 'CSS/homepage-bookdetails.css' %}">
+  <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
 {% endblock %}
 
-{% block content %}
 
-  <nav>
-    <span class="nav-brand">Library System</span>
-    <div class="nav-links">
-      <a href="{% url 'homepage' %}" class="active">Home</a>
-      <a href="{% url 'user-dashboard' %}">Profile</a>
-      <a href="{% url 'search-books' %}">Search</a>
-      <a href="{% url 'view-books' %}">Books</a>
-      <a href="{% url 'borrowed-books' %}">Borrowed</a>
-      <a href="{% url 'returned-books' %}">Returned</a>
-    </div>
-    <div class="nav-logout">
-      <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit">Logout</button>
-      </form>
-    </div>
-  </nav>
+{% block content %}
 
   <div class="hero">
     <h1>Discover Your Next Favorite Book</h1>
@@ -86,12 +69,10 @@
     .then(data => {
       const books = Array.isArray(data) ? data : (data.results ?? []);
       const featured = books.slice(0, 3);
-
       if (featured.length === 0) {
         container.innerHTML = "<p>No books available</p>";
         return;
       }
-
       container.innerHTML = featured.map(book => `
         <img src="${book.image || defaultImg}" width="150">
         <h3>${book.title}</h3>

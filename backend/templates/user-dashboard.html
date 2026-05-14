@@ -4,29 +4,12 @@
 {% block title %}Online Library | User Dashboard{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
   <link rel="stylesheet" href="{% static 'CSS/UserDashboard-BorrowedBooks.css' %}">
+  <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
 {% endblock %}
 
-{% block content %}
 
-  <nav>
-    <span class="nav-brand">Library System</span>
-    <div class="nav-links">
-      <a href="{% url 'homepage' %}">Home</a>
-      <a href="{% url 'user-dashboard' %}" class="active">Profile</a>
-      <a href="{% url 'search-books' %}">Search</a>
-      <a href="{% url 'view-books' %}">Books</a>
-      <a href="{% url 'borrowed-books' %}">Borrowed</a>
-      <a href="{% url 'returned-books' %}">Returned</a>
-    </div>
-    <div class="nav-logout">
-      <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit">Logout</button>
-      </form>
-    </div>
-  </nav>
+{% block content %}
 
   <div class="container">
     <div class="user-header">

@@ -5,30 +5,45 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="{% static 'CSS/background.css' %}">
+    <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
     <link rel="icon" href="{% static 'assets/images/Icon.png' %}" type="image/png">
-
     {% block extra_css %}{% endblock %}
-
     <title>{% block title %}Library System{% endblock %}</title>
   </head>
   <body>
-
-    {% if user.is_authenticated %}
-    <nav class="top-nav">
-      <span>Welcome, {{ user.username }}</span>
-      <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit">Logout</button>
-      </form>
+    <nav>
+      <a class="nav-brand" href="/">
+        <div class="nav-brand-icon">📚</div>
+        Library System
+      </a>
+      <div class="nav-links">
+        {% if jwt_user.role == 'ADMIN' %}
+          <a href="{% url 'dashboard' %}"     class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">Dashboard</a>
+          <a href="{% url 'add-book' %}"      class="{% if request.resolver_match.url_name == 'add-book' %}active{% endif %}">Add Book</a>
+          <a href="{% url 'manage-books' %}"  class="{% if request.resolver_match.url_name == 'manage-books' %}active{% endif %}">Manage Books</a>
+        {% else %}
+          <a href="{% url 'homepage' %}"       class="{% if request.resolver_match.url_name == 'homepage' %}active{% endif %}">Home</a>
+          <a href="{% url 'user-dashboard' %}" class="{% if request.resolver_match.url_name == 'user-dashboard' %}active{% endif %}">Profile</a>
+          <a href="{% url 'search-books' %}"   class="{% if request.resolver_match.url_name == 'search-books' %}active{% endif %}">Search</a>
+          <a href="{% url 'view-books' %}"     class="{% if request.resolver_match.url_name == 'view-books' %}active{% endif %}">Books</a>
+          <a href="{% url 'borrowed-books' %}" class="{% if request.resolver_match.url_name == 'borrowed-books' %}active{% endif %}">Borrowed</a>
+          <a href="{% url 'returned-books' %}" class="{% if request.resolver_match.url_name == 'returned-books' %}active{% endif %}">Returned</a>
+        {% endif %}
+      </div>
+      <div class="nav-right">
+        <form method="post" action="{% url 'logout' %}" style="margin:0;">
+          {% csrf_token %}
+          <button type="submit" class="logout-btn">Logout</button>
+        </form>
+      </div>
     </nav>
-    {% endif %}
 
     <div class="bg-orbs">
       <div class="orb orb1"></div>
       <div class="orb orb2"></div>
       <div class="orb orb3"></div>
     </div>
+    
     {% block content %}{% endblock %}
-
   </body>
 </html>
