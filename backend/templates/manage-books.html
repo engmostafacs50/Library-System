@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Online Library | Manage Books{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'CSS/manage-books.css' %}">
+  <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
+{% endblock %}
+
+{% block content %}
+
+  <div class="page-wrapper">
+    <h1>Manage Books</h1>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search by title, author, category…" />
+    </div>
+    <div class="top-bar">
+      <a href="{% url 'add-book' %}" class="btn btn-add">+ Add Book</a>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <caption><h2>Books List</h2></caption>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="{% static 'JS/manage-books.js' %}"></script>
+
+{% endblock %}

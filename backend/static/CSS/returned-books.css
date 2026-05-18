@@ -1,0 +1,258 @@
+/* ── Base ─────────────────────────────────────────────────────────────────── */
+body {
+    background-color: #0f172a;
+    color: white;
+    font-family: "Segoe UI", sans-serif;
+    margin: 0;
+}
+
+/* ── Navbar ──────────────────────────────────────────────────────────────── */
+nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 50px;
+    background: rgba(15, 23, 42, 0.9);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.nav-brand {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #a78bfa;
+}
+
+.nav-links a {
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: #818cf8;
+}
+
+.nav-logout a {
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+/* ── Background orbs ─────────────────────────────────────────────────────── */
+.bg-orbs { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.18;
+}
+.orb1 { width: 500px; height: 500px; background: #4f46e5; top: -120px; left: -100px; }
+.orb2 { width: 400px; height: 400px; background: #7c3aed; bottom: -80px; right: -60px; }
+.orb3 { width: 300px; height: 300px; background: #34d399; top: 40%; left: 50%; transform: translateX(-50%); }
+
+/* ── Wrapper ─────────────────────────────────────────────────────────────── */
+.main-wrapper {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 20px 60px;
+    min-height: 100vh;
+}
+
+/* ── Titles ──────────────────────────────────────────────────────────────── */
+.main-title {
+    font-size: 3rem;
+    background: linear-gradient(to right, #a78bfa, #f472b6);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-top: 40px;
+    text-align: center;
+}
+
+.subtitle {
+    color: #94a3b8;
+    text-align: center;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+
+.section-title {
+    color: #a78bfa;
+    font-size: 1.4rem;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+.btn-secondary {
+    display: inline-block;
+    color: #818cf8;
+    text-decoration: none;
+    border: 1px solid #818cf8;
+    padding: 10px 20px;
+    border-radius: 15px;
+    margin-top: 20px;
+    transition: 0.3s;
+    font-size: 0.9rem;
+}
+
+.btn-secondary:hover {
+    background: rgba(129, 140, 248, 0.1);
+}
+
+/* ── Grid ────────────────────────────────────────────────────────────────── */
+.returned-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    padding: 20px 0;
+    width: 100%;
+}
+
+/* ── Book Card ───────────────────────────────────────────────────────────── */
+@keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0);    }
+}
+
+.book-history-item {
+    background: #1e293b;
+    padding: 22px;
+    border-radius: 20px;
+    border-left: 5px solid #34d399;
+    transition: transform 0.25s, background 0.25s, box-shadow 0.25s;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    animation: fadeSlideUp 0.4s ease both;
+}
+
+.book-history-item:hover {
+    transform: translateY(-4px);
+    background: #243352;
+    box-shadow: 0 8px 30px rgba(52, 211, 153, 0.12);
+}
+
+/* Card header: title + condition badge side by side */
+.book-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.book-card-header h4 {
+    margin: 0;
+    font-size: 1.05rem;
+    color: #f1f5f9;
+    line-height: 1.3;
+    flex: 1;
+}
+
+/* Meta rows */
+.book-card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.book-card-meta p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+.book-card-meta p span {
+    color: #64748b;
+    font-size: 0.8rem;
+}
+
+/* ── Badges ──────────────────────────────────────────────────────────────── */
+.condition-badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+.condition-good    { background: rgba(52, 211, 153, 0.15); color: #34d399; border: 1px solid #34d399; }
+.condition-damaged { background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid #fbbf24; }
+.condition-lost    { background: rgba(239, 68, 68, 0.15);  color: #ef4444; border: 1px solid #ef4444; }
+
+.fine-badge {
+    display: inline-block;
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #f87171;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+    width: fit-content;
+}
+
+/* ── Borrow Again Button ─────────────────────────────────────────────────── */
+.borrow-again-btn {
+    margin-top: auto;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: white;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s;
+    width: 100%;
+}
+
+.borrow-again-btn:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 18px rgba(99, 102, 241, 0.45);
+}
+
+.borrow-again-btn:active  { transform: scale(0.97); }
+.borrow-again-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* ── State messages ──────────────────────────────────────────────────────── */
+.loading-spinner {
+    text-align: center;
+    color: #94a3b8;
+    padding: 40px;
+    font-size: 1rem;
+}
+
+.error-msg {
+    text-align: center;
+    color: #ef4444;
+    padding: 20px;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 12px;
+    width: 100%;
+}
+
+#emptyMsg {
+    text-align: center;
+    color: #64748b;
+    font-size: 1rem;
+    padding: 40px 0;
+}
+
+.history-section {
+    width: 90%;
+    max-width: 1000px;
+}

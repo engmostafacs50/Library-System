@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Online Library | Returned Books{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'CSS/returned-books.css' %}">
+{% endblock %}
+
+{% block content %}
+
+  <div class="main-wrapper">
+
+    <div class="top-action" style="margin-top: 30px;">
+      <a href="{% url 'borrowed-books' %}" class="btn-secondary">← Go to Borrowed Books</a>
+    </div>
+
+    <h1 class="main-title">My Returned Books</h1>
+    <p class="subtitle">Log and track your return history</p>
+
+    <div class="history-section">
+      <h2 class="section-title" style="text-align:center; border:none; margin-bottom:30px;">
+        📚 Your Return History
+      </h2>
+      <div id="loadingMsg" class="loading-spinner">Loading your returns…</div>
+      <div id="errorMsg" class="error-msg" style="display:none;"></div>
+      <p id="emptyMsg" style="display:none;">No returns recorded yet.</p>
+      <div id="returnedList" class="returned-grid"></div>
+    </div>
+
+  </div>
+  
+  <script src="{% static 'JS/returned-books.js' %}"></script>
+
+{% endblock %}

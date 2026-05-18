@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Online Library | Borrowed Books{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'CSS/UserDashboard-BorrowedBooks.css' %}">
+  <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+  <div class="container">
+    <h1>My Borrowed Books</h1>
+    <p class="subtitle">Manage your current loans</p>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Book Title</th>
+            <th>Borrow Date</th>
+            <th>Due Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="borrowed-table-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="{% static 'JS/UserDashboard-BorrowedBooks.js' %}"></script>
+
+{% endblock %}

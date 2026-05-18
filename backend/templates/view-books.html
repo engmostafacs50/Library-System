@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Online Library | View Books{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'CSS/view-books.css' %}">
+  <link rel="stylesheet" href="{% static 'CSS/navbar.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+  <div class="main-wrapper">
+    <h1 class="main-title">Library Collection</h1>
+    <p class="subtitle">Explore our available books and resources</p>
+
+    <div class="filter-section">
+      <label for="select-by-category">Select By Category:</label>
+      <select id="select-by-category" class="dark-input">
+        <option value="all">All Categories</option>
+        <option value="programming">Programming</option>
+        <option value="science">Science</option>
+        <option value="history">History</option>
+        <option value="fiction">Fiction</option>
+      </select>
+    </div>
+
+    <div id="booksContainer" class="books-grid"></div>
+  </div>
+
+  <script>
+    const BOOK_DETAILS_URL = "{% url 'book-details' %}";
+  </script>
+  <script src="{% static 'JS/view-books.js' %}"></script>
+
+{% endblock %}

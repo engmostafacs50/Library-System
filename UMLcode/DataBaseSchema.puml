@@ -1,0 +1,60 @@
+@startuml Library Management System
+
+!theme plain
+skinparam linetype ortho
+skinparam roundcorner 10
+skinparam classBorderColor #73726c
+skinparam classBackgroundColor #F1EFE8
+skinparam classHeaderBackgroundColor #D3D1C7
+skinparam classFontName Arial
+skinparam arrowColor #5F5E5A
+skinparam arrowThickness 1.5
+
+entity "USERS" as users {
+  * id : INT <<PK>>
+  --
+  * name : VARCHAR(100)
+  * email : VARCHAR(150) <<UNIQUE>>
+  * password_hash : VARCHAR(255)
+  * role : ENUM('admin','member')
+  created_at : TIMESTAMP
+}
+
+entity "BOOKS" as books {
+  * id : INT <<PK>>
+  --
+  * title : VARCHAR(200)
+  * author : VARCHAR(150)
+  isbn : VARCHAR(20) <<UNIQUE>>
+  category : VARCHAR(100)
+  * total_copies : INT
+  * available_copies : INT
+  cover_image : VARCHAR(255)
+  created_at : TIMESTAMP
+}
+
+entity "BORROW_RECORDS" as borrow {
+  * id : INT <<PK>>
+  --
+  * user_id : INT <<FK>>
+  * book_id : INT <<FK>>
+  * borrow_date : DATE
+  * due_date : DATE
+  return_date : DATE
+  * status : ENUM('active','returned','overdue')
+}
+
+entity "RETURNED_BOOKS" as returned {
+  * id : INT <<PK>>
+  --
+  * borrow_id : INT <<FK>>
+  * returned_at : TIMESTAMP
+  condition : ENUM('good','damaged','lost')
+  fine_amount : DECIMAL(8,2)
+}
+
+users ||--o{ borrow : "borrow"
+books ||--o{ borrow :  "was borrow"
+borrow ||--o| returned : "wa"
+
+@enduml
